@@ -5,6 +5,7 @@
   "dependencies": {
     "@coreui/coreui": "2.1.6",
     "@coreui/icons": "^0.3.0",
+    "@coreui/react": "^2.1.3",
     "flag-icon-css": "^3.2.1",
     "font-awesome": "^4.7.0",
     "formik": "^1.4.2",

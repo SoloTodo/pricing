@@ -16,10 +16,12 @@ import {
 import UserLoader from "./react-utils/components/UserLoader";
 import RequiredBundle from "./react-utils/components/RequiredBundle";
 
-import UserPermissionFilter from "./Auth/UserPermissionFilter";
+import UserPermissionFilter from "./User/UserPermissionFilter";
+import UserPreferences from "./User/UserPreferences";
 import Login from './views/Pages/Login';
 
 import './App.scss';
+import Layout from "./Layout/Layout";
 
 
 class App extends React.Component {
@@ -62,9 +64,9 @@ class App extends React.Component {
                       resources={['languages', 'currencies', 'countries', 'store_types', 'number_formats']}
                       loading={null}
                   >
-                    {/*<UserPreferences>*/}
-                      {/*<Full location={props.location}/>*/}
-                    {/*</UserPreferences>*/}
+                    <UserPreferences>
+                      <Layout {...props} />
+                    </UserPreferences>
                   </RequiredBundle>
                 </UserPermissionFilter>
               </UserLoader>
