@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
-import { Button, Card, CardBody, CardGroup, Col, Container, Form, Input, InputGroup, InputGroupAddon, InputGroupText, Row } from 'reactstrap';
+import { Button, Card, CardBody, CardGroup, Col, Container, Form, FormFeedback, Input, InputGroup, InputGroupAddon, InputGroupText, Row } from 'reactstrap';
 import { Formik, ErrorMessage } from 'formik';
 
 class Login extends Component {
+
   render() {
     return (
         <div className="app flex-row align-items-center">
@@ -15,7 +16,6 @@ class Login extends Component {
                       <Formik
                           initialValues={{ email: '', password: '' }}
                           validate={values => {
-                            console.log('validating');
                             let errors = {};
                             if (!values.email) {
                               errors.email = 'Required';
@@ -23,6 +23,10 @@ class Login extends Component {
                                 !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(values.email)
                             ) {
                               errors.email = 'Invalid email address';
+                            }
+
+                            if(!values.password){
+                                errors.password = 'Required';
                             }
                             console.log(errors);
                             return errors;
@@ -54,6 +58,7 @@ class Login extends Component {
                                   </InputGroupText>
                                 </InputGroupAddon>
                                 <Input
+                                    invalid={!!errors.email && touched.email}
                                     type="email"
                                     name="email"
                                     placeholder="E-mail"
@@ -61,7 +66,9 @@ class Login extends Component {
                                     onChange={handleChange}
                                     onBlur={handleBlur}
                                     value={values.email}/>
-                                <ErrorMessage name="email" component="div" />
+                                <FormFeedback>
+                                    <ErrorMessage name="email" component="div" />
+                                </FormFeedback>
                               </InputGroup>
                               <InputGroup className="mb-4">
                                 <InputGroupAddon addonType="prepend">
@@ -70,6 +77,7 @@ class Login extends Component {
                                   </InputGroupText>
                                 </InputGroupAddon>
                                 <Input
+                                    invalid={!!errors.password && touched.password}
                                     type="password"
                                     name="password"
                                     placeholder="Contraseña"
@@ -78,11 +86,14 @@ class Login extends Component {
                                     onBlur={handleBlur}
                                     value={values.password}
                                 />
-                                <ErrorMessage name="password" component="div" />
+
+                                <FormFeedback>
+                                    <ErrorMessage name="password" component="div" />
+                                </FormFeedback>
                               </InputGroup>
                               <Row>
                                 <Col xs="4">
-                                  <Button color="primary" className="px-4">Acceder</Button>
+                                  <Button color="primary" className="px-4" onClick={handleSubmit}>Acceder</Button>
                                 </Col>
                                 <Col xs="8" className="text-right">
                                   <Button color="link" className="px-0">¿Olvidaste tu contraseña?</Button>
