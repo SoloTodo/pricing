@@ -5,7 +5,7 @@ import { Formik, ErrorMessage } from 'formik';
 import { connect } from 'react-redux'
 
 import {settings} from "../../settings";
-import {fetchAuth} from "../../react-utils/utils";
+import {fetchJson} from "../../react-utils/utils";
 import {toast} from "react-toastify";
 import {Redirect} from "react-router-dom";
 
@@ -48,7 +48,7 @@ class Login extends Component {
                           password: values.password,
                         });
 
-                        fetchAuth(null, `${settings.endpoint}obtain-auth-token/`, {
+                        fetchJson( 'obtain-auth-token/', {
                           method: 'POST',
                           body: formData
                         }).then(json => {
