@@ -6,9 +6,6 @@ import {settings} from "../settings";
 
 class UserPermissionFilter extends Component {
   render() {
-    console.log(this.props.authToken)
-    console.log(this.props.user)
-
     if (!this.props.authToken) {
       toast.info("Por favor ingrese su nombre de usuario y contraseña para acceder a esta página");
 
@@ -37,7 +34,6 @@ class UserPermissionFilter extends Component {
 }
 
 function mapStateToProps(state) {
-  console.log(state.apiResourceObjects)
   return {
     authToken: state.authToken,
     user: state.apiResourceObjects[settings.ownUserUrl]

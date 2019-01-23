@@ -68,7 +68,8 @@ class Header extends Component {
             </DropdownToggle>
             <DropdownMenu right style={{ right: 'auto' }}>
               <DropdownItem header tag="div" className="text-center"><strong>Cuenta</strong></DropdownItem>
-              <DropdownItem onClick={this.handleLogout}><i className="fa fa-lock"/> Cerrar Sesión</DropdownItem>
+              <DropdownItem><NavLink href="/account/password_change"><i className="fa fa-lock"/>Cambiar Contraseña</NavLink></DropdownItem>
+              <DropdownItem onClick={this.handleLogout}><i className="fa fa-lock"/>Cerrar Sesión</DropdownItem>
             </DropdownMenu>
           </AppHeaderDropdown>
         </Nav>
