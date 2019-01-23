@@ -19,10 +19,11 @@ import RequiredBundle from "./react-utils/components/RequiredBundle";
 import UserPermissionFilter from "./User/UserPermissionFilter";
 import UserPreferences from "./User/UserPreferences";
 import Login from './views/Pages/Login';
+import PasswordReset from './views/Pages/PasswordReset'
+import PasswordResetConfirm from "./views/Pages/PasswordResetConfirm";
 
 import './App.scss';
 import Layout from "./Layout/Layout";
-
 
 class App extends React.Component {
   constructor(props) {
@@ -57,6 +58,9 @@ class App extends React.Component {
         <Switch>
           <Route exact path="/login" name="Login Page"
                  component={Login}/>
+          <Route exact path="/account/password_reset" name="Password Reset"
+                 component={PasswordReset}/>
+          <Route path="/reset" name="Password Reset Confirm" component={PasswordResetConfirm}/>
           <Route path="/" render={props => (
               <UserLoader {...props}>
                 <UserPermissionFilter redirectPath="/login">

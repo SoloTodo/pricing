@@ -4,12 +4,43 @@ import { Button, Card, CardBody, CardGroup, Col, Container, Form, FormFeedback, 
 import { Formik, ErrorMessage } from 'formik';
 import { connect } from 'react-redux'
 
-import {settings} from "../../settings";
 import {fetchJson} from "../../react-utils/utils";
 import {toast} from "react-toastify";
-import {Redirect} from "react-router-dom";
+import {Redirect, Link} from "react-router-dom";
 
 class Login extends Component {
+
+  validate = (values) => {
+    const errors = {};
+    if (!values.email) {
+      errors.email = 'Requerido';
+    } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(values.email)) {
+      errors.email = 'Correo inválido';
+    }
+    if (!values.password) {
+      errors.password = 'Requerido';
+    }
+    return errors;
+  };
+
+  onSubmit = (values, { setSubmitting }) => {
+    const formData = JSON.stringify({
+      username: values.email,
+      password: values.password,
+    });
+
+    fetchJson( 'obtain-auth-token/', {
+      method: 'POST',
+      body: formData
+    }).then(json => {
+      if (json.token) {
+        this.props.setAuthToken(json.token);
+      }
+      setSubmitting(false);
+    }).catch(() => {
+      toast.error("Nombre de usuario o contraseña incorrectos");
+    });
+  };
 
   render() {
     if (this.props.isLoggedIn) {
@@ -26,49 +57,9 @@ class Login extends Component {
                   <CardBody>
                     <Formik
                       initialValues={{ email: '', password: '' }}
-                      validate={values => {
-                        const errors = {};
-                        if (!values.email) {
-                          errors.email = 'Requerido';
-                        } else if (
-                          !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(values.email)
-                        ) {
-                          errors.email = 'Correo inválido';
-                        }
-
-                        if (!values.password) {
-                          errors.password = 'Requerido';
-                        }
-
-                        return errors;
-                      }}
-                      onSubmit={(values, { setSubmitting }) => {
-                        const formData = JSON.stringify({
-                          username: values.email,
-                          password: values.password,
-                        });
-
-                        fetchJson( 'obtain-auth-token/', {
-                          method: 'POST',
-                          body: formData
-                        }).then(json => {
-                          if (json.token) {
-                            this.props.setAuthToken(json.token);
-                          }
-                          setSubmitting(false);
-                        }).catch(() => {
-                          toast.error("Nombre de usuario o contraseña incorrectos");
-                        });
-                      }}
-                    >
-                      {({
-                          values,
-                          errors,
-                          touched,
-                          handleChange,
-                          handleBlur,
-                          handleSubmit,
-                        }) => (
+                      validate={this.validate}
+                      onSubmit={this.onSubmit}>
+                      {({values, errors, touched, handleChange, handleBlur, handleSubmit}) => (
                         <Form onSubmit={handleSubmit}>
                           <h1>Login</h1>
                           <p className="text-muted">Acceder con su cuenta</p>
@@ -105,9 +96,7 @@ class Login extends Component {
                               autoComplete="current-password"
                               onChange={handleChange}
                               onBlur={handleBlur}
-                              value={values.password}
-                            />
-
+                              value={values.password}/>
                             <FormFeedback>
                               <ErrorMessage name="password" component="div" />
                             </FormFeedback>
@@ -117,7 +106,9 @@ class Login extends Component {
                               <Button color="primary" className="px-4" onClick={handleSubmit}>Acceder</Button>
                             </Col>
                             <Col xs="8" className="text-right">
-                              <Button color="link" className="px-0">¿Olvidaste tu contraseña?</Button>
+                              <Button color="link" className="px-0">
+                                <Link to="/account/password_reset">¿Olvidaste tu contraseña?</Link>
+                              </Button>
                             </Col>
                           </Row>
                         </Form>
