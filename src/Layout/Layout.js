@@ -13,8 +13,6 @@ import {
   AppSidebarHeader,
   AppSidebarMinimizer,
 } from '@coreui/react';
-// sidebar nav config
-import navigation from './_nav';
 // routes config
 import routes from './routes';
 
@@ -27,7 +25,7 @@ class Layout extends React.Component {
   loading = () => <div className="animated fadeIn pt-1 text-center">Loading...</div>;
 
   signOut(e) {
-    e.preventDefault()
+    e.preventDefault();
     this.props.history.push('/login')
   }
 
@@ -41,7 +39,7 @@ class Layout extends React.Component {
             <AppSidebar fixed display="lg">
               <AppSidebarHeader />
               <AppSidebarForm />
-              <SidebarNav navConfig={navigation} />
+              <SidebarNav/>
               <AppSidebarFooter />
               <AppSidebarMinimizer />
             </AppSidebar>

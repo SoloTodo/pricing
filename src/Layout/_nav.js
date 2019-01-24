@@ -1,9 +1,10 @@
 export default {
   items: [
     {
-      name: 'Stores',
-      url: '/dashboard',
-      icon: 'icon-speedometer',
+      name: 'Tiendas',
+      url: '/stores',
+      icon: 'fas fa-store-alt',
+      requiredPermission: 'solotodo.backend_list_stores'
     },
   ],
 };
