@@ -39,7 +39,7 @@ class Layout extends React.Component {
             <AppSidebar fixed display="lg">
               <AppSidebarHeader />
               <AppSidebarForm />
-              <SidebarNav/>
+              <SidebarNav {...this.props}/>
               <AppSidebarFooter />
               <AppSidebarMinimizer />
             </AppSidebar>

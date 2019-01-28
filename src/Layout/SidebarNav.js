@@ -10,7 +10,7 @@ class SidebarNav extends React.Component {
       this.props.user.permissions.includes(item.requiredPermission)
     );
 
-    return <AppSidebarNav navConfig={{items}} />;
+    return <AppSidebarNav navConfig={{items}} {...this.props} />;
   }
 }
 
