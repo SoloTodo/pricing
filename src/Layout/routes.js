@@ -9,6 +9,7 @@ import SkuList from "../views/Pages/SkuList"
 import ResourceObjectPermission from "../react-utils/components/ResourceObjectPermission";
 import RequiredResources from "../react-utils/components/RequiredResources"
 import SkuDetail from "../views/Pages/SkuDetail";
+import SkuDetailPricingHistory from "../views/Pages/SkuDetailPricingHistory"
 
 // https://github.com/ReactTraining/react-router/tree/master/packages/react-router-config
 const routes = [
@@ -22,7 +23,10 @@ const routes = [
   { path: '/skus', exact: true, name:'SKUs', render: props => <RequiredResources resources={['categories', 'stores']}><SkuList/></RequiredResources>},
   { path: '/skus/:id', exact: true, name: 'Detalle', render: props => <RequiredResources resources={['stores', 'categories', 'users_with_staff_actions']}>
       <ResourceObjectPermission match={props.match} resource="entities" component={SkuDetail}/>
-    </RequiredResources>}
+    </RequiredResources>},
+  { path: '/skus/:id/pricing_history', exact:true, name:'Historial de precios', render: props => <RequiredResources resources={['stores']}>
+      <ResourceObjectPermission match={props.match} resource="entities" component={SkuDetailPricingHistory} />
+  </RequiredResources>}
 ];
 
 export default routes;

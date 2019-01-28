@@ -208,7 +208,7 @@ class SkuDetail extends React.Component {
               <CardBody>
                 <ul className="list-without-decoration subnavigation-links">
                   <li>
-                    <NavLink to={`/entities/${entity.id}/pricing_history`}>
+                    <NavLink to={`/skus/${entity.id}/pricing_history`}>
                       Historial de precios
                     </NavLink>
                   </li>
