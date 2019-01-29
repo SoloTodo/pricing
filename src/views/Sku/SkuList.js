@@ -1,5 +1,5 @@
 import React from 'react';
-import {Card, CardHeader, CardBody, Col, Row, Tooltip} from 'reactstrap';
+import {Card, CardHeader, CardBody, Col, Row, UncontrolledTooltip} from 'reactstrap';
 import {connect} from "react-redux";
 import {Link, NavLink} from "react-router-dom";
 import {apiResourceStateToPropsUtils, filterApiResourceObjectsByType} from "../../react-utils/ApiResource";
@@ -25,18 +25,7 @@ class SkuList extends React.Component {
       formValues: {},
       apiFormFieldChangeHandler: undefined,
       entities: undefined,
-      availableTooltipOpen: false,
-      visibleTooltipOpen: false,
-      filterAvailableTooltipOpen: false,
-      filterVisibleTooltipOpen: false,
-      filterHomologatedTooltipOpen: false,
     }
-  }
-
-  toggle(field) {
-    this.setState({
-      [field]: !this.state[field],
-    });
   }
 
   setApiFormFieldChangeHandler = apiFormFieldChangeHandler => {
@@ -104,12 +93,9 @@ class SkuList extends React.Component {
           if (warnings.length) {
             return <React.Fragment>
               <span id={'entity_'+ entity.id} className="tooltiped"><i className="fas fa-warning text-warning"/></span>
-              <Tooltip placement="top"
-                       isOpen={this.state[entity.id]}
-                       target={'entity_'+entity.id}
-                       toggle={() => {this.toggle(String(entity.id));}}>
+              <UncontrolledTooltip placement="top" target={'entity_'+entity.id}>
                 {warnings.map(warning => <React.Fragment key={warning}><span>{warning}</span><br/></React.Fragment>)}
-              </Tooltip>
+              </UncontrolledTooltip>
             </React.Fragment>
           }
         }
@@ -169,7 +155,7 @@ class SkuList extends React.Component {
       {
         label: <React.Fragment>
           <span id="available" className="tooltiped">¿Disponible?</span>
-          <Tooltip placement="top" isOpen={this.state.availableTooltipOpen} target="available" toggle={() => {this.toggle('availableTooltipOpen');}}>El SKU está disponible para compra actualmente</Tooltip>
+          <UncontrolledTooltip placement="top" target="available">El SKU está disponible para compra actualmente</UncontrolledTooltip>
         </React.Fragment>,
         renderer: entity => <i className={entity.activeRegistry && entity.activeRegistry.is_available ?
             'far fa-check-square' :
@@ -179,7 +165,7 @@ class SkuList extends React.Component {
       {
         label: <React.Fragment>
           <span id="visible" className="tooltiped">¿Relevante?</span>
-          <Tooltip placement="top" isOpen={this.state.visibleTooltipOpen} target="visible" toggle={() => {this.toggle('visibleTooltipOpen');}}>El SKU ha sido marcado como relevante por el staff de SoloTodo</Tooltip>
+          <UncontrolledTooltip placement="top" target="visible">El SKU ha sido marcado como relevante por el staff de SoloTodo</UncontrolledTooltip>
         </React.Fragment>,
 
         renderer: entity => <i className={entity.isVisible ?
@@ -305,7 +291,7 @@ class SkuList extends React.Component {
                     </Col>
                     <Col xs="12" sm="3" md="3" lg="2" xl="2">
                       <label id="is_available_label" htmlFor="is_available" className="tooltiped">¿Disponible?</label>
-                      <Tooltip placement="top" isOpen={this.state.filterAvailableTooltipOpen} target="is_available_label" toggle={() => {this.toggle('filterAvailableTooltipOpen');}}>El SKU está disponible para compra actualmente</Tooltip>
+                      <UncontrolledTooltip placement="top" target="is_available_label">El SKU está disponible para compra actualmente</UncontrolledTooltip>
                       <ApiFormChoiceField
                           name="is_available"
                           id="is_available"
@@ -317,7 +303,7 @@ class SkuList extends React.Component {
                     </Col>
                     <Col xs="12" sm="3" md="3" lg="2" xl="2">
                       <label id="is_visible_label" htmlFor="is_visible" className="tooltiped">¿Relevante?</label>
-                      <Tooltip placement="top" isOpen={this.state.filterVisibleTooltipOpen} target="is_visible_label" toggle={() => {this.toggle('filterVisibleTooltipOpen');}}>El SKU ha sido marcado como relevante por el staff de SoloTodo</Tooltip>
+                      <UncontrolledTooltip placement="top" target="is_visible_label">El SKU ha sido marcado como relevante por el staff de SoloTodo</UncontrolledTooltip>
                       <ApiFormChoiceField
                           name="is_visible"
                           id="is_visible"
@@ -329,7 +315,7 @@ class SkuList extends React.Component {
                     </Col>
                     <Col xs="12" sm="3" md="3" lg="2" xl="2">
                       <label id="is_associated_label" htmlFor="is_associated" className="tooltiped">¿Homologado?</label>
-                      <Tooltip placement="top" isOpen={this.state.filterHomologatedTooltipOpen} target="is_associated_label" toggle={() => {this.toggle('filterHomologatedTooltipOpen');}}>El SKU ha sido homologado a un producto</Tooltip>
+                      <UncontrolledTooltip placement="top" target="is_associated_label">El SKU ha sido homologado a un producto</UncontrolledTooltip>
                       <ApiFormChoiceField
                           name="is_associated"
                           id="is_associated"

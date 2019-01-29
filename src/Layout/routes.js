@@ -1,15 +1,15 @@
 import React from 'react'
 
 import PasswordChange from "../views/Pages/PasswordChange";
-import StoreList from "../views/Pages/StoreList";
-import StoreDetail from "../views/Pages/StoreDetail";
-import StoreDetailUpdateLogs from "../views/Pages/StoreDetailUpdateLogs"
-import SkuList from "../views/Pages/SkuList"
+import StoreList from "../views/Store/StoreList";
+import StoreDetail from "../views/Store/StoreDetail";
+import StoreDetailUpdateLogs from "../views/Store/StoreDetailUpdateLogs"
+import SkuList from "../views/Sku/SkuList"
 
 import ResourceObjectPermission from "../react-utils/components/ResourceObjectPermission";
 import RequiredResources from "../react-utils/components/RequiredResources"
-import SkuDetail from "../views/Pages/SkuDetail";
-import SkuDetailPricingHistory from "../views/Pages/SkuDetailPricingHistory"
+import SkuDetail from "../views/Sku/SkuDetail";
+import SkuDetailPricingHistory from "../views/Sku/SkuDetailPricingHistory"
 
 // https://github.com/ReactTraining/react-router/tree/master/packages/react-router-config
 const routes = [

@@ -10,7 +10,7 @@ import ImageGallery from 'react-image-gallery';
 import {formatCurrency, formatDateStr} from "../../react-utils/utils";
 import {pricingStateToPropsUtils} from "../../utils";
 import imageNotAvailable from '../../images/image-not-available.svg';
-import {Row, Col, Card, CardHeader, CardBody, Table, Alert} from "reactstrap";
+import {Row, Col, Card, CardHeader, CardBody, Table, UncontrolledAlert} from "reactstrap";
 
 class SkuDetail extends React.Component {
   initialState = {
@@ -29,13 +29,13 @@ class SkuDetail extends React.Component {
     const entity = this.props.apiResourceObject;
 
     if (!entity.product){
-      this.state.warnings.push({label: 'Este SKU aún no ha sido homologado', visibility: true});
+      this.state.warnings.push({label: 'Este SKU aún no ha sido homologado'});
     }
     if (!(entity.active_registry && entity.active_registry.is_available)){
-      this.state.warnings.push({label: 'Este SKU no está disponible para compra', visibility: true});
+      this.state.warnings.push({label: 'Este SKU no está disponible para compra'});
     }
     if (!entity.is_visible){
-      this.state.warnings.push({label: 'Este SKU ha sido marcado como no relevante por el staff de SoloTodo', visibility:true});
+      this.state.warnings.push({label: 'Este SKU ha sido marcado como no relevante por el staff de SoloTodo'});
     }
 
     if (this.userHasStockPermissions(entity)) {
@@ -60,12 +60,6 @@ class SkuDetail extends React.Component {
     entity = this.props.ApiResourceObject(entity);
 
     return entity.store.permissions.includes('view_store_stocks');
-  };
-
-  onDismiss = index => {
-    const warnings = this.state.warnings;
-    warnings[index].visibility = false;
-    this.setState({ warnings });
   };
 
   render() {
@@ -115,9 +109,9 @@ class SkuDetail extends React.Component {
         <Row>
           {this.state.warnings.map((warning, index) => {
             return <Col key={index} xs="12">
-              <Alert color="warning" isOpen={warning.visibility} toggle={() => this.onDismiss(index)}>
+              <UncontrolledAlert color="warning">
                 {warning.label}
-              </Alert>
+              </UncontrolledAlert>
             </Col>
           })}
 

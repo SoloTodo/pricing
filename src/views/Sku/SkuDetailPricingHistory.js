@@ -1,18 +1,17 @@
 import React from 'react';
 import {connect} from "react-redux";
+import {Row, Col, Card, CardHeader, CardBody} from 'reactstrap'
 import {
   apiResourceStateToPropsUtils,
   filterApiResourceObjectsByType
 } from "../../react-utils/ApiResource";
 import moment from 'moment';
-import {FormattedMessage} from "react-intl";
 import {convertToDecimal} from "../../react-utils/utils";
 import {
   ApiForm,
   ApiFormDateRangeField,
   ApiFormChoiceField,
 } from '../../react-utils/api_forms'
-import { toast } from 'react-toastify';
 import SkuDetailPricingHistoryChart from "./SkuDetailPricingHistoryChart";
 import {UncontrolledTooltip} from "reactstrap";
 import {pricingStateToPropsUtils} from "../../utils";
@@ -65,13 +64,6 @@ class SkuDetailPricingHistory extends React.Component {
     });
   };
 
-  handleObservedObjectChange = changes => {
-    toast.info(<FormattedMessage
-            id="entity_price_history_auto_updated"
-            defaultMessage="The pricing information of this entity has just been updated, refreshing chart."/>,
-        {autoClose: false});
-  };
-
   render() {
     const entity = this.props.ApiResourceObject(this.props.apiResourceObject);
 
@@ -91,7 +83,7 @@ class SkuDetailPricingHistory extends React.Component {
 
       if (currency.id === entity.currency.id) {
         priority = 1;
-        name += ` (${'default_text'})`
+        name += ' (default)'
       } else if (currency.id === this.props.preferredCurrency.id) {
         priority = 2
       }
@@ -106,73 +98,63 @@ class SkuDetailPricingHistory extends React.Component {
     currencyOptions.sort((a, b) => a.priority - b.priority);
 
     return (
-        <div className="animated fadeIn d-flex flex-column">
+        <div className="d-flex flex-column">
           <UncontrolledTooltip placement="top" target="timestamp_label">
-            <FormattedMessage id="entity_price_history_date_rage" defaultMessage="Date range for the chart. The minimum value is the entity's detection date" /> ({moment(entity.creationDate).format('ll')})
+            Rango de fechas. El valor mínimo es la fecha de detección del sku ({moment(entity.creationDate).format('ll')})
           </UncontrolledTooltip>
-
           <UncontrolledTooltip placement="top" target="currency_label">
-            <FormattedMessage id="entity_price_history_currency" defaultMessage="The price points are converted to this currency. The values are calculated using standard exchange rates" />
+            Los datos de precio son convertidos a esta moneda usando tasas de cambio estándar
           </UncontrolledTooltip>
-
           <ApiForm
               endpoints={[entity.url + 'pricing_history/']}
               fields={['timestamp', 'currency']}
               onResultsChange={this.setChartData}
-              observedObjects={[this.props.apiResourceObject]}
-              observedObjectsField="last_pricing_update"
-              onObservedObjectChange={this.handleObservedObjectChange}
               onFormValueChange={this.handleFormValueChange}
               setFieldChangeHandler={this.setApiFormFieldChangeHandler}>
-            <div className="card">
-              <div className="card-header">
-                <FormattedMessage id="filters" defaultMessage={`Filters`} />
-              </div>
-              <div className="card-block">
-                <div className="row api-form-filters">
-                  <div className="col-12 col-sm-12 col-md-12 col-lg-8 col-xl-6">
+            <Card>
+              <CardHeader>Filtros</CardHeader>
+              <CardBody>
+                <Row className="api-form-filters">
+                  <Col sm="12" md="12" lg="8" xl="6">
                     <label id="timestamp_label" className="dashed" htmlFor="timestamp">
-                      <FormattedMessage id="date_range_from_to" defaultMessage="Date range (from / to)" />
+                      Rango de Fechas (desde / hasta)
                     </label>
                     <ApiFormDateRangeField
                         name="timestamp"
                         id="timestamp"
-                        label={<FormattedMessage id="date_range_from_to" defaultMessage='Date range (from / to)' />}
+                        label={'Rango de fechas (desde / hasta)'}
                         min={entityCreationDate}
                         initial={[dateRangeInitialMin, dateRangeInitialMax]}
                         value={this.state.formValues.timestamp}
-                        onChange={this.state.apiFormFieldChangeHandler}
-                    />
-                  </div>
-                  <div className="col-12 col-sm-6 col-md-6 col-lg-4 col-xl-4">
+                        onChange={this.state.apiFormFieldChangeHandler}/>
+                  </Col>
+                  <Col xs="12" sm="6" md="6" lg="4" xl="4">
                     <label id="currency_label" className="dashed" htmlFor="currency">
-                      <FormattedMessage id="currency" defaultMessage="Currency" />
+                      Moneda
                     </label>
                     <ApiFormChoiceField
                         name="currency"
                         id="currency"
-                        label={<FormattedMessage id="currency" defaultMessage={`Currency`} />}
+                        label="Moneda"
                         choices={currencyOptions}
                         required={true}
                         searchable={false}
                         value={this.state.formValues.currency}
-                        onChange={this.state.apiFormFieldChangeHandler}
-                    />
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="card d-flex flex-column flex-grow">
-              <div className="card-header">
-                <FormattedMessage id="result" defaultMessage={`Result`} />
-              </div>
-              <div className="card-block d-flex flex-column">
+                        onChange={this.state.apiFormFieldChangeHandler}/>
+                  </Col>
+                </Row>
+              </CardBody>
+            </Card>
+            <Card className="d-flex flex-column flex-grow">
+              <CardHeader className="card-header">
+                Resultado
+              </CardHeader>
+              <CardBody className="d-flex flex-column">
                 <SkuDetailPricingHistoryChart
                     entity={this.props.apiResourceObject}
-                    chart={this.state.chart}
-                />
-              </div>
-            </div>
+                    chart={this.state.chart}/>
+              </CardBody>
+            </Card>
           </ApiForm>
         </div>
     )
