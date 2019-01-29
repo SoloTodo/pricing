@@ -12,5 +12,11 @@ export default {
       icon: 'fas fa-inbox',
       requiredPermission: 'solotodo.backend_list_stores'
     },
+    {
+      name: 'Categorías',
+      url: '/categories',
+      icon: 'fas fa-tv',
+      requiredPermission: 'solotodo.backend_list_stores'
+    }
   ],
 };

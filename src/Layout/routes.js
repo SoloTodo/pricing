@@ -10,6 +10,7 @@ import ResourceObjectPermission from "../react-utils/components/ResourceObjectPe
 import RequiredResources from "../react-utils/components/RequiredResources"
 import SkuDetail from "../views/Sku/SkuDetail";
 import SkuDetailPricingHistory from "../views/Sku/SkuDetailPricingHistory"
+import CategoryList from "../views/Category/CategoryList";
 
 // https://github.com/ReactTraining/react-router/tree/master/packages/react-router-config
 const routes = [
@@ -26,6 +27,9 @@ const routes = [
     </RequiredResources>},
   { path: '/skus/:id/pricing_history', exact:true, name:'Historial de precios', render: props => <RequiredResources resources={['stores']}>
       <ResourceObjectPermission match={props.match} resource="entities" component={SkuDetailPricingHistory} />
+  </RequiredResources>},
+  { path: '/categories', exact:true, name: 'Categorías', render: props => <RequiredResources resources={['categories']}>
+      <CategoryList />
   </RequiredResources>}
 ];
 
