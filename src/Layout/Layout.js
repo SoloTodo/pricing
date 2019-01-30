@@ -68,9 +68,6 @@ class Layout extends React.Component {
               <Aside />
             </AppAside>
           </div>
-          <AppFooter>
-            <Footer />
-          </AppFooter>
         </div>
     );
   }
