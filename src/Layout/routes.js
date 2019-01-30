@@ -11,6 +11,7 @@ import RequiredResources from "../react-utils/components/RequiredResources"
 import SkuDetail from "../views/Sku/SkuDetail";
 import SkuDetailPricingHistory from "../views/Sku/SkuDetailPricingHistory"
 import CategoryList from "../views/Category/CategoryList";
+import CategoryDetailBrowse from "../views/Category/CategoryDetailBrowse";
 
 // https://github.com/ReactTraining/react-router/tree/master/packages/react-router-config
 const routes = [
@@ -30,6 +31,9 @@ const routes = [
   </RequiredResources>},
   { path: '/categories', exact:true, name: 'Categorías', render: props => <RequiredResources resources={['categories']}>
       <CategoryList />
+  </RequiredResources>},
+  { path:'/categories/:id', exact:true, name: 'Detalle', render: props => <RequiredResources resources={['stores', 'countries']}>
+      <ResourceObjectPermission match={props.match} resource="categories" component={CategoryDetailBrowse} />
   </RequiredResources>}
 ];
 

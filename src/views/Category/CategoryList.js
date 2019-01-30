@@ -25,7 +25,7 @@ class CategoryList extends React.Component {
                   {this.props.categories.map(category => (
                       <tr key={category.id}>
                         <td>{category.id}</td>
-                        <td className="col-12"><NavLink to={'/categories/' + category.id}>{category.name}</NavLink></td>
+                        <td className="col-12"><NavLink to={'/categories/'+ category.id}>{category.name}</NavLink></td>
                       </tr>
                   ))}
                   </tbody>
