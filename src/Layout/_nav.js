@@ -7,15 +7,21 @@ export default {
       requiredPermission: 'solotodo.backend_list_stores'
     },
     {
+      name: 'Categorías',
+      url: '/categories',
+      icon: 'fas fa-tv',
+      requiredPermission: 'solotodo.backend_list_stores'
+    },
+    {
       name: 'SKUs',
       url: '/skus',
       icon: 'fas fa-inbox',
       requiredPermission: 'solotodo.backend_list_stores'
     },
     {
-      name: 'Categorías',
-      url: '/categories',
-      icon: 'fas fa-tv',
+      name: 'Productos',
+      url: '/products',
+      icon: 'fas fa-tags',
       requiredPermission: 'solotodo.backend_list_stores'
     }
   ],
