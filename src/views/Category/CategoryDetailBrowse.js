@@ -25,6 +25,7 @@ import {areObjectsEqual} from "../../react-utils/utils";
 import CategoryDetailBrowseResult from "./CategoryDetailBrowseResult";
 import {Accordion, AccordionItem} from "react-sanfona";
 import './CategoryDetailBrowse.css'
+import Button from "reactstrap/es/Button";
 
 
 
@@ -45,9 +46,13 @@ class CategoryDetailBrowse extends React.Component {
     this.state = {...this.initialState}
   }
 
+  apiFormFieldChangeHandlerDecorator = apiFormFieldChangeHandler => {
+    return apiFormFieldChangeHandler
+  }
+
   setApiFormFieldChangeHandler = apiFormFieldChangeHandler => {
     this.setState({
-      apiFormFieldChangeHandler
+      apiFormFieldChangeHandler: this.apiFormFieldChangeHandlerDecorator(apiFormFieldChangeHandler)
     })
   };
 
@@ -168,6 +173,11 @@ class CategoryDetailBrowse extends React.Component {
         fieldsets: newFieldsets
       }
     })
+  };
+
+  handleReportButtonClick = (e) => {
+    console.log(this.props.apiResourceObject.id);
+    console.log(this.state.formValues)
   };
 
   render() {
@@ -518,7 +528,7 @@ class CategoryDetailBrowse extends React.Component {
         <Row className="row">
           <Col sm="12">
             <Card>
-              <CardHeader><i className="fas fa-list"/> Resultados</CardHeader>
+              <CardHeader className="d-flex justify-content-between"><span><i className="fas fa-list"/> Resultados </span><Button onClick={this.handleReportButtonClick} className="btn">Descargar</Button></CardHeader>
               <CardBody>
                 <CategoryDetailBrowseResult
                   data={this.state.results}
