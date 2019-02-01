@@ -22,12 +22,13 @@ class CategoryList extends React.Component {
                   </tr>
                   </thead>
                   <tbody>
-                  {this.props.categories.map(category => (
+                  {this.props.categories.filter(category => category.permissions.includes('view_category_reports'))
+                    .map(category => (
                       <tr key={category.id}>
                         <td>{category.id}</td>
                         <td className="col-12"><NavLink to={'/categories/'+ category.id}>{category.name}</NavLink></td>
                       </tr>
-                  ))}
+                    ))}
                   </tbody>
                 </Table>
               </CardBody>

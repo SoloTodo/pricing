@@ -13,6 +13,7 @@ import SkuDetailPricingHistory from "../views/Sku/SkuDetailPricingHistory"
 import CategoryList from "../views/Category/CategoryList";
 import CategoryDetailBrowse from "../views/Category/CategoryDetailBrowse";
 import ProductList from "../views/Product/ProductList";
+import Page404 from "../views/Pages/Page404"
 
 // https://github.com/ReactTraining/react-router/tree/master/packages/react-router-config
 const routes = [
@@ -34,7 +35,7 @@ const routes = [
       <CategoryList />
   </RequiredResources>},
   { path:'/categories/:id', exact: true, name: 'Detalle', render: props => <RequiredResources resources={['stores', 'countries']}>
-      <ResourceObjectPermission match={props.match} resource="categories" component={CategoryDetailBrowse} />
+      <ResourceObjectPermission permission='view_category_reports' Http404={Page404} match={props.match} resource="categories" component={CategoryDetailBrowse} />
   </RequiredResources>},
   { path:'/products', exact: true, name: 'Productos', render: props => <RequiredResources resources={['categories']}>
       <ProductList />

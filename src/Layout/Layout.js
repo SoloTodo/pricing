@@ -56,7 +56,6 @@ class Layout extends React.Component {
                       exact={route.exact}
                       name={route.name}
                       render={render}/>
-
                   })}
                   <Redirect from="/" to="/dashboard" />
                 </Switch>
