@@ -25,6 +25,7 @@ import {areObjectsEqual} from "../../react-utils/utils";
 import CategoryDetailBrowseResult from "./CategoryDetailBrowseResult";
 import {Accordion, AccordionItem} from "react-sanfona";
 import './CategoryDetailBrowse.css'
+import LaddaButton, {EXPAND_LEFT} from "react-ladda"
 
 
 
@@ -42,12 +43,26 @@ class CategoryDetailBrowse extends React.Component {
 
   constructor(props) {
     super(props);
-    this.state = {...this.initialState}
+    this.state = {
+      ...this.initialState,
+      loading: false
+    };
+    this.fieldsData = {};
   }
+
+  apiFormFieldChangeHandlerDecorator = apiFormFieldChangeHandler => {
+    return (updatedFieldsData={}, pushUrl) => {
+      this.fieldsData = {
+        ...this.fieldsData,
+        ...updatedFieldsData
+      };
+      apiFormFieldChangeHandler(updatedFieldsData, pushUrl)
+    }
+  };
 
   setApiFormFieldChangeHandler = apiFormFieldChangeHandler => {
     this.setState({
-      apiFormFieldChangeHandler
+      apiFormFieldChangeHandler: this.apiFormFieldChangeHandlerDecorator(apiFormFieldChangeHandler)
     })
   };
 
@@ -168,6 +183,31 @@ class CategoryDetailBrowse extends React.Component {
         fieldsets: newFieldsets
       }
     })
+  };
+
+  handleReportButtonClick = (e) => {
+    e.preventDefault();
+    this.setState({
+      loading: true,
+    });
+
+    let apiSearch = '';
+    const endpoint = `reports/current_prices?category=${this.props.apiResourceObject.id}`;
+    for (const fieldName of Object.keys(this.fieldsData)) {
+      for (const apiParamKey of Object.keys(this.fieldsData[fieldName].apiParams)) {
+        for (const apiParamValue of this.fieldsData[fieldName].apiParams[apiParamKey]) {
+          apiSearch += `${apiParamKey}=${apiParamValue}&`
+        }
+      }
+    }
+
+    this.props.fetchAuth(`${endpoint}&${apiSearch}`)
+      .then(json => {
+        window.location = json.url;
+        this.setState({
+          loading: false,
+        });
+      });
   };
 
   render() {
@@ -518,7 +558,15 @@ class CategoryDetailBrowse extends React.Component {
         <Row className="row">
           <Col sm="12">
             <Card>
-              <CardHeader><i className="fas fa-list"/> Resultados</CardHeader>
+              <CardHeader className="d-flex justify-content-between">
+                <span><i className="fas fa-list"/> Resultados </span>
+                <LaddaButton loading={this.state.loading}
+                             onClick={this.handleReportButtonClick}
+                             data-style={EXPAND_LEFT}
+                             className="btn btn-primary">
+                  {this.state.loading? 'Generando': 'Descargar'}
+                </LaddaButton>
+              </CardHeader>
               <CardBody>
                 <CategoryDetailBrowseResult
                   data={this.state.results}

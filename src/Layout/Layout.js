@@ -5,7 +5,6 @@ import { Container } from 'reactstrap';
 import {
   AppAside,
   AppBreadcrumb,
-  AppFooter,
   AppHeader,
   AppSidebar,
   AppSidebarFooter,
@@ -17,7 +16,6 @@ import {
 import routes from './routes';
 
 import Aside from './Aside';
-import Footer from './Footer';
 import Header from './Header';
 import SidebarNav from './SidebarNav'
 
