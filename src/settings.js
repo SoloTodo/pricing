@@ -3,7 +3,10 @@ import {apiSettings} from "./react-utils/settings";
 export const settings = {
   ...apiSettings,
   categoryBrowsePurposeId: 1,
-    usdCurrencyUrl: apiSettings.endpoint + 'currencies/4/',
+  categoryTemplateDetailPurposeId: 1,
+  ownWebsiteId: 1,
+  mobileNetworkOperatorId: 3,
+  usdCurrencyUrl: apiSettings.endpoint + 'currencies/4/',
   clpCurrencyUrl: apiSettings.endpoint + 'currencies/1/',
   statusDict: {
     1: 'Pendiente',
