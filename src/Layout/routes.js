@@ -22,12 +22,12 @@ const routes = [
   //{ path: '/', exact: true, name: 'Home', component:Layout },
   { path: '/account/password_change', exact: true, name: 'Cambiar contraseña', component: PasswordChange },
   { path: '/stores', exact: true, name: 'Tiendas', component: StoreList },
-  { path: '/stores/:id', exact: true, name: 'Detalle', render: props => <ResourceObjectPermission match={props.match} resource="stores" component={StoreDetail} />},
+  { path: '/stores/:id', exact: true, name: params => ({apiResource: 'stores', apiResourceObjectId: params.id}), render: props => <ResourceObjectPermission match={props.match} resource="stores" component={StoreDetail} />},
   { path: '/stores/:id/update_logs', exact: true, name: 'Registros de actualización', render: props => <RequiredResources resources={['categories']}>
       <ResourceObjectPermission match={props.match} resource="stores" permission="view_store_update_logs" component={StoreDetailUpdateLogs} />
   </RequiredResources>},
   { path: '/skus', exact: true, name:'SKUs', render: props => <RequiredResources resources={['categories', 'stores']}><SkuList/></RequiredResources>},
-  { path: '/skus/:id', exact: true, name: 'Detalle', render: props => <RequiredResources resources={['stores', 'categories', 'users_with_staff_actions']}>
+  { path: '/skus/:id', exact: true, name: params => ({apiResource: 'entities', apiResourceObjectId: params.id}), render: props => <RequiredResources resources={['stores', 'categories', 'users_with_staff_actions']}>
       <ResourceObjectPermission match={props.match} resource="entities" component={SkuDetail}/>
     </RequiredResources>},
   { path: '/skus/:id/pricing_history', exact:true, name:'Historial de precios', render: props => <RequiredResources resources={['stores']}>
@@ -36,13 +36,13 @@ const routes = [
   { path: '/categories', exact: true, name: 'Categorías', render: props => <RequiredResources resources={['categories']}>
       <CategoryList />
   </RequiredResources>},
-  { path:'/categories/:id', exact: true, name: 'Detalle', render: props => <RequiredResources resources={['stores', 'countries']}>
+  { path:'/categories/:id', exact: true, name: params => ({apiResource: 'categories', apiResourceObjectId: params.id}), render: props => <RequiredResources resources={['stores', 'countries']}>
       <ResourceObjectPermission permission='view_category_reports' Http404={Page404} match={props.match} resource="categories" component={CategoryDetailBrowse} />
   </RequiredResources>},
   { path:'/products', exact: true, name: 'Productos', render: props => <RequiredResources resources={['categories']}>
       <ProductList />
   </RequiredResources>},
-  { path: '/products/:id', exact: true, name: 'Detalle', render: props => <RequiredResources resources={['categories', 'stores', 'users_with_staff_actions', 'websites']}>
+  { path: '/products/:id', exact: true, name: params => ({apiResource: 'products', apiResourceObjectId: params.id}), render: props => <RequiredResources resources={['categories', 'stores', 'users_with_staff_actions', 'websites']}>
       <ResourceObjectPermission match={props.match} resource="products" component={ProductDetail} />
   </RequiredResources>},
   { path: '/products/:id/pricing_history', exact: true, name: 'Historial de precios', render: props=> <RequiredResources resources={['categories', 'stores', 'countries', 'currencies']}>

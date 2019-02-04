@@ -4,7 +4,6 @@ import { Container } from 'reactstrap';
 
 import {
   AppAside,
-  AppBreadcrumb,
   AppHeader,
   AppSidebar,
   AppSidebarFooter,
@@ -18,6 +17,7 @@ import routes from './routes';
 import Aside from './Aside';
 import Header from './Header';
 import SidebarNav from './SidebarNav'
+import Breadcrumbs from '../Components/Breadcrumbs'
 
 class Layout extends React.Component {
   loading = () => <div className="animated fadeIn pt-1 text-center">Loading...</div>;
@@ -42,7 +42,7 @@ class Layout extends React.Component {
               <AppSidebarMinimizer />
             </AppSidebar>
             <main className="main">
-              <AppBreadcrumb appRoutes={routes}/>
+              <Breadcrumbs location={this.props.location}/>
               <Container fluid>
                 <Switch>
                   {routes.map((route, idx) => {

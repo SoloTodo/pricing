@@ -40,6 +40,7 @@
     "reactstrap": "^7.1.0",
     "redux": "^4.0.1",
     "redux-responsive": "^4.3.8",
+    "route-parser": "^0.0.5",
     "simple-line-icons": "^2.4.1"
   },
   "scripts": {
