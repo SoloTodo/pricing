@@ -14,6 +14,7 @@ import CategoryList from "../views/Category/CategoryList";
 import CategoryDetailBrowse from "../views/Category/CategoryDetailBrowse";
 import ProductList from "../views/Product/ProductList";
 import Page404 from "../views/Pages/Page404"
+import ProductDetail from "../views/Product/ProductDetail";
 
 // https://github.com/ReactTraining/react-router/tree/master/packages/react-router-config
 const routes = [
@@ -39,6 +40,9 @@ const routes = [
   </RequiredResources>},
   { path:'/products', exact: true, name: 'Productos', render: props => <RequiredResources resources={['categories']}>
       <ProductList />
+  </RequiredResources>},
+  { path: '/products/:id', exact: true, name: 'Detalle', render: props => <RequiredResources resources={['categories', 'stores', 'users_with_staff_actions', 'websites']}>
+      <ResourceObjectPermission match={props.match} resource="products" component={ProductDetail} />
   </RequiredResources>}
 ];
 
