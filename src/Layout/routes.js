@@ -12,10 +12,12 @@ import SkuDetail from "../views/Sku/SkuDetail";
 import SkuDetailPricingHistory from "../views/Sku/SkuDetailPricingHistory"
 import CategoryList from "../views/Category/CategoryList";
 import CategoryDetailBrowse from "../views/Category/CategoryDetailBrowse";
+import CategoryDetailShareOfShelves from "../views/Category/CategoryDetailShareOfShelves"
 import ProductList from "../views/Product/ProductList";
 import Page404 from "../views/Pages/Page404"
 import ProductDetail from "../views/Product/ProductDetail";
 import ProductDetailPricingHistory from "../views/Product/ProductDetailPricingHistory";
+import CategoryDetail from "../views/Category/CategoryDetail";
 
 // https://github.com/ReactTraining/react-router/tree/master/packages/react-router-config
 const routes = [
@@ -36,8 +38,12 @@ const routes = [
   { path: '/categories', exact: true, name: 'Categorías', render: props => <RequiredResources resources={['categories']}>
       <CategoryList />
   </RequiredResources>},
-  { path:'/categories/:id', exact: true, name: params => ({apiResource: 'categories', apiResourceObjectId: params.id}), render: props => <RequiredResources resources={['stores', 'countries']}>
+  { path: '/categories/:id', exact: true, name: params => ({apiResource: 'categories', apiResourceObjectId: params.id}), component: CategoryDetail},
+  { path:'/categories/:id/current_prices', exact: true, name: 'Precios actuales', render: props => <RequiredResources resources={['stores', 'countries']}>
       <ResourceObjectPermission permission='view_category_reports' Http404={Page404} match={props.match} resource="categories" component={CategoryDetailBrowse} />
+  </RequiredResources>},
+  { path:'/categories/:id/share_of_shelves', exact: true, name: 'Share of shelves', render: props => <RequiredResources resources={['stores', 'countries']}>
+      <ResourceObjectPermission permission='view_category_reports' Http404={Page404} match={props.match} resource="categories" component={CategoryDetailShareOfShelves} />
   </RequiredResources>},
   { path:'/products', exact: true, name: 'Productos', render: props => <RequiredResources resources={['categories']}>
       <ProductList />
