@@ -25,8 +25,6 @@ import {areObjectsEqual} from "../../react-utils/utils";
 import CategoryDetailShareOfShelvesChart from "./CategoryDetailShareOfShelvesChart";
 import {Accordion, AccordionItem} from "react-sanfona";
 import './CategoryDetailBrowse.css'
-import LaddaButton, {EXPAND_LEFT} from "react-ladda"
-
 
 
 class CategoryDetailShareOfShelves extends React.Component {
@@ -183,31 +181,6 @@ class CategoryDetailShareOfShelves extends React.Component {
         fieldsets: newFieldsets
       }
     })
-  };
-
-  handleReportButtonClick = (e) => {
-    e.preventDefault();
-    this.setState({
-      loading: true,
-    });
-
-    let apiSearch = '';
-    const endpoint = `reports/current_prices?category=${this.props.apiResourceObject.id}`;
-    for (const fieldName of Object.keys(this.fieldsData)) {
-      for (const apiParamKey of Object.keys(this.fieldsData[fieldName].apiParams)) {
-        for (const apiParamValue of this.fieldsData[fieldName].apiParams[apiParamKey]) {
-          apiSearch += `${apiParamKey}=${apiParamValue}&`
-        }
-      }
-    }
-
-    this.props.fetchAuth(`${endpoint}&${apiSearch}`)
-      .then(json => {
-        window.location = json.url;
-        this.setState({
-          loading: false,
-        });
-      });
   };
 
   render() {
@@ -492,15 +465,21 @@ class CategoryDetailShareOfShelves extends React.Component {
     const storeTypeUrls = this.props.stores.map(store => store.type);
     const storeTypes = this.props.storeTypes.filter(storeType => storeTypeUrls.includes(storeType.url));
 
-    let brandChoices = undefined;
+    let chartChoices = {};
 
     for (const fieldset of this.state.formLayout.fieldsets) {
-      const brand_filter = fieldset.filters.filter(filter => filter.name === 'brands');
-      if (brand_filter.length) {
-        brandChoices = brand_filter[0].choices;
-        break;
+      const filters = fieldset.filters;
+
+      for (const filter of filters) {
+        if (filter.type === 'exact'){
+          chartChoices[filter.name] = {
+            label: filter.label,
+            choices: filter.choices
+          }
+        }
       }
     }
+
 
     return (
       <ApiForm
@@ -566,19 +545,13 @@ class CategoryDetailShareOfShelves extends React.Component {
           </Col>
         </Row>
         <Row className="row">
-          <Col sm="12">
+          <Col sm="7">
             <Card>
               <CardHeader className="d-flex justify-content-between">
                 <span><i className="fas fa-list"/> Resultados </span>
-                <LaddaButton loading={this.state.loading}
-                             onClick={this.handleReportButtonClick}
-                             data-style={EXPAND_LEFT}
-                             className="btn btn-primary">
-                  {this.state.loading? 'Generando': 'Descargar'}
-                </LaddaButton>
               </CardHeader>
               <CardBody>
-                <CategoryDetailShareOfShelvesChart data={this.state.resultsAggs} brandChoices={brandChoices}/>
+                <CategoryDetailShareOfShelvesChart data={this.state.resultsAggs} chartChoices={chartChoices}/>
               </CardBody>
             </Card>
           </Col>
