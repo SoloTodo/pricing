@@ -83,6 +83,11 @@ class StoreList extends React.Component {
             return 'Cargando...'
           }
           const storeLog = this.state.latestStoreUpdateLogs[entry.url];
+
+          if (!storeLog) {
+            return 'N/A'
+          }
+          
           return settings.statusDict[storeLog.status];
         },
         cssClasses: 'hidden-xs-down'
@@ -94,6 +99,11 @@ class StoreList extends React.Component {
             return 'Cargando...'
           }
           const storeLog = this.state.latestStoreUpdateLogs[entry.url];
+
+          if (!storeLog) {
+            return 'N/A'
+          }
+
           return storeLog.status === 3 ? `${storeLog.available_products_count} / ${storeLog.unavailable_products_count} / ${storeLog.discovery_urls_without_products_count}` : 'N/A'
         },
         cssClasses: 'hidden-xs-down'
