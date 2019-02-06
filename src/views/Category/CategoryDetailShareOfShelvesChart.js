@@ -3,6 +3,10 @@ import {Pie} from 'react-chartjs-2'
 import Select from "react-select";
 import {apiResourceStateToPropsUtils} from "../../react-utils/ApiResource";
 import connect from "react-redux/es/connect/connect";
+import {Row, Col, Table} from "reactstrap";
+import {
+  chartColors
+} from "../../react-utils/colors";
 
 class CategoryDetailShareOfShelvesChart extends React.Component{
   constructor(props){
@@ -12,25 +16,38 @@ class CategoryDetailShareOfShelvesChart extends React.Component{
     }
   }
 
-  render() {
-    const current_param = this.state.param;
-    const choice_dict = this.props.chartChoices[current_param];
-    const agg = this.props.data[current_param];
+  handleParamChange = param => {
+    this.setState({
+      param: param.value
+    })
+  };
 
-    if(!choice_dict || !agg){
+  render() {
+    const currentParam = this.state.param;
+    const choiceDict = this.props.chartChoices[currentParam];
+    const paramAggs = this.props.data[currentParam];
+
+    if(!choiceDict || !paramAggs){
       return <div/>
     }
 
-    const labels = agg.map(choice => {
-      const label = choice_dict.choices.filter(choice_data => choice_data.id === choice.id);
+    const labels = paramAggs.map(agg => {
+      const label = choiceDict.choices.filter(choice => choice.id === agg.id);
       return label[0].name;
     });
 
-    const count_data = agg.map(choice => choice.doc_count);
+    const countData = paramAggs.map(agg => agg.doc_count);
+
+    const colors = [];
+
+    for (let i=0; i<labels.length; ++i) {
+      colors.push(chartColors[i%chartColors.length])
+    }
 
     const data = {
       datasets: [{
-        data: count_data
+        data: countData,
+        backgroundColor: colors,
       }],
 
       labels: labels
@@ -42,21 +59,45 @@ class CategoryDetailShareOfShelvesChart extends React.Component{
       }
     };
 
-    console.log(this.props.chartChoices);
-
-    const select_options = [];
+    const selectOptions = [];
 
     for(const param in this.props.chartChoices){
-      select_options.push({value: param, label:this.props.chartChoices[param].label})
+      selectOptions.push({value: param, label:this.props.chartChoices[param].label})
     }
 
-    console.log(select_options);
-
-    return <div className='chart-container'>
-      <Select className="react-select"
-              options={select_options}/>
-      <Pie data={data} options={options}/>
-    </div>
+    return <Row>
+      <Col sm="8">
+        <div className='chart-container'>
+          <label htmlFor="aggregation">Agrupado por</label>
+          <Select className="react-select"
+                  id = "aggregation"
+                  name = "aggregation"
+                  defaultValue = {selectOptions.filter(option => option.value === this.state.param)[0]}
+                  options={selectOptions}
+                  onChange={this.handleParamChange}
+          />
+          <br/>
+          <Pie data={data} options={options}/>
+        </div>
+      </Col>
+      <Col sm="4">
+        <Table responsive striped>
+          <thead>
+          <tr>
+            <th>{this.props.chartChoices[this.state.param].label}</th>
+            <th>Apariciones</th>
+          </tr>
+          </thead>
+          <tbody>
+          {countData.map((count, index) => <tr>
+              <td>{labels[index]}</td>
+              <td>{count}</td>
+            </tr>
+          )}
+          </tbody>
+        </Table>
+      </Col>
+    </Row>
   }
 }
 

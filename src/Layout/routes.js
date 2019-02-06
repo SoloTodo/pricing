@@ -43,7 +43,7 @@ const routes = [
       <ResourceObjectPermission permission='view_category_reports' Http404={Page404} match={props.match} resource="categories" component={CategoryDetailBrowse} />
   </RequiredResources>},
   { path:'/categories/:id/share_of_shelves', exact: true, name: 'Share of shelves', render: props => <RequiredResources resources={['stores', 'countries']}>
-      <ResourceObjectPermission permission='view_category_reports' Http404={Page404} match={props.match} resource="categories" component={CategoryDetailShareOfShelves} />
+      <ResourceObjectPermission permission='view_category_share_of_shelves' Http404={Page404} match={props.match} resource="categories" component={CategoryDetailShareOfShelves} />
   </RequiredResources>},
   { path:'/products', exact: true, name: 'Productos', render: props => <RequiredResources resources={['categories']}>
       <ProductList />

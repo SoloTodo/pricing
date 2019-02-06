@@ -19,18 +19,26 @@ class CategoryList extends React.Component {
                 <tr>
                   <th>ID</th>
                   <th>Nombre</th>
-                  <th/>
-                  <th/>
+                  <th>Precios actuales</th>
+                  {this.props.categories.some(category => category.permissions.includes('view_category_share_of_shelves'))?
+                    <th>Share of shelves</th>:null
+                  }
+
                 </tr>
                 </thead>
                 <tbody>
-                {this.props.categories.filter(category => category.permissions.includes('view_category_reports'))
-                  .map(category => (
+                {this.props.categories.map(category => (
                     <tr key={category.id}>
                       <td>{category.id}</td>
                       <td>{category.name}</td>
-                      <td><NavLink to={'/categories/'+ category.id + '/current_prices'}>Precios actuales</NavLink></td>
-                      <td><NavLink to={'/categories/'+ category.id + '/share_of_shelves'}>Share of shelves</NavLink></td>
+                      {category.permissions.includes('view_category_reports')?
+                        <td><NavLink to={'/categories/'+ category.id + '/current_prices'}>Precios actuales</NavLink></td>:
+                        <td>N/A</td>
+                      }
+                      {category.permissions.includes('view_category_share_of_shelves')?
+                        <td><NavLink to={'/categories/'+ category.id + '/share_of_shelves'}>Share of shelves</NavLink></td>:
+                        <td>N/A</td>
+                      }
                     </tr>
                   ))}
                 </tbody>

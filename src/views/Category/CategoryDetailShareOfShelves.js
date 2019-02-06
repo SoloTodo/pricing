@@ -468,9 +468,7 @@ class CategoryDetailShareOfShelves extends React.Component {
     let chartChoices = {};
 
     for (const fieldset of this.state.formLayout.fieldsets) {
-      const filters = fieldset.filters;
-
-      for (const filter of filters) {
+      for (const filter of fieldset.filters) {
         if (filter.type === 'exact'){
           chartChoices[filter.name] = {
             label: filter.label,
@@ -479,7 +477,6 @@ class CategoryDetailShareOfShelves extends React.Component {
         }
       }
     }
-
 
     return (
       <ApiForm
@@ -544,8 +541,8 @@ class CategoryDetailShareOfShelves extends React.Component {
             </Card>
           </Col>
         </Row>
-        <Row className="row">
-          <Col sm="7">
+        <Row>
+          <Col sm="12">
             <Card>
               <CardHeader className="d-flex justify-content-between">
                 <span><i className="fas fa-list"/> Resultados </span>

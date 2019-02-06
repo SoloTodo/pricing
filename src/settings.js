@@ -2,6 +2,9 @@ import {apiSettings} from "./react-utils/settings";
 
 export const settings = {
   ...apiSettings,
+  defaults: {
+    countries: 1
+  },
   categoryBrowsePurposeId: 1,
   categoryTemplateDetailPurposeId: 1,
   ownWebsiteId: 1,
