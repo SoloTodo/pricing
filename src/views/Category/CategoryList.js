@@ -21,7 +21,7 @@ class CategoryList extends React.Component {
                   <th>Nombre</th>
                   <th>Precios actuales</th>
                   {this.props.categories.some(category => category.permissions.includes('view_category_share_of_shelves'))?
-                    <th>Share of shelves</th>:null
+                    <th>Share of shelves</th> : null
                   }
 
                 </tr>
@@ -32,12 +32,10 @@ class CategoryList extends React.Component {
                       <td>{category.id}</td>
                       <td>{category.name}</td>
                       {category.permissions.includes('view_category_reports')?
-                        <td><NavLink to={'/categories/'+ category.id + '/current_prices'}>Precios actuales</NavLink></td>:
-                        <td>N/A</td>
+                        <td><NavLink to={'/categories/'+ category.id + '/current_prices'}>Precios actuales</NavLink></td>: null
                       }
                       {category.permissions.includes('view_category_share_of_shelves')?
-                        <td><NavLink to={'/categories/'+ category.id + '/share_of_shelves'}>Share of shelves</NavLink></td>:
-                        <td>N/A</td>
+                        <td><NavLink to={'/categories/'+ category.id + '/share_of_shelves'}>Share of shelves</NavLink></td> : null
                       }
                     </tr>
                   ))}
