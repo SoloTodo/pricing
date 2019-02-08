@@ -6,7 +6,7 @@ import {settings} from "../settings";
 
 class SidebarNav extends React.Component {
   render() {
-    const items = navigation.items.filter(item =>
+    const items = navigation.items.filter(item => !item.requiredPermission ||
       this.props.user.permissions.includes(item.requiredPermission)
     );
 

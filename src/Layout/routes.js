@@ -18,6 +18,7 @@ import Page404 from "../views/Pages/Page404"
 import ProductDetail from "../views/Product/ProductDetail";
 import ProductDetailPricingHistory from "../views/Product/ProductDetailPricingHistory";
 import CategoryDetail from "../views/Category/CategoryDetail";
+import AlertList from "../views/Alert/AlertList";
 
 // https://github.com/ReactTraining/react-router/tree/master/packages/react-router-config
 const routes = [
@@ -53,7 +54,8 @@ const routes = [
   </RequiredResources>},
   { path: '/products/:id/pricing_history', exact: true, name: 'Historial de precios', render: props=> <RequiredResources resources={['categories', 'stores', 'countries', 'currencies']}>
       <ResourceObjectPermission match={props.match} resource="products" component={ProductDetailPricingHistory}/>
-  </RequiredResources>}
+  </RequiredResources>},
+  { path: '/alerts', exact: true, name: 'Alertas', render: props => <RequiredResources resources={['user_alerts']}><AlertList/></RequiredResources>}
 ];
 
 export default routes;
