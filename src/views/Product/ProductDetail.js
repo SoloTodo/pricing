@@ -8,6 +8,7 @@ import ProductDetailPricesTable from "./ProductDetailPricesTable";
 import {NavLink} from "react-router-dom";
 import {Row, Col, Card, CardHeader, CardBody} from "reactstrap";
 import './ProductDetail.css'
+import ProductUserAlertButton from "../../Components/Product/ProductUserAlertButton";
 
 class ProductDetail extends Component {
   initialState = {
@@ -101,6 +102,7 @@ class ProductDetail extends Component {
                   </NavLink>
                 </li>
               </ul>
+              <ProductUserAlertButton product={product}/>
             </CardBody>
           </Card>
         </Col>

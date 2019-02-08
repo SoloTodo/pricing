@@ -4,6 +4,8 @@ import {apiResourceStateToPropsUtils} from "../../react-utils/ApiResource";
 import {connect} from "react-redux";
 import {toast} from "react-toastify";
 
+import {settings} from '../../settings'
+
 
 class SkuUserAlertButton extends React.Component{
   clickHandler = e => {
@@ -14,7 +16,7 @@ class SkuUserAlertButton extends React.Component{
       entity: this.props.entity.id
     });
 
-    this.props.fetchAuth('user_alerts/', {
+    this.props.fetchAuth(settings.apiResourceEndpoints.anonymous_alerts, {
       method: 'POST',
       body:formData
     }).then(json => {
