@@ -52,7 +52,7 @@ class Breadcrumbs extends React.Component{
         const apiResourceObjectUrl = `${settings.apiResourceEndpoints[apiResource]}${apiResourceObjectId}/`;
         const apiResourceObject = this.props.apiResourceObjects[apiResourceObjectUrl];
         if (apiResourceObject) {
-          name = apiResourceObject.name;
+          name = apiResourceObject.name || apiResourceObject.id;
         }
       } else {
         name = routeValue

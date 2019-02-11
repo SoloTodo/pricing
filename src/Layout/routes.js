@@ -19,6 +19,7 @@ import ProductDetail from "../views/Product/ProductDetail";
 import ProductDetailPricingHistory from "../views/Product/ProductDetailPricingHistory";
 import CategoryDetail from "../views/Category/CategoryDetail";
 import AlertList from "../views/Alert/AlertList";
+import AlertDetail from "../views/Alert/AlertDetail"
 
 // https://github.com/ReactTraining/react-router/tree/master/packages/react-router-config
 const routes = [
@@ -55,7 +56,10 @@ const routes = [
   { path: '/products/:id/pricing_history', exact: true, name: 'Historial de precios', render: props=> <RequiredResources resources={['categories', 'stores', 'countries', 'currencies']}>
       <ResourceObjectPermission match={props.match} resource="products" component={ProductDetailPricingHistory}/>
   </RequiredResources>},
-  { path: '/alerts', exact: true, name: 'Alertas', render: props => <RequiredResources resources={['user_alerts']}><AlertList/></RequiredResources>}
+  { path: '/alerts', exact: true, name: 'Alertas', render: props => <RequiredResources resources={['user_alerts', 'stores']}><AlertList/></RequiredResources>},
+  { path: '/alerts/:id', exact: true, name: params => ({apiResource: 'user_alerts', apiResourceObjectId: params.id}), render: props => <RequiredResources resources={['stores']}>
+      <ResourceObjectPermission Http404={Page404} onDelete='/alerts' match={props.match} resource="user_alerts" component={AlertDetail} />
+  </RequiredResources>}
 ];
 
 export default routes;
