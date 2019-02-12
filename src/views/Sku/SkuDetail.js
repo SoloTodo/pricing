@@ -11,6 +11,7 @@ import {formatCurrency, formatDateStr} from "../../react-utils/utils";
 import {pricingStateToPropsUtils} from "../../utils";
 import imageNotAvailable from '../../images/image-not-available.svg';
 import {Row, Col, Card, CardHeader, CardBody, Table, UncontrolledAlert} from "reactstrap";
+import SkuUserAlertButton from "../../Components/Sku/SkuUserAlertButton";
 
 class SkuDetail extends React.Component {
   initialState = {
@@ -207,6 +208,7 @@ class SkuDetail extends React.Component {
                     </NavLink>
                   </li>
                 </ul>
+                <SkuUserAlertButton entity={entity}/>
               </CardBody>
             </Card>
           </Col>

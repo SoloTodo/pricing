@@ -23,6 +23,11 @@ export default {
       url: '/products',
       icon: 'fas fa-tags',
       requiredPermission: 'solotodo.backend_list_products'
+    },
+    {
+      name: 'Alertas',
+      url: '/alerts',
+      icon: 'fas fa-bell',
     }
   ],
 };
