@@ -30,10 +30,6 @@ class AlertDetail extends React.Component {
     this.toggleDeleteModal();
   };
 
-  handleCancelDeleteButtonClick = () => {
-    this.toggleDeleteModal();
-  };
-
   handleConfirmDeleteButtonClick = () => {
     this.props.fetchAuth(`${settings.apiResourceEndpoints.user_alerts}${this.alert.id}/`,{
      method:'DELETE'
@@ -91,7 +87,7 @@ class AlertDetail extends React.Component {
             <CardBody>
               <Nav vertical>
                 <NavItem><NavLink to={'/alerts/' + alert.id}>Información General</NavLink></NavItem>
-                <NavItem><NavLink to={'/alerts/' + alert.id + '/history'}>Historial</NavLink></NavItem>
+                <NavItem><NavLink to={'/alerts/' + alert.id + '/change_history'}>Historial de cambios</NavLink></NavItem>
               </Nav>
               <Button color="danger" onClick={this.handleDeleteButtonClick}><i className="fas fa-trash"/> Eliminar alerta</Button>
             </CardBody>
