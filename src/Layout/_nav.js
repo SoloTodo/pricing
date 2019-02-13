@@ -27,7 +27,12 @@ export default {
     {
       name: 'Alertas',
       url: '/alerts',
-      icon: 'fas fa-bell',
+      icon: 'fas fa-bell'
+    },
+    {
+      name: 'Reportes',
+      url: '/reports',
+      icon: 'fas fa-file-excel'
     }
   ],
 };
