@@ -1,5 +1,4 @@
 import React, {Component} from 'react';
-import {FormattedMessage} from "react-intl";
 import {NavLink} from "react-router-dom";
 import {filterApiResourceObjectsByType} from "../../react-utils/ApiResource";
 import {connect} from "react-redux";
@@ -10,33 +9,29 @@ class ReportList extends Component {
     const reports = this.props.reports;
 
     return (
-      <div className="animated fadeIn">
-        <Row>
-          <Col sm="12">
-            <Card>
-              <CardHeader>Reportes</CardHeader>
-              <CardBody>
-                <Table striped>
-                  <thead>
-                  <tr>
-                    <th>
-                      <FormattedMessage id="name" defaultMessage="Name"/>
-                    </th>
+      <Row>
+        <Col sm="12">
+          <Card>
+            <CardHeader>Reportes</CardHeader>
+            <CardBody>
+              <Table striped>
+                <thead>
+                <tr>
+                  <th>Nombre</th>
+                </tr>
+                </thead>
+                <tbody>
+                {reports.map(report => (
+                  <tr key={report.id}>
+                    <td><NavLink to={`/reports/${report.slug}`}>{report.name}</NavLink></td>
                   </tr>
-                  </thead>
-                  <tbody>
-                  {reports.map(report => (
-                    <tr key={report.id}>
-                      <td><NavLink to={`/reports/${report.slug}`}>{report.name}</NavLink></td>
-                    </tr>
-                  ))}
-                  </tbody>
-                </Table>
-              </CardBody>
-            </Card>
-          </Col>
-        </Row>
-      </div>
+                ))}
+                </tbody>
+              </Table>
+            </CardBody>
+          </Card>
+        </Col>
+      </Row>
     )
   }
 }
