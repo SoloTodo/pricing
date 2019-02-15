@@ -54,7 +54,7 @@ class ReportWtb extends React.Component {
           </CardHeader>
           <ApiForm
             endpoints={['reports/wtb_report/']}
-            fields={['wtb_brand', 'category', 'stores', 'countries', 'store_types', 'currency', 'submit']}
+            fields={['wtb_brand', 'categories', 'stores', 'countries', 'store_types', 'currency', 'submit']}
             onResultsChange={this.setDownloadLink}
             onFormValueChange={this.handleFormValueChange}
             setFieldChangeHandler={this.setApiFormFieldChangeHandler}
@@ -74,11 +74,12 @@ class ReportWtb extends React.Component {
                 <Col xs="12" sm="6" md="6" lg="6" xl="6">
                   <label>Categoría</label>
                   <ApiFormChoiceField
-                    name="category"
-                    required={true}
+                    name="categories"
                     choices={this.props.categories}
+                    multiple={true}
+                    placeholder="Todas"
                     onChange={this.state.apiFormFieldChangeHandler}
-                    value={this.state.formValues.category}/>
+                    value={this.state.formValues.categories}/>
                 </Col>
 
                 <Col xs="12" sm="6" md="6" lg="6" xl="6">
