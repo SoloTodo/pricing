@@ -36,7 +36,8 @@ class CategoryDetailShareOfShelves extends React.Component {
     resultsAggs: {},
     priceRange: undefined,
     columns: undefined,
-    specsFiltersModelOpen: false
+    specsFiltersModelOpen: false,
+    bucketingField: 'brands'
   };
 
   constructor(props) {
@@ -162,7 +163,7 @@ class CategoryDetailShareOfShelves extends React.Component {
   }
 
   apiEndpoint = () => {
-    return `categories/${this.props.apiResourceObject.id}/browse/`;
+    return `categories/${this.props.apiResourceObject.id}/share_of_shelves/`;
   };
 
   handleFieldsetChange = (fieldset, expanded) => {
@@ -207,7 +208,7 @@ class CategoryDetailShareOfShelves extends React.Component {
 
     const usdCurrency = this.props.currencies.filter(currency => currency.url === settings.usdCurrencyUrl)[0];
 
-    const apiFormFields = ['stores', 'countries', 'store_types', 'normal_price_usd', 'search'];
+    const apiFormFields = ['stores', 'countries', 'store_types', 'normal_price_usd', 'search', 'bucketing_field'];
     const processedFormLayout = [
       {
         id: 'normal_price',
@@ -272,16 +273,11 @@ class CategoryDetailShareOfShelves extends React.Component {
           }
 
           for (const choice of originalFilterChoices) {
-            const choiceDocCount = filterDocCountsDict[choice.id];
-
-            if (!choiceDocCount) {
+            if (!filterDocCountsDict[choice.id]) {
               continue
             }
 
-            filterAggs.push({
-              ...choice,
-              doc_count: choiceDocCount
-            })
+            filterAggs.push(choice)
           }
         } else {
           filterAggs = originalFilterChoices
@@ -312,10 +308,7 @@ class CategoryDetailShareOfShelves extends React.Component {
               for (const selectedValue of arrayValue) {
                 let valueInChoices = Boolean(filterChoices.filter(choice => choice.id.toString() === selectedValue.id.toString()).length);
                 if (!valueInChoices) {
-                  filterChoices.push({
-                    ...selectedValue,
-                    doc_count: 0
-                  })
+                  filterChoices.push(selectedValue)
                 }
               }
             }
@@ -335,15 +328,10 @@ class CategoryDetailShareOfShelves extends React.Component {
           let filterChoices = undefined;
 
           if (filterAggs) {
-            let ongoingResultCount = 0;
-
             filterChoices = filterAggs.map(choice => {
-              ongoingResultCount += choice.doc_count;
-
               return {
                 ...choice,
                 name: `${filterChoiceIdToNameDict[choice.id]}`,
-                doc_count: ongoingResultCount
               };
             });
           } else {
@@ -363,19 +351,10 @@ class CategoryDetailShareOfShelves extends React.Component {
           let filterChoices = undefined;
 
           if (filterAggs) {
-            let totalResultCount = filterAggs.reduce((acum, elem) => acum + elem.doc_count, 0);
-
-            filterChoices = filterAggs.map(choice => {
-              let result = {
+            filterChoices = filterAggs.map(choice => ({
                 ...choice,
                 name: `${filterChoiceIdToNameDict[choice.id]}`,
-                doc_count: totalResultCount
-              };
-
-              totalResultCount -= choice.doc_count;
-
-              return result
-            });
+              }));
           } else {
             filterChoices = originalFilterChoices
           }
@@ -478,6 +457,18 @@ class CategoryDetailShareOfShelves extends React.Component {
       }
     }
 
+    const bucketingOptions = [];
+
+    for(const param in chartChoices){
+      bucketingOptions.push({id: param, name:chartChoices[param].label, value: param, label:chartChoices[param].label})
+    }
+
+    let active_bucketing = '';
+
+    if(this.state.formValues.bucketing_field) {
+      active_bucketing = this.state.formValues.bucketing_field.label
+    }
+
     return (
       <ApiForm
         endpoints={[this.apiEndpoint()]}
@@ -548,7 +539,14 @@ class CategoryDetailShareOfShelves extends React.Component {
                 <span><i className="fas fa-list"/> Resultados </span>
               </CardHeader>
               <CardBody>
-                <CategoryDetailShareOfShelvesChart data={this.state.resultsAggs} chartChoices={chartChoices}/>
+                <label htmlFor="bucketing_field">Agrupado por</label>
+                <ApiFormChoiceField
+                  name="bucketing_field"
+                  id="bucketing_field"
+                  required={true}
+                  choices={bucketingOptions}
+                  onChange={this.state.apiFormFieldChangeHandler}/>
+                <CategoryDetailShareOfShelvesChart results={this.state.results} active_bucketing={active_bucketing}/>
               </CardBody>
             </Card>
           </Col>
