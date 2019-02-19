@@ -13,6 +13,7 @@ import ApiFormTextField from "../../react-utils/api_forms/ApiFormTextField";
 import ApiFormDateRangeField from "../../react-utils/api_forms/ApiFormDateRangeField";
 import moment from "moment/moment";
 import {booleanChoices} from "../../utils";
+import {toast} from "react-toastify";
 
 class ReportDailyPrices extends Component {
   constructor(props) {
@@ -37,10 +38,8 @@ class ReportDailyPrices extends Component {
 
   setDownloadLink = json => {
     if (json) {
-      window.location = json.payload.url;
-      this.setState({
-        downloadLink: undefined
-      })
+      toast.success('El reporte esta siendo generado. Una vez finalizado este será enviado a su correo.',
+        {autoClose: false})
     } else {
       this.setState({
         downloadLink: null
@@ -165,7 +164,7 @@ class ReportDailyPrices extends Component {
                   <ApiFormSubmitButton
                     value={this.state.formValues.submit}
                     label="Generar"
-                    loadingLabel="Generando"
+                    loadingLabel="Generar"
                     onChange={this.state.apiFormFieldChangeHandler}
                     loading={this.state.downloadLink === null}/>
                 </Col>
