@@ -30,6 +30,7 @@ import ReportWebsitesTraffic from "../views/Report/ReportWebsitesTraffic";
 import ReportSecPrices from "../views/Report/ReportSecPrices";
 import ReportDailyPrices from "../views/Report/ReportDailyPrices";
 import ReportWtb from "../views/Report/ReportWtb";
+import BannerList from "../views/Banner/BannerList"
 
 // https://github.com/ReactTraining/react-router/tree/master/packages/react-router-config
 const routes = [
@@ -97,7 +98,10 @@ const routes = [
     </RequiredResources>},
   { path: '/reports/wtb_report', exact: true, name: 'Reporte donde comprar', render: props => <RequiredResources resources={['wtb_brands', 'categories', 'stores', 'currencies', 'store_types', 'countries']}>
       <ReportWtb />
-    </RequiredResources>}
+    </RequiredResources>},
+  { path: '/banners', exact:true, name: 'Banners', render: props => <RequiredResources resources={['stores']}>
+      <BannerList/>
+  </RequiredResources>}
 ];
 
 export default routes;
