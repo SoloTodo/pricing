@@ -16,6 +16,7 @@ import {booleanChoices} from "../../utils";
 import {formatDateStr} from "../../react-utils/utils";
 import CardBody from "reactstrap/es/CardBody";
 import './BannerList.css'
+import Table from "reactstrap/es/Table";
 
 
 class BannerList extends React.Component{
@@ -55,24 +56,42 @@ class BannerList extends React.Component{
     const columns = [
       {
         label: 'Imagen',
-        renderer: banner => <a href={banner.asset.picture_url} target="_blank" rel="noopener noreferrer"><img className="img-fluid banner-preview" src={banner.asset.picture_url} alt=""/></a>
+        renderer: banner => <a href={banner.asset.picture_url} target="_blank" rel="noopener noreferrer"><img className="img-fluid banner-preview" src={banner.asset.picture_url} alt=""/></a>,
+        cssClasses: 'text-center',
       },
       {
         label: 'Tienda',
-        ordering: 'store',
+        ordering: 'update__store',
         renderer: banner => this.storeObject[banner.update.store].name
       },
       {
-        label: 'Categoría',
-        renderer: banner => banner.category || 'Home'
+        label: 'Sección',
+        renderer: banner => banner.section.name
       },
       {
         label: '¿Activo?',
         renderer: banner => banner.update.is_active? 'Sí' : 'No'
       },
       {
-        label: 'Completitud',
-        renderer: banner => `${banner.asset.total_percentage || 0} %`
+        label: 'Contenidos',
+        renderer: banner => {
+          return banner.asset.total_percentage?
+            <Table className="banner-content-table" responsive borderless>
+              <tbody>
+              {banner.asset.contents.map(content => <tr className="banner-content-tr">
+                <td className="banner-content-td">{content.brand.name}</td>
+                <td className="banner-content-td">{content.category.name}</td>
+                <td className="banner-content-td">{`${content.percentage} %`}</td>
+              </tr>)}
+              <tr className="banner-content-tr">
+                <th className="banner-content-td">Total</th>
+                <th className="banner-content-td">&nbsp;</th>
+                <th className="banner-content-td">{`${banner.asset.total_percentage}` || 0} %</th>
+              </tr>
+              </tbody>
+            </Table>
+            : "Sin contenidos"
+        }
       },
       {
         label:'Posición',
@@ -81,7 +100,7 @@ class BannerList extends React.Component{
       },
       {
         label: 'Fecha creación',
-        ordering: 'timestamp',
+        ordering: 'update__timestamp',
         renderer: banner => formatDateStr(banner.update.timestamp)
       }
     ];
@@ -89,13 +108,14 @@ class BannerList extends React.Component{
     return <div className="animated fadeIn">
       <ApiForm
         endpoints={['banners/']}
-        fields={['stores', 'ordering', 'is_active']}
+        fields={['stores', 'ordering', 'is_active', 'sections']}
         onResultsChange={this.setBanners}
         onFormValueChange={this.handleFormValueChange}
         setFieldChangeHandler={this.setApiFormFieldChangeHandler}>
         <ApiFormChoiceField
           name='ordering'
-          choices={createOrderingOptionChoices(['store', 'timestamp', 'position'])}
+          choices={createOrderingOptionChoices(['update__timestamp', 'update__store', 'position'])}
+          initial='-update__timestamp'
           hidden={true}
           required={true}
           value={this.state.formValues.ordering}
@@ -128,6 +148,18 @@ class BannerList extends React.Component{
                       onChange={this.state.apiFormFieldChangeHandler}
                       value={this.state.formValues.stores}/>
                   </Col>
+                  <Col xs="12" sm="6">
+                    <label htmlFor="sections">Sección</label>
+                    <ApiFormChoiceField
+                      name="sections"
+                      id="sections"
+                      multiple={true}
+                      choices={this.props.sections}
+                      searchable={false}
+                      onChange={this.state.apiFormFieldChangeHandler}
+                      value={this.state.formValues.sections}
+                      placeholder='Todas'/>
+                  </Col>
                 </Row>
               </CardBody>
             </Card>
@@ -157,7 +189,8 @@ function mapStateToProps(state) {
 
   return {
     ApiResourceObject,
-    stores: filterApiResourceObjectsByType(state.apiResourceObjects, 'stores')
+    stores: filterApiResourceObjectsByType(state.apiResourceObjects, 'stores'),
+    sections: filterApiResourceObjectsByType(state.apiResourceObjects, 'banner_sections')
   }
 }
 

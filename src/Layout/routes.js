@@ -99,7 +99,7 @@ const routes = [
   { path: '/reports/wtb_report', exact: true, name: 'Reporte donde comprar', render: props => <RequiredResources resources={['wtb_brands', 'categories', 'stores', 'currencies', 'store_types', 'countries']}>
       <ReportWtb />
     </RequiredResources>},
-  { path: '/banners', exact:true, name: 'Banners', render: props => <RequiredResources resources={['stores']}>
+  { path: '/banners', exact:true, name: 'Banners', render: props => <RequiredResources resources={['stores', 'banner_sections']}>
       <BannerList/>
   </RequiredResources>}
 ];
