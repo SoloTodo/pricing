@@ -3,15 +3,16 @@ import {connect} from "react-redux";
 import {
   apiResourceStateToPropsUtils,
 } from "../../react-utils/ApiResource";
-
+import moment from 'moment'
 import {NavLink} from "react-router-dom";
 import { Markdown } from 'react-showdown';
 import ImageGallery from 'react-image-gallery';
-import {formatCurrency, formatDateStr} from "../../react-utils/utils";
+import {convertToDecimal, formatCurrency, formatDateStr} from "../../react-utils/utils";
 import {pricingStateToPropsUtils} from "../../utils";
 import imageNotAvailable from '../../images/image-not-available.svg';
 import {Row, Col, Card, CardHeader, CardBody, Table, UncontrolledAlert} from "reactstrap";
 import SkuUserAlertButton from "../../Components/Sku/SkuUserAlertButton";
+import SkuDetailPricingHistoryChart from "./SkuDetailPricingHistoryChart";
 
 class SkuDetail extends React.Component {
   initialState = {
@@ -23,6 +24,7 @@ class SkuDetail extends React.Component {
     this.state = {
       ...this.initialState,
       warnings: [],
+      chart: undefined
     }
   }
 
@@ -54,6 +56,29 @@ class SkuDetail extends React.Component {
         })
       }
     }
+
+    this.props.fetchAuth(`entities/${entity.id}/pricing_history/`).then(json => {
+      const convertedData = json.map(entityHistory => ({
+        timestamp: moment(entityHistory.timestamp),
+        normalPrice: convertToDecimal(entityHistory.normal_price),
+        offerPrice: convertToDecimal(entityHistory.offer_price),
+        cellMonthlyPayment: convertToDecimal(entityHistory.cell_monthly_payment),
+        isAvailable: entityHistory.is_available,
+        stock: entityHistory.stock,
+      }));
+
+      const endDate = moment().startOf('day');
+      const startDate = moment().startOf('day').subtract(30, 'days');
+
+      this.setState({
+        chart: {
+          data: convertedData,
+          currency: this.props.preferredCurrency,
+          startDate: startDate,
+          endDate: endDate
+        }
+      });
+    })
   }
 
   userHasStockPermissions = entity => {
@@ -209,6 +234,22 @@ class SkuDetail extends React.Component {
                   </li>
                 </ul>
                 <SkuUserAlertButton entity={entity}/>
+              </CardBody>
+            </Card>
+          </Col>
+        </Row>
+        <Row>
+          <Col sm="12">
+            <Card className="d-flex flex-column flex-grow">
+              <CardHeader className="card-header">
+                Resultado
+              </CardHeader>
+              <CardBody className="d-flex flex-column">
+                {this.state.chart?
+                  <SkuDetailPricingHistoryChart
+                    entity={this.props.apiResourceObject}
+                    chart={this.state.chart}/>:'Loading...'
+                }
               </CardBody>
             </Card>
           </Col>
