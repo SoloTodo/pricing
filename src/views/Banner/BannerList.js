@@ -65,15 +65,16 @@ class BannerList extends React.Component{
         renderer: banner => this.storeObject[banner.update.store].name
       },
       {
-        label: 'Sección',
-        renderer: banner => banner.section.name
+        label: 'Subsección',
+        ordering: 'subsection',
+        renderer: banner => `${banner.subsection.section.name} > ${banner.subsection.name}`
       },
       {
         label: '¿Activo?',
         renderer: banner => banner.update.is_active? 'Sí' : 'No'
       },
       {
-        label: 'Contenidos',
+        label: 'Contenido',
         renderer: banner => {
           return banner.asset.total_percentage?
             <Table className="banner-content-table" responsive borderless>
@@ -90,7 +91,7 @@ class BannerList extends React.Component{
               </tr>
               </tbody>
             </Table>
-            : "Sin contenidos"
+            : "Sin Contenido"
         }
       },
       {
@@ -108,13 +109,13 @@ class BannerList extends React.Component{
     return <div className="animated fadeIn">
       <ApiForm
         endpoints={['banners/']}
-        fields={['stores', 'ordering', 'is_active', 'sections']}
+        fields={['stores', 'ordering', 'is_active', 'sections', 'page', 'page_size']}
         onResultsChange={this.setBanners}
         onFormValueChange={this.handleFormValueChange}
         setFieldChangeHandler={this.setApiFormFieldChangeHandler}>
         <ApiFormChoiceField
           name='ordering'
-          choices={createOrderingOptionChoices(['update__timestamp', 'update__store', 'position'])}
+          choices={createOrderingOptionChoices(['update__timestamp', 'update__store', 'position', 'subsection'])}
           initial='-update__timestamp'
           hidden={true}
           required={true}
@@ -170,8 +171,9 @@ class BannerList extends React.Component{
       <Row>
         <Col sm="12">
           <ApiFormResultTableWithPagination
+            icon="fas fa-list"
             cardClass="card-body"
-            page_size_choices={[50, 100, 200]}
+            page_size_choices={[10, 20, 50]}
             page={this.state.formValues.page}
             page_size={this.state.formValues.page_size}
             data={this.state.banners}
