@@ -30,6 +30,21 @@ export default {
       icon: 'fas fa-bell'
     },
     {
+      name: 'Banner Visibiliy',
+      icon: 'fas fa-eye',
+      requiredPermission: 'banners.backend_list_banners',
+      children: [
+        {
+          name: 'Banners',
+          url: '/banners'
+        },
+        {
+          name: 'Reportes',
+          url: '/banners/reports'
+        },
+      ]
+    },
+    {
       name: 'Reportes',
       url: '/reports',
       icon: 'fas fa-file-excel'
