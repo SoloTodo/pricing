@@ -5,7 +5,7 @@ import {
 } from "../../react-utils/ApiResource";
 import {chartColors, lightenDarkenColor} from "../../react-utils/colors";
 import connect from "react-redux/es/connect/connect";
-import {formatCurrency} from "../../react-utils/utils";
+import {convertToDecimal, formatCurrency} from "../../react-utils/utils";
 import moment from "moment";
 import {pricingStateToPropsUtils} from "../../utils";
 import './SkuDetailPricingHistoryChart.css'
@@ -21,7 +21,14 @@ class SkuDetailPricingHistoryChart extends React.Component {
 
     let initiallyAvailable = false;
     let includesStockInfo = false;
-    const chartData = this.props.chart.data;
+    const chartData = this.props.chart.data.map(entityHistory => ({
+      timestamp: moment(entityHistory.timestamp),
+      normalPrice: convertToDecimal(entityHistory.normal_price),
+      offerPrice: convertToDecimal(entityHistory.offer_price),
+      cellMonthlyPayment: convertToDecimal(entityHistory.cell_monthly_payment),
+      isAvailable: entityHistory.is_available,
+      stock: entityHistory.stock
+    }));
 
     if (chartData.length) {
       initiallyAvailable = chartData[0].isAvailable;

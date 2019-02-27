@@ -8,7 +8,10 @@ import ProductDetailPricesTable from "./ProductDetailPricesTable";
 import {NavLink} from "react-router-dom";
 import {Row, Col, Card, CardHeader, CardBody} from "reactstrap";
 import './ProductDetail.css'
-import ProductUserAlertButton from "../../Components/Product/ProductUserAlertButton";
+// import ProductUserAlertButton from "../../Components/Product/ProductUserAlertButton";
+import ProductDetailPricingHistoryChart from "./ProductDetailPricingHistoryChart";
+import moment from "moment";
+import Button from "reactstrap/es/Button";
 
 class ProductDetail extends Component {
   initialState = {
@@ -18,7 +21,10 @@ class ProductDetail extends Component {
 
   constructor(props) {
     super(props);
-    this.state = {...this.initialState}
+    this.state = {
+      ...this.initialState,
+      chart: undefined
+    }
   }
 
   componentWillMount() {
@@ -32,6 +38,24 @@ class ProductDetail extends Component {
     if (currentProduct.id !== nextProduct.id) {
       this.setState(this.initialState, () => this.componentUpdate(nextProduct));
     }
+  }
+
+  componentDidMount(){
+    const product = this.props.apiResourceObject;
+
+    const startDate = moment().startOf('day').subtract(30, 'days');
+    const endDate = moment().startOf('day');
+
+    this.props.fetchAuth(`products/${product.id}/pricing_history?timestamp_0=${startDate.format()}&timestamp_1=${endDate.format()}`).then(json => {
+      this.setState({
+        chart: {
+          data: json,
+          priceType: {id:'offer', name:'Precio Oferta'},
+          startDate: startDate,
+          endDate: endDate
+        }
+      });
+    })
   }
 
   componentUpdate(product) {
@@ -90,19 +114,28 @@ class ProductDetail extends Component {
               <ProductDetailPricesTable product={this.props.apiResourceObject} />
             </CardBody>
           </Card>
+          {/*<Card>*/}
+            {/*<CardHeader>Opciones</CardHeader>*/}
+            {/*<CardBody>*/}
+              {/*<ProductUserAlertButton product={product}/>*/}
+            {/*</CardBody>*/}
+          {/*</Card>*/}
+        </Col>
+        <Col sm="12">
           <Card>
-            <CardHeader>Opciones</CardHeader>
+            <CardHeader className="d-flex justify-content-between align-items-center">
+              Historico de Precios
+              <NavLink to={`/products/${product.id}/pricing_history`}>
+                <Button color='primary' type="button" className="btn">
+                  Ver historial completo
+                </Button>
+              </NavLink>
+            </CardHeader>
             <CardBody>
-              <ul className="list-without-decoration subnavigation-links">
-                <li>
-                  <NavLink to={`/products/${product.id}/pricing_history`}>
-                    <button type="button" className="btn btn-link">
-                      Historial pricing
-                    </button>
-                  </NavLink>
-                </li>
-              </ul>
-              <ProductUserAlertButton product={product}/>
+              {this.state.chart?
+                <ProductDetailPricingHistoryChart
+                  product={this.props.apiResourceObject}
+                  chart={this.state.chart}/>:'Loading...'}
             </CardBody>
           </Card>
         </Col>

@@ -4,10 +4,7 @@ import {
   apiResourceStateToPropsUtils, filterApiResourceObjectsByType
 } from "../../react-utils/ApiResource";
 import moment from 'moment';
-import {
-  convertToDecimal,
-  listToObject,
-} from "../../react-utils/utils";
+import {listToObject} from "../../react-utils/utils";
 import {
   ApiForm,
   ApiFormDateRangeField,
@@ -48,14 +45,7 @@ class ProductDetailPricingHistory extends React.Component {
       return;
     }
 
-    const convertedData = bundle.payload.map(pricingEntry => ({
-      entity: pricingEntry.entity,
-      pricingHistory: pricingEntry.pricing_history.map(entityHistory => ({
-        timestamp: moment(entityHistory.timestamp),
-        normalPrice: convertToDecimal(entityHistory.normal_price),
-        offerPrice: convertToDecimal(entityHistory.offer_price),
-      }))
-    }));
+    const data = bundle.payload;
 
     this.setState({
       chart: {
@@ -63,7 +53,7 @@ class ProductDetailPricingHistory extends React.Component {
         endDate: bundle.fieldValues.timestamp.endDate,
         currency: bundle.fieldValues.currency,
         priceType: bundle.fieldValues.price_type,
-        data: convertedData
+        data: data
       }
     });
   };

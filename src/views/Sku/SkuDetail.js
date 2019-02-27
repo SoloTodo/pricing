@@ -1,17 +1,18 @@
 import React from 'react';
 import {connect} from "react-redux";
 import {
-  apiResourceStateToPropsUtils,
+  apiResourceStateToPropsUtils, filterApiResourceObjectsByType,
 } from "../../react-utils/ApiResource";
-
+import moment from 'moment'
 import {NavLink} from "react-router-dom";
 import { Markdown } from 'react-showdown';
 import ImageGallery from 'react-image-gallery';
 import {formatCurrency, formatDateStr} from "../../react-utils/utils";
 import {pricingStateToPropsUtils} from "../../utils";
 import imageNotAvailable from '../../images/image-not-available.svg';
-import {Row, Col, Card, CardHeader, CardBody, Table, UncontrolledAlert} from "reactstrap";
-import SkuUserAlertButton from "../../Components/Sku/SkuUserAlertButton";
+import {Row, Col, Card, CardHeader, CardBody, Table, UncontrolledAlert, Button} from "reactstrap";
+// import SkuUserAlertButton from "../../Components/Sku/SkuUserAlertButton";
+import SkuDetailPricingHistoryChart from "./SkuDetailPricingHistoryChart";
 
 class SkuDetail extends React.Component {
   initialState = {
@@ -23,6 +24,7 @@ class SkuDetail extends React.Component {
     this.state = {
       ...this.initialState,
       warnings: [],
+      chart: undefined
     }
   }
 
@@ -54,6 +56,27 @@ class SkuDetail extends React.Component {
         })
       }
     }
+
+    const entityCreationDate = moment(entity.creation_date).startOf('day');
+    const todayMinus30Days = moment().startOf('day').subtract(30, 'days');
+
+    let startDate = entityCreationDate;
+    if (entityCreationDate.isBefore(todayMinus30Days)) {
+      startDate = todayMinus30Days;
+    }
+    const endDate = moment().startOf('day');
+    const currency = this.props.currencies.filter(currency => currency.url === entity.currency)[0];
+
+    this.props.fetchAuth(`entities/${entity.id}/pricing_history?timestamp_0=${startDate.format()}&timestamp_1=${endDate.format()}`).then(json => {
+      this.setState({
+        chart: {
+          data: json,
+          currency: currency,
+          startDate: startDate,
+          endDate: endDate
+        }
+      });
+    })
   }
 
   userHasStockPermissions = entity => {
@@ -198,17 +221,30 @@ class SkuDetail extends React.Component {
                 </Table>
               </CardBody>
             </Card>
-            <Card>
-              <CardHeader>Opciones</CardHeader>
-              <CardBody>
-                <ul className="list-without-decoration subnavigation-links">
-                  <li>
-                    <NavLink to={`/skus/${entity.id}/pricing_history`}>
-                      Historial de precios
-                    </NavLink>
-                  </li>
-                </ul>
-                <SkuUserAlertButton entity={entity}/>
+            {/*<Card>*/}
+              {/*<CardHeader>Opciones</CardHeader>*/}
+              {/*<CardBody>*/}
+                {/*<SkuUserAlertButton entity={entity}/>*/}
+              {/*</CardBody>*/}
+            {/*</Card>*/}
+          </Col>
+        </Row>
+        <Row>
+          <Col sm="12">
+            <Card className="d-flex flex-column flex-grow">
+              <CardHeader className="d-flex justify-content-between align-items-center">
+                Historico de Precios
+                <NavLink to={`/skus/${entity.id}/pricing_history`}>
+                  <Button color='primary' type="button" className="btn">
+                    Ver historial completo
+                  </Button>
+                </NavLink>
+              </CardHeader>
+              <CardBody className="d-flex flex-column">
+                {this.state.chart?
+                  <SkuDetailPricingHistoryChart
+                    entity={this.props.apiResourceObject}
+                    chart={this.state.chart}/>:'Loading...'}
               </CardBody>
             </Card>
           </Col>
@@ -313,6 +349,7 @@ function mapStateToProps(state) {
     fetchAuth,
     preferredCurrency,
     preferredNumberFormat,
+    currencies: filterApiResourceObjectsByType(state.apiResourceObjects, 'currencies')
   }
 }
 

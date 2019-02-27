@@ -5,7 +5,6 @@ import {
   ApiForm,
   ApiFormChoiceField,
   ApiFormResultTableWithPagination,
-  ApiFormRemoveOnlyListField,
   createOrderingOptionChoices
 } from '../../react-utils/api_forms'
 import {
