@@ -6,7 +6,6 @@ import {
   filterApiResourceObjectsByType
 } from "../../react-utils/ApiResource";
 import moment from 'moment';
-import {convertToDecimal} from "../../react-utils/utils";
 import {
   ApiForm,
   ApiFormDateRangeField,
@@ -45,21 +44,14 @@ class SkuDetailPricingHistory extends React.Component {
       return;
     }
 
-    const convertedData = bundle.payload.map(entityHistory => ({
-      timestamp: moment(entityHistory.timestamp),
-      normalPrice: convertToDecimal(entityHistory.normal_price),
-      offerPrice: convertToDecimal(entityHistory.offer_price),
-      cellMonthlyPayment: convertToDecimal(entityHistory.cell_monthly_payment),
-      isAvailable: entityHistory.is_available,
-      stock: entityHistory.stock,
-    }));
+    const data = bundle.payload;
 
     this.setState({
       chart: {
         startDate: bundle.fieldValues.timestamp.startDate,
         endDate: bundle.fieldValues.timestamp.endDate,
         currency: bundle.fieldValues.currency,
-        data: convertedData
+        data: data
       }
     });
   };

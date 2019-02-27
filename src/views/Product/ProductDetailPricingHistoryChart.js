@@ -24,7 +24,16 @@ class ProductDetailPricingHistoryChart extends React.Component {
 
     let result = [];
 
-    for (const datapoint of this.props.chart.data) {
+    const convertedData = this.props.chart.data.map(pricingEntry => ({
+      entity: pricingEntry.entity,
+      pricingHistory: pricingEntry.pricing_history.map(entityHistory => ({
+        timestamp: moment(entityHistory.timestamp),
+        normalPrice: convertToDecimal(entityHistory.normal_price),
+        offerPrice: convertToDecimal(entityHistory.offer_price),
+      }))
+    }));
+
+    for (const datapoint of convertedData) {
       const entity = this.props.ApiResourceObject(datapoint.entity);
 
       const entityCurrencyExchangeRate = convertToDecimal(entity.currency.exchangeRate);
