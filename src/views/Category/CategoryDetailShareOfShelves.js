@@ -201,13 +201,12 @@ class CategoryDetailShareOfShelves extends React.Component {
       }
     }
 
-    this.props.fetchAuth(`${endpoint}&${apiSearch}`)
-      .then(json => {
-        window.location = json.url;
-        this.setState({
-          loading: false,
-        });
+    this.props.fetchAuth(`${endpoint}&${apiSearch}`).then(json => {
+      window.location = json.url;
+      this.setState({
+        loading: false,
       });
+    });
   };
 
   render() {
@@ -571,13 +570,17 @@ class CategoryDetailShareOfShelves extends React.Component {
                 </LaddaButton>
               </CardHeader>
               <CardBody>
-                <label htmlFor="bucketing_field">Agrupado por</label>
-                <ApiFormChoiceField
-                  name="bucketing_field"
-                  id="bucketing_field"
-                  required={true}
-                  choices={bucketingOptions}
-                  onChange={this.state.apiFormFieldChangeHandler}/>
+                <Row>
+                  <Col sm="6">
+                    <label htmlFor="bucketing_field">Agrupado por</label>
+                    <ApiFormChoiceField
+                      name="bucketing_field"
+                      id="bucketing_field"
+                      required={true}
+                      choices={bucketingOptions}
+                      onChange={this.state.apiFormFieldChangeHandler}/>
+                  </Col>
+                </Row>
                 <CategoryDetailShareOfShelvesChart results={this.state.results} active_bucketing={active_bucketing}/>
               </CardBody>
             </Card>
