@@ -46,7 +46,7 @@ class ProductDetail extends Component {
     const startDate = moment().startOf('day').subtract(30, 'days');
     const endDate = moment().startOf('day');
 
-    this.props.fetchAuth(`products/${product.id}/pricing_history?timestamp_0=${startDate.format()}&timestamp_1=${endDate.format()}`).then(json => {
+    this.props.fetchAuth(`products/${product.id}/pricing_history?timestamp_0=${startDate.format()}`).then(json => {
       this.setState({
         chart: {
           data: json,
