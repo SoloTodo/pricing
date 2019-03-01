@@ -39,8 +39,8 @@ export default {
           url: '/banners'
         },
         {
-          name: 'Reportes',
-          url: '/banners/reports'
+          name: 'Active Participation',
+          url: '/banners/active_participation'
         },
       ]
     },
