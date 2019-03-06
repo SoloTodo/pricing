@@ -66,30 +66,35 @@ class BannerList extends React.Component{
       {
         label: 'Subsección',
         ordering: 'subsection',
-        renderer: banner => `${banner.subsection.section.name} > ${banner.subsection.name}`
+        renderer: banner => <a href={banner.externalUrl} target="_blank" rel="noopener noreferrer">{banner.subsection.section.name} > {banner.subsection.name}</a>
+      },
+      {
+        label: 'Destino',
+        renderer: banner => <ul className="list-without-decoration mb-0">{banner.destinationUrlList.map(url => {
+          return <li key={url}><a href={url} target="_blank" rel="noopener noreferrer">Link</a></li>
+        })}</ul>
       },
       {
         label: '¿Activo?',
         renderer: banner => banner.update.is_active? 'Sí' : 'No'
       },
       {
-        label: 'Contenido',
+        label: <div className='d-flex flex-row banner-content-container'>
+          <div className="d-flex flex-column align-items-start banner-content-brand">Marca</div>
+          <div className="d-flex flex-column align-items-start banner-content-category">Categoría</div>
+          <div className="d-flex flex-column align-items-center banner-content-percentage">%</div>
+        </div>,
         renderer: banner => {
           return banner.asset.total_percentage?
-            <Table className="banner-content-table" responsive borderless>
-              <tbody>
-              {banner.asset.contents.map(content => <tr className="banner-content-tr">
-                <td className="banner-content-td">{content.brand.name}</td>
-                <td className="banner-content-td">{content.category.name}</td>
-                <td className="banner-content-td">{`${content.percentage} %`}</td>
-              </tr>)}
-              <tr className="banner-content-tr">
-                <th className="banner-content-td">Total</th>
-                <th className="banner-content-td">&nbsp;</th>
-                <th className="banner-content-td">{`${banner.asset.total_percentage}` || 0} %</th>
-              </tr>
-              </tbody>
-            </Table>
+            <div>
+              {banner.asset.contents.map(content =>
+                <div className='d-flex flex-row banner-content-container'>
+                  <div className="d-flex flex-column align-items-start banner-content-brand">{content.brand.name}</div>
+                  <div className="d-flex flex-column align-items-start banner-content-category">{content.category.name}</div>
+                  <div className="d-flex flex-column align-items-end banner-content-percentage">{`${content.percentage} %`}</div>
+                </div>
+              )}
+            </div>
             : "Sin Contenido"
         }
       },
