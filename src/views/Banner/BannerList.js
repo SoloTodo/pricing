@@ -15,7 +15,6 @@ import {booleanChoices} from "../../utils";
 import {formatDateStr} from "../../react-utils/utils";
 import CardBody from "reactstrap/es/CardBody";
 import './BannerList.css'
-import Table from "reactstrap/es/Table";
 
 
 class BannerList extends React.Component{
@@ -195,7 +194,7 @@ function mapStateToProps(state) {
 
   return {
     ApiResourceObject,
-    stores: filterApiResourceObjectsByType(state.apiResourceObjects, 'stores'),
+    stores: filterApiResourceObjectsByType(state.apiResourceObjects, 'stores').filter(store => store.permissions.includes('view_store_banners')),
     sections: filterApiResourceObjectsByType(state.apiResourceObjects, 'banner_sections')
   }
 }
