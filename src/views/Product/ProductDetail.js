@@ -6,12 +6,15 @@ import {
 import {settings} from "../../settings";
 import ProductDetailPricesTable from "./ProductDetailPricesTable";
 import {NavLink} from "react-router-dom";
-import {Row, Col, Card, CardHeader, CardBody} from "reactstrap";
+import {Row, Col, Card, CardHeader, CardBody,
+  UncontrolledDropdown, DropdownToggle, DropdownMenu, DropdownItem
+} from "reactstrap";
 import './ProductDetail.css'
 // import ProductUserAlertButton from "../../Components/Product/ProductUserAlertButton";
 import ProductDetailPricingHistoryChart from "./ProductDetailPricingHistoryChart";
 import moment from "moment";
 import Button from "reactstrap/es/Button";
+import {pricingStateToPropsUtils} from "../../utils";
 
 class ProductDetail extends Component {
   initialState = {
@@ -81,9 +84,19 @@ class ProductDetail extends Component {
       })
   }
 
+  createListWithProduct = (name, product) => {
+
+  };
+
+  addProductToList = (product, productList) => {
+    console.log(product);
+    console.log(productList)
+  };
+
   render() {
     const product = this.props.ApiResourceObject(this.props.apiResourceObject);
     let techSpecs = null;
+    const productLists = this.props.user.product_lists.filter(productList => productList.category === product.category.url);
 
     switch (this.state.renderedSpecs) {
       case undefined:
@@ -95,6 +108,7 @@ class ProductDetail extends Component {
       default:
         techSpecs = <div className="product_specs" dangerouslySetInnerHTML={{ __html: this.state.renderedSpecs }} />
     }
+
     return (
       <Row>
         <Col sm="12" md="8" lg="8" xl="5" >
@@ -114,12 +128,25 @@ class ProductDetail extends Component {
               <ProductDetailPricesTable product={this.props.apiResourceObject} />
             </CardBody>
           </Card>
-          {/*<Card>*/}
-            {/*<CardHeader>Opciones</CardHeader>*/}
-            {/*<CardBody>*/}
+          <Card>
+            <CardHeader>Opciones</CardHeader>
+            <CardBody>
               {/*<ProductUserAlertButton product={product}/>*/}
-            {/*</CardBody>*/}
-          {/*</Card>*/}
+              <UncontrolledDropdown>
+                <DropdownToggle caret color="primary">
+                  Agregar a Lista
+                </DropdownToggle>
+                <DropdownMenu>
+                  {productLists.map(productList => (
+                    <DropdownItem key={productList.id} onClick={() => this.addProductToList(product, productList)}>
+                      {productList.name}
+                    </DropdownItem>
+                  ))}
+                  <DropdownItem>Agregar a nueva lista</DropdownItem>
+                </DropdownMenu>
+              </UncontrolledDropdown>
+            </CardBody>
+          </Card>
         </Col>
         <Col sm="12">
           <Card>
@@ -154,8 +181,10 @@ class ProductDetail extends Component {
 
 function mapStateToProps(state) {
   const {ApiResourceObject, fetchAuth} = apiResourceStateToPropsUtils(state);
+  const {user} = pricingStateToPropsUtils(state);
 
   return {
+    user,
     ApiResourceObject,
     fetchAuth,
   }

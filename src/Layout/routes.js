@@ -32,6 +32,7 @@ import ReportDailyPrices from "../views/Report/ReportDailyPrices";
 import ReportWtb from "../views/Report/ReportWtb";
 import BannerList from "../views/Banner/BannerList"
 import BannerActiveParticipation from "../views/Banner/BannerActiveParticipation";
+import ProductListList from "../views/ProductList/ProductListList"
 
 // https://github.com/ReactTraining/react-router/tree/master/packages/react-router-config
 const routes = [
@@ -105,7 +106,8 @@ const routes = [
   </RequiredResources>},
   { path: '/banners/active_participation', exact:true, name: 'Active participation', render: props => <RequiredResources resources={['stores', 'brands', 'categories', 'banner_sections', 'banner_subsection_types']}>
       <BannerActiveParticipation/>
-  </RequiredResources>}
+  </RequiredResources>},
+  { path: '/product_lists', exact:true, name: 'Product Lists', render: props => <RequiredResources resources={['categories']}><ProductListList/></RequiredResources>}
 ];
 
 export default routes;

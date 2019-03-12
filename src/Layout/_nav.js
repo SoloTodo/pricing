@@ -25,6 +25,12 @@ export default {
       requiredPermission: 'solotodo.backend_list_products'
     },
     {
+      name: 'Listas de Productos',
+      url: '/product_lists',
+      icon: 'fas fa-list',
+      requiredPermission: 'product_lists.backend_list_product_lists'
+    },
+    {
       name: 'Alertas',
       url: '/alerts',
       icon: 'fas fa-bell'
