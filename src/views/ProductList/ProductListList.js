@@ -12,6 +12,7 @@ import {
   ApiFormResultTableWithPagination
 } from "../../react-utils/api_forms";
 import {formatDateStr} from "../../react-utils/utils";
+import ProductListReorderButton from "../../Components/ProductList/ProductListReorderButton";
 
 
 class ProductListList extends React.Component{
@@ -64,6 +65,10 @@ class ProductListList extends React.Component{
             <NavLink to={`/products/${entry.product.id}`}>{entry.product.name}</NavLink>
           </li>)}
         </div>: <em>Sin productos</em>}
+      },
+      {
+        label: 'Reordenar',
+        renderer: productList => <ProductListReorderButton productList={productList}/>
       }
     ];
     return <div>

@@ -6,11 +6,10 @@ import {
 import {settings} from "../../settings";
 import ProductDetailPricesTable from "./ProductDetailPricesTable";
 import {NavLink} from "react-router-dom";
-import {Row, Col, Card, CardHeader, CardBody,
-  UncontrolledDropdown, DropdownToggle, DropdownMenu, DropdownItem
-} from "reactstrap";
+import {Row, Col, Card, CardHeader, CardBody} from "reactstrap";
 import './ProductDetail.css'
 // import ProductUserAlertButton from "../../Components/Product/ProductUserAlertButton";
+import ProductAddOrRemoveFromListButton from '../../Components/Product/ProductAddOrRemoveFromListButton'
 import ProductDetailPricingHistoryChart from "./ProductDetailPricingHistoryChart";
 import moment from "moment";
 import Button from "reactstrap/es/Button";
@@ -84,19 +83,9 @@ class ProductDetail extends Component {
       })
   }
 
-  createListWithProduct = (name, product) => {
-
-  };
-
-  addProductToList = (product, productList) => {
-    console.log(product);
-    console.log(productList)
-  };
-
   render() {
     const product = this.props.ApiResourceObject(this.props.apiResourceObject);
     let techSpecs = null;
-    const productLists = this.props.user.product_lists.filter(productList => productList.category === product.category.url);
 
     switch (this.state.renderedSpecs) {
       case undefined:
@@ -132,19 +121,7 @@ class ProductDetail extends Component {
             <CardHeader>Opciones</CardHeader>
             <CardBody>
               {/*<ProductUserAlertButton product={product}/>*/}
-              <UncontrolledDropdown>
-                <DropdownToggle caret color="primary">
-                  Agregar a Lista
-                </DropdownToggle>
-                <DropdownMenu>
-                  {productLists.map(productList => (
-                    <DropdownItem key={productList.id} onClick={() => this.addProductToList(product, productList)}>
-                      {productList.name}
-                    </DropdownItem>
-                  ))}
-                  <DropdownItem>Agregar a nueva lista</DropdownItem>
-                </DropdownMenu>
-              </UncontrolledDropdown>
+              <ProductAddOrRemoveFromListButton product={product}/>
             </CardBody>
           </Card>
         </Col>
