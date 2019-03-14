@@ -1,6 +1,9 @@
 import React from 'react';
 import {Button, Modal, ModalHeader, ModalBody, ModalFooter} from "reactstrap";
 import {DragDropContext, Draggable, Droppable} from "react-beautiful-dnd";
+import {apiResourceStateToPropsUtils} from "../../react-utils/ApiResource";
+import {connect} from "react-redux";
+import {toast} from "react-toastify";
 
 class ProductListReorderButton extends React.Component{
   constructor(props) {
@@ -16,6 +19,20 @@ class ProductListReorderButton extends React.Component{
       reorderModalOpen: !this.state.reorderModalOpen,
       entries: [...this.props.productList.entries]
     })
+  };
+
+  updateOrdering = () => {
+    const products = this.state.entries.map(entry=>entry.product.id);
+    this.props.fetchAuth(`product_lists/${this.props.productList.id}/update_entries_ordering/`, {
+      method: 'POST',
+      body: JSON.stringify({
+        products: products
+      })
+    }).then(json => {
+      toast.success('Lista de productos reordenada')
+    });
+    this.props.onProductsReorder();
+    this.toggleReorderModal()
   };
 
   reorder = (entries, startIndex, endIndex) => {
@@ -40,8 +57,6 @@ class ProductListReorderButton extends React.Component{
     this.setState({
       entries
     });
-
-    console.log(entries.map(entry=>entry.product.id))
   };
 
   render() {
@@ -49,31 +64,31 @@ class ProductListReorderButton extends React.Component{
     const entries = this.state.entries;
 
     return <React.Fragment>
-      <Button className="btn-info" onClick={this.toggleReorderModal}>Reordenar</Button>
+      <Button color="primary" onClick={this.toggleReorderModal}>Reordenar</Button>
       <Modal centered isOpen={this.state.reorderModalOpen} toggle={this.toggleReorderModal}>
         <ModalHeader>Reordenar {productList.name}</ModalHeader>
         <ModalBody>
           <DragDropContext onDragEnd={this.onDragEnd}>
             <Droppable droppableId="droppable">
               {(provided, snapshot) => (
-                <div {...provided.droppableProps} ref={provided.innerRef}>
+                <ul className="list-group" {...provided.droppableProps} ref={provided.innerRef}>
                   {entries.map((entry, index) => (
                     <Draggable key={entry.product.id} draggableId={entry.product.id} index={index}>
                       {(provided, snapshot) => (
-                        <div ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
+                        <li className="list-group-item" ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
                           {entry.product.name}
-                        </div>
+                        </li>
                       )}
                     </Draggable>
                   ))}
                   {provided.placeholder}
-                </div>
+                </ul>
               )}
             </Droppable>
           </DragDropContext>
         </ModalBody>
         <ModalFooter>
-          <Button color="success">Guardar</Button>
+          <Button color="success" onClick={this.updateOrdering}>Guardar</Button>
           <Button color="danger" onClick={this.toggleReorderModal}>Cancelar</Button>
         </ModalFooter>
       </Modal>
@@ -81,4 +96,12 @@ class ProductListReorderButton extends React.Component{
   }
 }
 
-export default ProductListReorderButton
+function mapStateToProps(state) {
+  const {fetchAuth} = apiResourceStateToPropsUtils(state);
+
+  return {
+    fetchAuth,
+  }
+}
+
+export default connect(mapStateToProps)(ProductListReorderButton);

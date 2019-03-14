@@ -33,7 +33,6 @@ import ReportWtb from "../views/Report/ReportWtb";
 import BannerList from "../views/Banner/BannerList"
 import BannerActiveParticipation from "../views/Banner/BannerActiveParticipation";
 import ProductListList from "../views/ProductList/ProductListList"
-import ProductListDetail from "../views/ProductList/ProductListDetail";
 
 // https://github.com/ReactTraining/react-router/tree/master/packages/react-router-config
 const routes = [
@@ -110,8 +109,7 @@ const routes = [
   </RequiredResources>},
   { path: '/product_lists', exact:true, name: 'Product Lists', render: props => <RequiredResources resources={['categories']}>
       <ProductListList/>
-  </RequiredResources>},
-  { path: '/product_lists/:id', exact: true, name: params => ({apiResource: 'product_lists', apiResourceObjectId: params.id}), render: props => <ResourceObjectPermission Http404={Page404} onDelete='/product_lists' match={props.match} resource="product_lists" component={ProductListDetail} />}
+  </RequiredResources>}
 ];
 
 export default routes;

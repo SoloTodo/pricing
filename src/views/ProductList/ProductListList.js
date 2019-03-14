@@ -21,9 +21,16 @@ class ProductListList extends React.Component{
     this.state = {
       formValues: {},
       apiFormFieldChangeHandler: undefined,
-      productLists: undefined
+      productLists: undefined,
+      endpoint: 'product_lists/'
     }
   }
+
+  productsReorderHandler = () => {
+    this.setState({
+      endpoint: `product_lists/?_=${new Date().getTime()}`
+    })
+  };
 
   setApiFormFieldChangeHandler = apiFormFieldChangeHandler => {
     this.setState({
@@ -68,12 +75,14 @@ class ProductListList extends React.Component{
       },
       {
         label: 'Reordenar',
-        renderer: productList => <ProductListReorderButton productList={productList}/>
+        renderer: productList => <ProductListReorderButton
+          productList={productList}
+          onProductsReorder={this.productsReorderHandler}/>
       }
     ];
     return <div>
       <ApiForm
-        endpoints={['product_lists/']}
+        endpoints={[this.state.endpoint]}
         fields={['categories', 'page', 'page_size']}
         onResultsChange={this.setProductLists}
         onFormValueChange={this.handleFormValueChange}
