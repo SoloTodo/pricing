@@ -13,6 +13,8 @@ import {
 } from "../../react-utils/api_forms";
 import {formatDateStr} from "../../react-utils/utils";
 import ProductListReorderButton from "../../Components/ProductList/ProductListReorderButton";
+import ProductListRenameButton from "../../Components/ProductList/ProductListRenameButton"
+import ProductListDeleteButton from "../../Components/ProductList/ProductListDeleteButton";
 
 
 class ProductListList extends React.Component{
@@ -26,7 +28,7 @@ class ProductListList extends React.Component{
     }
   }
 
-  productsReorderHandler = () => {
+  listChangeHandler = () => {
     this.setState({
       endpoint: `product_lists/?_=${new Date().getTime()}`
     })
@@ -55,7 +57,10 @@ class ProductListList extends React.Component{
     const columns = [
       {
         label: 'Nombre',
-        renderer: productList => productList.name
+        renderer: productList => <div className="d-flex justify-content-between">
+          {productList.name}
+          <ProductListRenameButton productList={productList} onListRename={this.listChangeHandler}/>
+        </div>
       },
       {
         label: 'Categoría',
@@ -77,7 +82,13 @@ class ProductListList extends React.Component{
         label: 'Reordenar',
         renderer: productList => <ProductListReorderButton
           productList={productList}
-          onProductsReorder={this.productsReorderHandler}/>
+          onProductsReorder={this.listChangeHandler}/>
+      },
+      {
+        label: 'Eliminar',
+        renderer: productList => <ProductListDeleteButton
+          productList={productList}
+          onListDelete={this.listChangeHandler}/>
       }
     ];
     return <div>

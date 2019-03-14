@@ -29,9 +29,9 @@ class ProductListReorderButton extends React.Component{
         products: products
       })
     }).then(json => {
-      toast.success('Lista de productos reordenada')
+      toast.success('Lista de productos reordenada');
+      this.props.onProductsReorder();
     });
-    this.props.onProductsReorder();
     this.toggleReorderModal()
   };
 
