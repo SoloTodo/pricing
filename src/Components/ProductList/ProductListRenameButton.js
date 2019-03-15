@@ -1,10 +1,5 @@
 import React from 'react';
-import Modal from "reactstrap/es/Modal";
-import ModalHeader from "reactstrap/es/ModalHeader";
-import ModalBody from "reactstrap/es/ModalBody";
-import Input from "reactstrap/es/Input";
-import ModalFooter from "reactstrap/es/ModalFooter";
-import {Button, Label} from "reactstrap";
+import {Modal, ModalHeader, ModalBody, ModalFooter, Input, Button, Label} from "reactstrap";
 import {apiResourceStateToPropsUtils} from "../../react-utils/ApiResource";
 import {connect} from "react-redux";
 import {toast} from "react-toastify";
@@ -40,6 +35,9 @@ class ProductListRenameButton extends React.Component{
       })
     }).then(json => {
       toast.success('Nombre cambiado');
+      this.props.fetchAuth(`product_lists/${this.props.productList.id}/`).then(json => {
+        this.props.addProductList(json)
+      });
       this.props.onListRename()
     });
     this.toggleRenameModal()
@@ -47,7 +45,7 @@ class ProductListRenameButton extends React.Component{
 
   render() {
     return <React.Fragment>
-      <a href="." onClick={this.toggleRenameModal} className="fas fa-pencil-alt text-primary"/>
+      <a href="." onClick={this.toggleRenameModal}><span className="fas fa-pencil-alt text-primary"/></a>
       <Modal centered isOpen={this.state.renameModalOpen}  toggle={this.toggleRenameModal}>
         <ModalHeader>Cambiar Nombre</ModalHeader>
         <ModalBody>
@@ -71,4 +69,15 @@ function mapStateToProps(state) {
   }
 }
 
-export default connect(mapStateToProps)(ProductListRenameButton);
+function mapDispatchToProps(dispatch) {
+  return {
+    addProductList: productList => {
+      return dispatch({
+        type: 'addApiResourceObject',
+        apiResource: productList
+      })
+    }
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(ProductListRenameButton);

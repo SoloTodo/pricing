@@ -30,6 +30,7 @@ class ProductListReorderButton extends React.Component{
       })
     }).then(json => {
       toast.success('Lista de productos reordenada');
+      this.props.addProductList(json);
       this.props.onProductsReorder();
     });
     this.toggleReorderModal()
@@ -104,4 +105,15 @@ function mapStateToProps(state) {
   }
 }
 
-export default connect(mapStateToProps)(ProductListReorderButton);
+function mapDispatchToProps(dispatch) {
+  return {
+    addProductList: productList => {
+      return dispatch({
+        type: 'addApiResourceObject',
+        apiResource: productList
+      })
+    }
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(ProductListReorderButton);

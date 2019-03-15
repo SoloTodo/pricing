@@ -58,7 +58,7 @@ class ProductListList extends React.Component{
       {
         label: 'Nombre',
         renderer: productList => <div className="d-flex justify-content-between">
-          {productList.name}
+          <NavLink to={`/product_lists/${productList.id}/current_prices`}>{productList.name}</NavLink>
           <ProductListRenameButton productList={productList} onListRename={this.listChangeHandler}/>
         </div>
       },

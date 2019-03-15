@@ -10,9 +10,12 @@ import {
 
 
 import {
-  apiResourceObjectsReducer,
-  authTokenReducer, loadedBundleReducer, loadedResourcesReducer
+  authTokenReducer
 } from "./react-utils/redux-utils";
+import {
+  apiResourceObjectsReducer,
+  loadedBundleReducer, loadedResourcesReducer
+} from "./react-utils/redux/reducers";
 import UserLoader from "./react-utils/components/UserLoader";
 import RequiredBundle from "./react-utils/components/RequiredBundle";
 

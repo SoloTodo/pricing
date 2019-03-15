@@ -1,8 +1,5 @@
 import React from 'react'
-import Button from "reactstrap/es/Button";
-import Modal from "reactstrap/es/Modal";
-import ModalHeader from "reactstrap/es/ModalHeader";
-import ModalFooter from "reactstrap/es/ModalFooter";
+import {Modal, ModalHeader, ModalFooter, Button} from "reactstrap";
 import {apiResourceStateToPropsUtils} from "../../react-utils/ApiResource";
 import {connect} from "react-redux";
 import {toast} from "react-toastify";
@@ -27,6 +24,7 @@ class ProductListDeleteButton extends React.Component{
       method: 'DELETE'
     }).then(json => {
       toast.success('Lista de productos eliminada');
+      this.props.deleteProductList(this.props.productList.url);
       this.props.onListDelete()
     });
     this.toggleDeleteModal()
@@ -53,4 +51,15 @@ function mapStateToProps(state) {
   }
 }
 
-export default connect(mapStateToProps)(ProductListDeleteButton);
+function mapDispatchToProps(dispatch) {
+  return {
+    deleteProductList: url => {
+      return dispatch({
+        type: 'deleteApiResourceObject',
+        url: url
+      })
+    }
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(ProductListDeleteButton);
