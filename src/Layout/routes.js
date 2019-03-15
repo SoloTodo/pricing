@@ -32,6 +32,9 @@ import ReportDailyPrices from "../views/Report/ReportDailyPrices";
 import ReportWtb from "../views/Report/ReportWtb";
 import BannerList from "../views/Banner/BannerList"
 import BannerActiveParticipation from "../views/Banner/BannerActiveParticipation";
+import ProductListList from "../views/ProductList/ProductListList"
+import ProductListDetail from "../views/ProductList/ProductListDetail";
+import ProductListDetailBrowse from "../views/ProductList/ProductListDetailBrowse";
 
 // https://github.com/ReactTraining/react-router/tree/master/packages/react-router-config
 const routes = [
@@ -102,10 +105,17 @@ const routes = [
     </RequiredResources>},
   { path: '/banners', exact:true, name: 'Banners', render: props => <RequiredResources resources={['stores', 'banner_sections']}>
       <BannerList/>
-  </RequiredResources>},
+    </RequiredResources>},
   { path: '/banners/active_participation', exact:true, name: 'Active participation', render: props => <RequiredResources resources={['stores', 'brands', 'categories', 'banner_sections', 'banner_subsection_types']}>
       <BannerActiveParticipation/>
-  </RequiredResources>}
+    </RequiredResources>},
+  { path: '/product_lists', exact:true, name: 'Product Lists', render: props => <RequiredResources resources={['categories']}>
+      <ProductListList/>
+    </RequiredResources>},
+  { path: '/product_lists/:id', exact:true, name: params => ({apiResource: 'product_lists', apiResourceObjectId: params.id}), component:ProductListDetail},
+  { path: '/product_lists/:id/current_prices', exact:true, name: 'Precios actuales', render: props => <RequiredResources resources={['stores', 'categories']}>
+      <ResourceObjectPermission Http404={Page404} match={props.match} resource="product_lists" component={ProductListDetailBrowse} />
+    </RequiredResources>}
 ];
 
 export default routes;

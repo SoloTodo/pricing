@@ -120,6 +120,7 @@ class CategoryDetailBrowseResult extends React.Component {
       width: 300,
       Header: 'Producto',
       accessor: d => dataHasCellPlans ? d.product.id : d.product,
+      sortMethod: (a, b) => dataHasCellPlans ? 0 : a.name.localeCompare(b.name),
       PivotValue: d => {
         const product = productsDict[d.value];
         return <Link to={`/products/${product.id}`}>

@@ -9,9 +9,11 @@ import {NavLink} from "react-router-dom";
 import {Row, Col, Card, CardHeader, CardBody} from "reactstrap";
 import './ProductDetail.css'
 // import ProductUserAlertButton from "../../Components/Product/ProductUserAlertButton";
+import ProductAddOrRemoveFromListButton from '../../Components/Product/ProductAddOrRemoveFromListButton'
 import ProductDetailPricingHistoryChart from "./ProductDetailPricingHistoryChart";
 import moment from "moment";
 import Button from "reactstrap/es/Button";
+import {pricingStateToPropsUtils} from "../../utils";
 
 class ProductDetail extends Component {
   initialState = {
@@ -95,6 +97,7 @@ class ProductDetail extends Component {
       default:
         techSpecs = <div className="product_specs" dangerouslySetInnerHTML={{ __html: this.state.renderedSpecs }} />
     }
+
     return (
       <Row>
         <Col sm="12" md="8" lg="8" xl="5" >
@@ -114,12 +117,13 @@ class ProductDetail extends Component {
               <ProductDetailPricesTable product={this.props.apiResourceObject} />
             </CardBody>
           </Card>
-          {/*<Card>*/}
-            {/*<CardHeader>Opciones</CardHeader>*/}
-            {/*<CardBody>*/}
+          <Card>
+            <CardHeader>Opciones</CardHeader>
+            <CardBody>
               {/*<ProductUserAlertButton product={product}/>*/}
-            {/*</CardBody>*/}
-          {/*</Card>*/}
+              <ProductAddOrRemoveFromListButton product={product}/>
+            </CardBody>
+          </Card>
         </Col>
         <Col sm="12">
           <Card>
@@ -154,8 +158,10 @@ class ProductDetail extends Component {
 
 function mapStateToProps(state) {
   const {ApiResourceObject, fetchAuth} = apiResourceStateToPropsUtils(state);
+  const {user} = pricingStateToPropsUtils(state);
 
   return {
+    user,
     ApiResourceObject,
     fetchAuth,
   }
