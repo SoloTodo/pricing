@@ -13,9 +13,10 @@ import {
 } from "../../react-utils/api_forms";
 import {formatDateStr} from "../../react-utils/utils";
 import ProductListReorderButton from "../../Components/ProductList/ProductListReorderButton";
-import ProductListRenameButton from "../../Components/ProductList/ProductListRenameButton"
+import ProductListRenameButton from "../../Components/ProductList/ProductListRenameButton";
 import ProductListDeleteButton from "../../Components/ProductList/ProductListDeleteButton";
-
+import ProductListCreateButton from "../../Components/ProductList/ProductListCreateButton";
+import moment from "moment";
 
 class ProductListList extends React.Component{
   constructor(props) {
@@ -52,6 +53,11 @@ class ProductListList extends React.Component{
     });
   };
 
+  updateEndpoint = () => {
+    this.setState({
+      endpoint: 'product_lists/?_='+moment().format()
+    })
+  };
 
   render() {
     const columns = [
@@ -125,7 +131,9 @@ class ProductListList extends React.Component{
         <Col sm="12">
           <ApiFormResultTableWithPagination
             icon="fas fa-list"
+            label="Listas de Productos"
             cardClass="card-body"
+            headerButton=<ProductListCreateButton categories={this.props.categories} callback={this.updateEndpoint}/>
             page_size_choices={[10,20,50]}
             page={this.state.formValues.page}
             page_size={this.state.formValues.page_size}
