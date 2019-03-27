@@ -2,7 +2,7 @@ import React from 'react'
 import {Modal, ModalHeader, ModalBody, ModalFooter, Label, Input, Button} from "reactstrap";
 import Select from "react-select";
 import {createOptions} from "../../react-utils/form_utils";
-import {apiResourceStateToPropsUtils} from "../../react-utils/ApiResource";
+import {apiResourceStateToPropsUtils, filterApiResourceObjectsByType} from "../../react-utils/ApiResource";
 import {pricingStateToPropsUtils} from "../../utils";
 import {connect} from "react-redux";
 
@@ -96,6 +96,7 @@ function mapStateToProps(state) {
   return {
     user,
     fetchAuth,
+    categories: filterApiResourceObjectsByType(state.apiResourceObjects, 'categories')
   }
 }
 

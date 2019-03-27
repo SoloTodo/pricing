@@ -29,10 +29,6 @@ class ProductDetail extends Component {
     }
   }
 
-  componentWillMount() {
-    this.componentUpdate(this.props.apiResourceObject);
-  }
-
   componentWillReceiveProps(nextProps) {
     const currentProduct = this.props.apiResourceObject;
     const nextProduct = nextProps.apiResourceObject;
@@ -41,10 +37,16 @@ class ProductDetail extends Component {
       this.setState(this.initialState, () => this.componentUpdate(nextProduct));
     }
 
-    this.updateChart();
+    this.setState({
+      chart: {
+        ...this.state.chart,
+        currency:nextProps.preferredCurrency
+      }
+    })
   }
 
   componentDidMount(){
+    this.componentUpdate(this.props.apiResourceObject);
     this.updateChart()
   }
 
