@@ -29,10 +29,6 @@ class ProductDetail extends Component {
     }
   }
 
-  componentWillMount() {
-    this.componentUpdate(this.props.apiResourceObject);
-  }
-
   componentWillReceiveProps(nextProps) {
     const currentProduct = this.props.apiResourceObject;
     const nextProduct = nextProps.apiResourceObject;
@@ -40,18 +36,31 @@ class ProductDetail extends Component {
     if (currentProduct.id !== nextProduct.id) {
       this.setState(this.initialState, () => this.componentUpdate(nextProduct));
     }
+
+    this.setState({
+      chart: {
+        ...this.state.chart,
+        currency:nextProps.preferredCurrency
+      }
+    })
   }
 
   componentDidMount(){
+    this.componentUpdate(this.props.apiResourceObject);
+    this.updateChart()
+  }
+
+  updateChart(){
     const product = this.props.apiResourceObject;
 
     const startDate = moment().startOf('day').subtract(30, 'days');
     const endDate = moment().startOf('day');
 
-    this.props.fetchAuth(`products/${product.id}/pricing_history?timestamp_0=${startDate.format()}`).then(json => {
+    this.props.fetchAuth(`products/${product.id}/pricing_history?timestamp_0=${startDate.format()}&exclude_unavailable=1`).then(json => {
       this.setState({
         chart: {
           data: json,
+          currency: this.props.preferredCurrency,
           priceType: {id:'offer', name:'Precio Oferta'},
           startDate: startDate,
           endDate: endDate
@@ -158,10 +167,11 @@ class ProductDetail extends Component {
 
 function mapStateToProps(state) {
   const {ApiResourceObject, fetchAuth} = apiResourceStateToPropsUtils(state);
-  const {user} = pricingStateToPropsUtils(state);
+  const {user, preferredCurrency} = pricingStateToPropsUtils(state);
 
   return {
     user,
+    preferredCurrency,
     ApiResourceObject,
     fetchAuth,
   }
