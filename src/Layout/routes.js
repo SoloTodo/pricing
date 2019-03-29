@@ -13,6 +13,7 @@ import SkuDetailPricingHistory from "../views/Sku/SkuDetailPricingHistory"
 import CategoryList from "../views/Category/CategoryList";
 import CategoryDetailBrowse from "../views/Category/CategoryDetailBrowse";
 import CategoryDetailShareOfShelves from "../views/Category/CategoryDetailShareOfShelves"
+import CategoryDetailHistoricShareOfShelves from "../views/Category/CategoryDetailHistoricShareOfShelves"
 import ProductList from "../views/Product/ProductList";
 import Page404 from "../views/Pages/Page404"
 import ProductDetail from "../views/Product/ProductDetail";
@@ -61,6 +62,9 @@ const routes = [
     </RequiredResources>},
   { path:'/categories/:id/share_of_shelves', exact: true, name: 'Share of shelves', render: props => <RequiredResources resources={['stores', 'countries']}>
       <ResourceObjectPermission permission='view_category_share_of_shelves' Http404={Page404} match={props.match} resource="categories" component={CategoryDetailShareOfShelves} />
+    </RequiredResources>},
+  { path:'/categories/:id/historic_share_of_shelves', exact: true, name: 'Share of shelves histórico', render: props => <RequiredResources resources={['stores', 'countries', 'currencies']}>
+      <ResourceObjectPermission permission='view_category_share_of_shelves' Http404={Page404} match={props.match} resource="categories" component={CategoryDetailHistoricShareOfShelves} />
     </RequiredResources>},
   { path:'/products', exact: true, name: 'Productos', render: props => <RequiredResources resources={['categories']}>
       <ProductList />

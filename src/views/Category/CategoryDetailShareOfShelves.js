@@ -224,8 +224,6 @@ class CategoryDetailShareOfShelves extends React.Component {
       }} />
     }
 
-    const resultsAggs = this.state.resultsAggs;
-
     const currenciesDict = {};
     for (const currency of this.props.currencies) {
       currenciesDict[currency.url] = this.props.ApiResourceObject(currency)
@@ -233,217 +231,14 @@ class CategoryDetailShareOfShelves extends React.Component {
 
     const usdCurrency = this.props.currencies.filter(currency => currency.url === settings.usdCurrencyUrl)[0];
 
-    const apiFormFields = ['stores', 'countries', 'store_types', 'normal_price_usd', 'search', 'bucketing_field'];
-    const processedFormLayout = [
-      {
-        id: 'normal_price',
-        label:<legend>Precio Normal</legend>,
-        expanded: true,
-        filters: [{
-          name: 'normal_price_usd',
-          component: <ApiFormPriceRangeField
-            name="normal_price_usd"
-            onChange={this.state.apiFormFieldChangeHandler}
-            min={this.state.priceRange && this.state.priceRange.min}
-            max={this.state.priceRange && this.state.priceRange.max}
-            p80th={this.state.priceRange && this.state.priceRange.p80th}
-            currency={usdCurrency}
-            conversionCurrency={this.props.preferredCurrency}
-            numberFormat={this.props.preferredNumberFormat}
-          />
-        }]
-      },
-      {
-        id: 'keywords',
-        label: <legend>Palabras clave</legend>,
-        expanded: true,
-        filters: [{
-          name: 'search',
-          component: <ApiFormTextField
-            name="search"
-            placeholder={<FormattedMessage id="keywords" defaultMessage="Keywords" />}
-            onChange={this.state.apiFormFieldChangeHandler}
-            debounceTimeout={2000}
-          />
-        }]
-      }
-    ];
+    const [processedFormLayout, apiFormFields] = getProcessedForm(
+      formLayout,
+      this.state,
+      usdCurrency,
+      this.props.preferredCurrency,
+      this.props.preferredNumberFormat);
 
-    for (const fieldset of formLayout.fieldsets) {
-      const fieldSetFilters = [];
-      for (const filter of fieldset.filters) {
-        apiFormFields.push(filter.name);
-
-        const filterChoiceIdToNameDict = {};
-        let originalFilterChoices = undefined;
-
-        if (filter.type === 'exact') {
-          originalFilterChoices = filter.choices || [{id: 0, name: 'No'}, {id: 1, name: 'Sí'}]
-        } else {
-          originalFilterChoices = filter.choices || []
-        }
-
-        for (const choice of originalFilterChoices) {
-          filterChoiceIdToNameDict[choice.id] = choice.name;
-        }
-
-        const filterDocCountsDict = {};
-
-        let filterAggs = [];
-        const rawFilterAggs = resultsAggs[filter.name];
-
-        if (rawFilterAggs) {
-          for (const filterDocCount of rawFilterAggs) {
-            filterDocCountsDict[filterDocCount.id] = filterDocCount.doc_count
-          }
-
-          for (const choice of originalFilterChoices) {
-            if (!filterDocCountsDict[choice.id]) {
-              continue
-            }
-
-            filterAggs.push(choice)
-          }
-        } else {
-          filterAggs = originalFilterChoices
-        }
-
-        let filterComponent = null;
-
-        if (filter.type === 'exact') {
-          let filterChoices = undefined;
-          const value = this.state.formValues[filter.name];
-
-          let arrayValue = [];
-          if (Array.isArray(value)) {
-            arrayValue = value
-          } else if (value) {
-            arrayValue = [value]
-          } else {
-            arrayValue = null
-          }
-
-          if (filterAggs) {
-            filterChoices = filterAggs.map(choice => ({
-              ...choice,
-              name: filterChoiceIdToNameDict[choice.id],
-            }));
-
-            if (arrayValue) {
-              for (const selectedValue of arrayValue) {
-                let valueInChoices = Boolean(filterChoices.filter(choice => choice.id.toString() === selectedValue.id.toString()).length);
-                if (!valueInChoices) {
-                  filterChoices.push(selectedValue)
-                }
-              }
-            }
-          } else {
-            filterChoices = originalFilterChoices
-          }
-
-          filterComponent = <ApiFormChoiceField
-            name={filter.name}
-            choices={filterChoices}
-            placeholder={filter.label}
-            searchable={true}
-            onChange={this.state.apiFormFieldChangeHandler}
-            multiple={Boolean(filter.choices)}
-          />
-        } else if (filter.type === 'lte') {
-          let filterChoices = undefined;
-
-          if (filterAggs) {
-            filterChoices = filterAggs.map(choice => {
-              return {
-                ...choice,
-                name: `${filterChoiceIdToNameDict[choice.id]}`,
-              };
-            });
-          } else {
-            filterChoices = originalFilterChoices
-          }
-
-          filterComponent = <ApiFormChoiceField
-            name={filter.name}
-            apiField={filter.name + '_1'}
-            urlField={filter.name + '_end'}
-            choices={filterChoices}
-            placeholder={filter.label}
-            searchable={true}
-            onChange={this.state.apiFormFieldChangeHandler}
-          />
-        } else if (filter.type === 'gte') {
-          let filterChoices = undefined;
-
-          if (filterAggs) {
-            filterChoices = filterAggs.map(choice => ({
-              ...choice,
-              name: `${filterChoiceIdToNameDict[choice.id]}`,
-            }));
-          } else {
-            filterChoices = originalFilterChoices
-          }
-
-          filterComponent = <ApiFormChoiceField
-            name={filter.name}
-            apiField={filter.name + '_0'}
-            urlField={filter.name + '_start'}
-            choices={filterChoices}
-            placeholder={filter.label}
-            searchable={true}
-            onChange={this.state.apiFormFieldChangeHandler}
-          />
-        } else if (filter.type === 'range') {
-          if (filter.continuous_range_step) {
-            // Continous (weight....)
-
-            filterComponent = <ApiFormContinuousRangeField
-              name={filter.name}
-              label={filter.label}
-              onChange={this.state.apiFormFieldChangeHandler}
-              choices={rawFilterAggs}
-              step={filter.continuous_range_step}
-              unit={filter.continuous_range_unit}
-              resultCountSuffix={<FormattedMessage id="results_lower_case" defaultMessage="results" />}
-            />
-          } else {
-            // Discrete (screen size...)
-            let filterChoices = undefined;
-
-            if (filterAggs) {
-              filterChoices = filterAggs.map(choice => ({
-                ...choice,
-                label: `${filterChoiceIdToNameDict[choice.id]}`,
-              }));
-            } else {
-              filterChoices = originalFilterChoices.map(choice => ({
-                ...choice,
-                label: choice.name,
-                value: parseFloat(choice.value)
-              }))
-            }
-
-            filterComponent = <ApiFormDiscreteRangeField
-              name={filter.name}
-              label={filter.label}
-              onChange={this.state.apiFormFieldChangeHandler}
-              choices={filterChoices}
-              resultCountSuffix={<FormattedMessage id="results_lower_case" defaultMessage="results" />}
-            />
-          }
-        }
-
-        fieldSetFilters.push({
-          ...filter,
-          component: filterComponent,
-        })
-      }
-
-      processedFormLayout.push({
-        label: fieldset.label,
-        filters: fieldSetFilters
-      })
-    }
+    apiFormFields.push('stores', 'countries', 'store_types', 'normal_price_usd', 'search', 'bucketing_field');
 
     const filtersComponent = <Accordion allowMultiple={true}>
       {processedFormLayout.map(fieldset => (
@@ -469,30 +264,10 @@ class CategoryDetailShareOfShelves extends React.Component {
     const storeTypeUrls = this.props.stores.map(store => store.type);
     const storeTypes = this.props.storeTypes.filter(storeType => storeTypeUrls.includes(storeType.url));
 
-    let chartChoices = {};
+    const bucketingOptions = getBucketingOptions(this.state.formLayout);
 
-    for (const fieldset of this.state.formLayout.fieldsets) {
-      for (const filter of fieldset.filters) {
-        if (filter.type === 'exact'){
-          chartChoices[filter.name] = {
-            label: filter.label,
-            choices: filter.choices
-          }
-        }
-      }
-    }
-
-    const bucketingOptions = [];
-
-    for(const param in chartChoices){
-      bucketingOptions.push({id: param, name:chartChoices[param].label, value: param, label:chartChoices[param].label})
-    }
-
-    let active_bucketing = '';
-
-    if(this.state.formValues.bucketing_field) {
-      active_bucketing = this.state.formValues.bucketing_field.label
-    }
+    const active_bucketing = this.state.formValues.bucketing_field?
+      this.state.formValues.bucketing_field.label : '';
 
     return (
       <ApiForm
@@ -562,12 +337,14 @@ class CategoryDetailShareOfShelves extends React.Component {
             <Card>
               <CardHeader className="d-flex justify-content-between">
                 <span><i className="fas fa-list"/> Resultados </span>
-                <LaddaButton loading={this.state.loading}
-                             onClick={this.handleReportButtonClick}
-                             data-style={EXPAND_LEFT}
-                             className="btn btn-primary">
-                  {this.state.loading? 'Generando': 'Descargar'}
-                </LaddaButton>
+                <span>
+                  <LaddaButton loading={this.state.loading}
+                               onClick={this.handleReportButtonClick}
+                               data-style={EXPAND_LEFT}
+                               className="btn btn-primary">
+                    {this.state.loading? 'Generando': 'Descargar'}
+                  </LaddaButton>
+                </span>
               </CardHeader>
               <CardBody>
                 <Row>
@@ -609,5 +386,246 @@ function mapStateToProps(state) {
     isExtraSmall: state.browser.is.extraSmall
   }
 }
+
+export const getProcessedForm = (formLayout, state, usdCurrency, preferredCurrency, preferredNumberFormat) => {
+  const resultsAggs = state.resultsAggs || {};
+  const apiFormFields = [];
+  const processedFormLayout = [
+    {
+      id: 'normal_price',
+      label:<legend>Precio Normal</legend>,
+      expanded: true,
+      filters: [{
+        name: 'normal_price_usd',
+        component: <ApiFormPriceRangeField
+          name="normal_price_usd"
+          onChange={state.apiFormFieldChangeHandler}
+          min={state.priceRange && state.priceRange.min}
+          max={state.priceRange && state.priceRange.max}
+          p80th={state.priceRange && state.priceRange.p80th}
+          currency={usdCurrency}
+          conversionCurrency={preferredCurrency}
+          numberFormat={preferredNumberFormat}
+        />
+      }]
+    },
+    {
+      id: 'keywords',
+      label: <legend>Palabras clave</legend>,
+      expanded: true,
+      filters: [{
+        name: 'search',
+        component: <ApiFormTextField
+          name="search"
+          placeholder={<FormattedMessage id="keywords" defaultMessage="Keywords" />}
+          onChange={state.apiFormFieldChangeHandler}
+          debounceTimeout={2000}
+        />
+      }]
+    }
+  ];
+
+  for (const fieldset of formLayout.fieldsets) {
+    const fieldSetFilters = [];
+    for (const filter of fieldset.filters) {
+      apiFormFields.push(filter.name);
+
+      const filterChoiceIdToNameDict = {};
+      let originalFilterChoices = undefined;
+
+      if (filter.type === 'exact') {
+        originalFilterChoices = filter.choices || [{id: 0, name: 'No'}, {id: 1, name: 'Sí'}]
+      } else {
+        originalFilterChoices = filter.choices || []
+      }
+
+      for (const choice of originalFilterChoices) {
+        filterChoiceIdToNameDict[choice.id] = choice.name;
+      }
+
+      const filterDocCountsDict = {};
+
+      let filterAggs = [];
+      const rawFilterAggs = resultsAggs[filter.name];
+
+      if (rawFilterAggs) {
+        for (const filterDocCount of rawFilterAggs) {
+          filterDocCountsDict[filterDocCount.id] = filterDocCount.doc_count
+        }
+
+        for (const choice of originalFilterChoices) {
+          if (!filterDocCountsDict[choice.id]) {
+            continue
+          }
+
+          filterAggs.push(choice)
+        }
+      } else {
+        filterAggs = originalFilterChoices
+      }
+
+      let filterComponent = null;
+
+      if (filter.type === 'exact') {
+        let filterChoices = undefined;
+        const value = state.formValues[filter.name];
+
+        let arrayValue = [];
+        if (Array.isArray(value)) {
+          arrayValue = value
+        } else if (value) {
+          arrayValue = [value]
+        } else {
+          arrayValue = null
+        }
+
+        if (filterAggs) {
+          filterChoices = filterAggs.map(choice => ({
+            ...choice,
+            name: filterChoiceIdToNameDict[choice.id],
+          }));
+
+          if (arrayValue) {
+            for (const selectedValue of arrayValue) {
+              let valueInChoices = Boolean(filterChoices.filter(choice => choice.id.toString() === selectedValue.id.toString()).length);
+              if (!valueInChoices) {
+                filterChoices.push(selectedValue)
+              }
+            }
+          }
+        } else {
+          filterChoices = originalFilterChoices
+        }
+
+        filterComponent = <ApiFormChoiceField
+          name={filter.name}
+          choices={filterChoices}
+          placeholder={filter.label}
+          searchable={true}
+          onChange={state.apiFormFieldChangeHandler}
+          multiple={Boolean(filter.choices)}
+        />
+      } else if (filter.type === 'lte') {
+        let filterChoices = undefined;
+
+        if (filterAggs) {
+          filterChoices = filterAggs.map(choice => {
+            return {
+              ...choice,
+              name: `${filterChoiceIdToNameDict[choice.id]}`,
+            };
+          });
+        } else {
+          filterChoices = originalFilterChoices
+        }
+
+        filterComponent = <ApiFormChoiceField
+          name={filter.name}
+          apiField={filter.name + '_1'}
+          urlField={filter.name + '_end'}
+          choices={filterChoices}
+          placeholder={filter.label}
+          searchable={true}
+          onChange={state.apiFormFieldChangeHandler}
+        />
+      } else if (filter.type === 'gte') {
+        let filterChoices = undefined;
+
+        if (filterAggs) {
+          filterChoices = filterAggs.map(choice => ({
+            ...choice,
+            name: `${filterChoiceIdToNameDict[choice.id]}`,
+          }));
+        } else {
+          filterChoices = originalFilterChoices
+        }
+
+        filterComponent = <ApiFormChoiceField
+          name={filter.name}
+          apiField={filter.name + '_0'}
+          urlField={filter.name + '_start'}
+          choices={filterChoices}
+          placeholder={filter.label}
+          searchable={true}
+          onChange={state.apiFormFieldChangeHandler}
+        />
+      } else if (filter.type === 'range') {
+        if (filter.continuous_range_step) {
+          // Continous (weight....)
+
+          filterComponent = <ApiFormContinuousRangeField
+            name={filter.name}
+            label={filter.label}
+            onChange={state.apiFormFieldChangeHandler}
+            choices={rawFilterAggs}
+            step={filter.continuous_range_step}
+            unit={filter.continuous_range_unit}
+            resultCountSuffix={<FormattedMessage id="results_lower_case" defaultMessage="results" />}
+          />
+        } else {
+          // Discrete (screen size...)
+          let filterChoices = undefined;
+
+          if (filterAggs) {
+            filterChoices = filterAggs.map(choice => ({
+              ...choice,
+              label: `${filterChoiceIdToNameDict[choice.id]}`,
+            }));
+          } else {
+            filterChoices = originalFilterChoices.map(choice => ({
+              ...choice,
+              label: choice.name,
+              value: parseFloat(choice.value)
+            }))
+          }
+
+          filterComponent = <ApiFormDiscreteRangeField
+            name={filter.name}
+            label={filter.label}
+            onChange={state.apiFormFieldChangeHandler}
+            choices={filterChoices}
+            resultCountSuffix={<FormattedMessage id="results_lower_case" defaultMessage="results" />}
+          />
+        }
+      }
+
+      fieldSetFilters.push({
+        ...filter,
+        component: filterComponent,
+      })
+    }
+
+    processedFormLayout.push({
+      label: fieldset.label,
+      filters: fieldSetFilters
+    })
+  }
+
+  return [processedFormLayout, apiFormFields]
+};
+
+export const getBucketingOptions = (formLayout) => {
+  const chartChoices = {};
+
+  for (const fieldset of formLayout.fieldsets) {
+    for (const filter of fieldset.filters) {
+      if (filter.type === 'exact'){
+        chartChoices[filter.name] = {
+          label: filter.label,
+          choices: filter.choices
+        }
+      }
+    }
+  }
+
+  const bucketingOptions = [];
+
+  for(const param in chartChoices){
+    bucketingOptions.push({id: param, name:chartChoices[param].label, value: param, label:chartChoices[param].label})
+  }
+
+  return bucketingOptions
+};
+
 
 export default connect(mapStateToProps)(CategoryDetailShareOfShelves);
