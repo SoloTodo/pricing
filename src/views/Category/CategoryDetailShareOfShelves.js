@@ -26,7 +26,6 @@ import CategoryDetailShareOfShelvesChart from "./CategoryDetailShareOfShelvesCha
 import {Accordion, AccordionItem} from "react-sanfona";
 import './CategoryDetailBrowse.css'
 import LaddaButton, {EXPAND_LEFT} from "react-ladda"
-import {NavLink} from 'react-router-dom'
 
 class CategoryDetailShareOfShelves extends React.Component {
   initialState = {
@@ -339,7 +338,6 @@ class CategoryDetailShareOfShelves extends React.Component {
               <CardHeader className="d-flex justify-content-between">
                 <span><i className="fas fa-list"/> Resultados </span>
                 <span>
-                  <NavLink className="btn btn-primary mr-2" to={`/categories/${this.props.apiResourceObject.id}/historic_share_of_shelves`}>Ver Historico</NavLink>
                   <LaddaButton loading={this.state.loading}
                                onClick={this.handleReportButtonClick}
                                data-style={EXPAND_LEFT}

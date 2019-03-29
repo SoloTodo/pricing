@@ -91,7 +91,7 @@ class CategoryDetailHistoricShareOfShelves extends React.Component {
     }
   };
 
-    handleFieldsetChange = (fieldset, expanded) => {
+  handleFieldsetChange = (fieldset, expanded) => {
     const newFieldsets = this.state.formLayout.fieldsets.map(stateFieldset => {
       const newExpanded = stateFieldset.id === fieldset.id ? expanded : stateFieldset.expanded;
 
@@ -151,19 +151,20 @@ class CategoryDetailHistoricShareOfShelves extends React.Component {
 
     const bucketingOptions = getBucketingOptions(this.state.formLayout);
 
-    return <Row>
-      <Col sm="12" md="6" lg="8" xl="8">
-        <Card>
-          <CardHeader>
-            <i className="fas fa-search"/> Filtros
-          </CardHeader>
-          <ApiForm
-            endpoints={[`categories/${category.id}/historic_share_of_shelves/`]}
-            fields={['timestamp', 'stores', 'countries', 'submit']}
-            onResultsChange={this.setDownloadLink}
-            onFormValueChange={this.handleFormValueChange}
-            setFieldChangeHandler={this.setApiFormFieldChangeHandler}
-            requiresSubmit={true}>
+    return <ApiForm
+      endpoints={[`categories/${category.id}/historic_share_of_shelves/`]}
+      fields={['timestamp', 'stores', 'countries', 'submit']}
+      onResultsChange={this.setDownloadLink}
+      onFormValueChange={this.handleFormValueChange}
+      setFieldChangeHandler={this.setApiFormFieldChangeHandler}
+      requiresSubmit={true}>
+      <Row>
+        <Col sm="12" md="6" lg="8" xl="8">
+          <Card>
+            <CardHeader>
+              <i className="fas fa-search"/> Filtros
+            </CardHeader>
+
             <CardBody>
               <Row className='api-form-filters'>
                 <Col xs="12" sm="6">
@@ -218,18 +219,18 @@ class CategoryDetailHistoricShareOfShelves extends React.Component {
                 </Col>
               </Row>
             </CardBody>
-          </ApiForm>
-        </Card>
-      </Col>
-      <Col sm="12" md="6" lg="4" xl="4">
-        <Card>
-          <CardHeader id="filters"><i className="fas fa-search"/> Filtros</CardHeader>
+          </Card>
+        </Col>
+        <Col sm="12" md="6" lg="4" xl="4">
+          <Card>
+            <CardHeader id="filters"><i className="fas fa-search"/> Filtros</CardHeader>
             <CardBody id="category-browse-filters">
               {filtersComponent}
             </CardBody>
-        </Card>
-      </Col>
-    </Row>
+          </Card>
+        </Col>
+      </Row>
+    </ApiForm>
   }
 }
 

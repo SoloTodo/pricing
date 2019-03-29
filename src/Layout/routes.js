@@ -63,7 +63,7 @@ const routes = [
   { path:'/categories/:id/share_of_shelves', exact: true, name: 'Share of shelves', render: props => <RequiredResources resources={['stores', 'countries']}>
       <ResourceObjectPermission permission='view_category_share_of_shelves' Http404={Page404} match={props.match} resource="categories" component={CategoryDetailShareOfShelves} />
     </RequiredResources>},
-  { path:'/categories/:id/historic_share_of_shelves', exact: true, name: 'Historic share of shelves', render: props => <RequiredResources resources={['stores', 'countries', 'currencies']}>
+  { path:'/categories/:id/historic_share_of_shelves', exact: true, name: 'Share of shelves histórico', render: props => <RequiredResources resources={['stores', 'countries', 'currencies']}>
       <ResourceObjectPermission permission='view_category_share_of_shelves' Http404={Page404} match={props.match} resource="categories" component={CategoryDetailHistoricShareOfShelves} />
     </RequiredResources>},
   { path:'/products', exact: true, name: 'Productos', render: props => <RequiredResources resources={['categories']}>

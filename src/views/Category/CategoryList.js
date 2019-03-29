@@ -35,7 +35,10 @@ class CategoryList extends React.Component {
                         <td><NavLink to={'/categories/'+ category.id + '/current_prices'}>Precios actuales</NavLink></td>: null
                       }
                       {category.permissions.includes('view_category_share_of_shelves')?
-                        <td><NavLink to={'/categories/'+ category.id + '/share_of_shelves'}>Share of shelves</NavLink></td> : null
+                        <td >
+                          <NavLink to={'/categories/'+ category.id + '/share_of_shelves'}>Actual</NavLink> /&nbsp;
+                          <NavLink to={'/categories/'+ category.id + '/historic_share_of_shelves'}>Histórico</NavLink>
+                        </td> : <td/>
                       }
                     </tr>
                   ))}
