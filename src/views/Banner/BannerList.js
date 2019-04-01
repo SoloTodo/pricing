@@ -22,7 +22,6 @@ class BannerList extends React.Component{
     super(props);
     this.state = {
       formValues: {},
-      apiFormFieldChangeHandler: undefined,
       banners: undefined
     };
 
@@ -31,12 +30,6 @@ class BannerList extends React.Component{
       this.storeObject[store.url] = store
     }
   }
-
-  setApiFormFieldChangeHandler = apiFormFieldChangeHandler => {
-    this.setState({
-      apiFormFieldChangeHandler
-    })
-  };
 
   handleFormValueChange = formValues => {
     this.setState({
@@ -114,16 +107,14 @@ class BannerList extends React.Component{
         endpoints={['banners/']}
         fields={['stores', 'ordering', 'is_active', 'sections', 'page', 'page_size']}
         onResultsChange={this.setBanners}
-        onFormValueChange={this.handleFormValueChange}
-        setFieldChangeHandler={this.setApiFormFieldChangeHandler}>
+        onFormValueChange={this.handleFormValueChange}>
         <ApiFormChoiceField
           name='ordering'
           choices={createOrderingOptionChoices(['update__timestamp', 'update__store', 'position', 'subsection'])}
           initial='-update__timestamp'
           hidden={true}
           required={true}
-          value={this.state.formValues.ordering}
-          onChange={this.state.apiFormFieldChangeHandler}/>
+          value={this.state.formValues.ordering}/>
 
         <Row>
           <Col sm="12">
@@ -138,7 +129,6 @@ class BannerList extends React.Component{
                       id="stores"
                       choices={this.props.stores}
                       multiple={true}
-                      onChange={this.state.apiFormFieldChangeHandler}
                       value={this.state.formValues.stores}
                       placeholder='Todas'/>
                   </Col>
@@ -149,7 +139,6 @@ class BannerList extends React.Component{
                       id="is_active"
                       choices={booleanChoices}
                       searchable={false}
-                      onChange={this.state.apiFormFieldChangeHandler}
                       value={this.state.formValues.stores}/>
                   </Col>
                   <Col xs="12" sm="6">
@@ -160,7 +149,6 @@ class BannerList extends React.Component{
                       multiple={true}
                       choices={this.props.sections}
                       searchable={false}
-                      onChange={this.state.apiFormFieldChangeHandler}
                       value={this.state.formValues.sections}
                       placeholder='Todas'/>
                   </Col>
@@ -169,22 +157,20 @@ class BannerList extends React.Component{
             </Card>
           </Col>
         </Row>
-
+        <Row>
+          <Col sm="12">
+            <ApiFormResultTableWithPagination
+              icon="fas fa-list"
+              cardClass="card-body"
+              page_size_choices={[10, 20, 50]}
+              page={this.state.formValues.page}
+              page_size={this.state.formValues.page_size}
+              data={this.state.banners}
+              columns={columns}
+              ordering={this.state.formValues.ordering}/>
+          </Col>
+        </Row>
       </ApiForm>
-      <Row>
-        <Col sm="12">
-          <ApiFormResultTableWithPagination
-            icon="fas fa-list"
-            cardClass="card-body"
-            page_size_choices={[10, 20, 50]}
-            page={this.state.formValues.page}
-            page_size={this.state.formValues.page_size}
-            data={this.state.banners}
-            onChange={this.state.apiFormFieldChangeHandler}
-            columns={columns}
-            ordering={this.state.formValues.ordering}/>
-        </Col>
-      </Row>
     </div>
   }
 }
