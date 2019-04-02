@@ -25,7 +25,6 @@ class CategoryDetailHistoricShareOfShelves extends React.Component {
 
     this.state = {
       formValues: {},
-      apiFormFieldChangeHandler: undefined,
       downloadLink: undefined
     }
   }
@@ -67,18 +66,11 @@ class CategoryDetailHistoricShareOfShelves extends React.Component {
       })
   }
 
-  setApiFormFieldChangeHandler = apiFormFieldChangeHandler => {
-    this.setState({
-      apiFormFieldChangeHandler
-    })
-  };
-
   handleFormValueChange = formValues => {
     this.setState({formValues})
   };
 
   setDownloadLink = json => {
-    console.log(json);
     if (json) {
       window.location = json.payload.url;
       this.setState({
@@ -156,7 +148,6 @@ class CategoryDetailHistoricShareOfShelves extends React.Component {
       fields={['timestamp', 'stores', 'countries', 'submit']}
       onResultsChange={this.setDownloadLink}
       onFormValueChange={this.handleFormValueChange}
-      setFieldChangeHandler={this.setApiFormFieldChangeHandler}
       requiresSubmit={true}>
       <Row>
         <Col sm="12" md="6" lg="8" xl="8">
@@ -173,8 +164,7 @@ class CategoryDetailHistoricShareOfShelves extends React.Component {
                     name="timestamp"
                     id="timestamp"
                     initial={[todayMinus30Days, today]}
-                    value={this.state.formValues.timestamp}
-                    onChange={this.state.apiFormFieldChangeHandler}/>
+                    value={this.state.formValues.timestamp} />
                 </Col>
                 <Col xs="12" sm="6">
                   <label>Tiendas</label>
@@ -184,8 +174,7 @@ class CategoryDetailHistoricShareOfShelves extends React.Component {
                     multiple={true}
                     placeholder="Todas"
                     searchable={true}
-                    value={this.state.formValues.stores}
-                    onChange={this.state.apiFormFieldChangeHandler}/>
+                    value={this.state.formValues.stores} />
                 </Col>
                 <Col xs="12" sm="6">
                   <label>Países</label>
@@ -195,8 +184,7 @@ class CategoryDetailHistoricShareOfShelves extends React.Component {
                     multiple={true}
                     placeholder="Todos"
                     searchable={true}
-                    value={this.state.formValues.countries}
-                    onChange={this.state.apiFormFieldChangeHandler}/>
+                    value={this.state.formValues.countries} />
                 </Col>
                 <Col xs="12" sm="6">
                   <label>Agrupación</label>
@@ -205,8 +193,7 @@ class CategoryDetailHistoricShareOfShelves extends React.Component {
                     id="bucketing_field"
                     required={true}
                     choices={bucketingOptions}
-                    value={this.state.formValues.bucketing_field}
-                    onChange={this.state.apiFormFieldChangeHandler}/>
+                    value={this.state.formValues.bucketing_field} />
                 </Col>
                 <Col xs="12" sm="7" md="6" lg="12" xl="12">
                   <label htmlFor="submit"/>
@@ -214,7 +201,6 @@ class CategoryDetailHistoricShareOfShelves extends React.Component {
                     value={this.state.formValues.submit}
                     label="Generar"
                     loadingLabel="Generando"
-                    onChange={this.state.apiFormFieldChangeHandler}
                     loading={this.state.downloadLink === null}/>
                 </Col>
               </Row>
