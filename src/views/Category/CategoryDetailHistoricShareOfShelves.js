@@ -31,7 +31,7 @@ class CategoryDetailHistoricShareOfShelves extends React.Component {
   }
 
   componentDidMount() {
-    const category = this.props.apiResourceObject
+    const category = this.props.apiResourceObject;
 
     this.props.fetchAuth(settings.apiResourceEndpoints.category_specs_form_layouts  + '?category=' + category.id)
       .then(all_form_layouts => {

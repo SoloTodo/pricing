@@ -33,6 +33,7 @@ import ReportDailyPrices from "../views/Report/ReportDailyPrices";
 import ReportWtb from "../views/Report/ReportWtb";
 import BannerList from "../views/Banner/BannerList"
 import BannerActiveParticipation from "../views/Banner/BannerActiveParticipation";
+import BannerHistoricParticipation from "../views/Banner/BannerHistoricParticipation";
 import ProductListList from "../views/ProductList/ProductListList"
 import ProductListDetail from "../views/ProductList/ProductListDetail";
 import ProductListDetailBrowse from "../views/ProductList/ProductListDetailBrowse";
@@ -112,6 +113,9 @@ const routes = [
     </RequiredResources>},
   { path: '/banners/active_participation', exact:true, name: 'Active participation', render: props => <RequiredResources resources={['stores', 'brands', 'categories', 'banner_sections', 'banner_subsection_types']}>
       <BannerActiveParticipation/>
+    </RequiredResources>},
+  { path: '/banners/historic_participation', exact:true, name: 'Historic participation', render: props => <RequiredResources resources={['stores', 'brands', 'categories', 'banner_sections', 'banner_subsection_types']}>
+      <BannerHistoricParticipation/>
     </RequiredResources>},
   { path: '/product_lists', exact:true, name: 'Product Lists', render: props => <RequiredResources resources={['categories']}>
       <ProductListList/>

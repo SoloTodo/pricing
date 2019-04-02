@@ -157,47 +157,46 @@ class BannerActiveParticipation extends React.Component {
             </Card>
           </Col>
         </Row>
-
-      <Row>
-        <Col sm="12">
-          <Card>
-            <CardHeader className="d-flex justify-content-between align-items-center">
-              Participación
-              <LaddaButton loading={this.state.loading}
-                           onClick={this.handleReportButtonClick}
-                           data-style={EXPAND_LEFT}
-                           className="btn btn-primary">
-                {this.state.loading? 'Generando': 'Descargar'}
-              </LaddaButton>
-            </CardHeader>
-            <CardBody>
-              <Row>
-                <Col sm="6">
-                  <label>Agrupar por</label>
-                  <ApiFormChoiceField
-                    name="grouping_field"
-                    choices={groupingFields}
-                    required={true}
-                    placeholder='Todas'
-                    value={this.state.formValues.stores}
-                  />
-                </Col>
-              </Row>
-              <Row>
-                <Col sm="6">
-                  <BannerActiveParticipationChart data={this.state.participation}/>
-                </Col>
-                <Col sm="6">
-                  <br/>
-                  <ApiFormResultsTable
-                    results={this.state.participation}
-                    columns={columns}/>
-                </Col>
-              </Row>
-            </CardBody>
-          </Card>
-        </Col>
-      </Row>
+        <Row>
+          <Col sm="12">
+            <Card>
+              <CardHeader className="d-flex justify-content-between align-items-center">
+                Participación
+                <LaddaButton loading={this.state.loading}
+                             onClick={this.handleReportButtonClick}
+                             data-style={EXPAND_LEFT}
+                             className="btn btn-primary">
+                  {this.state.loading? 'Generando': 'Descargar'}
+                </LaddaButton>
+              </CardHeader>
+              <CardBody>
+                <Row>
+                  <Col sm="6">
+                    <label>Agrupar por</label>
+                    <ApiFormChoiceField
+                      name="grouping_field"
+                      choices={groupingFields}
+                      required={true}
+                      placeholder='Todas'
+                      value={this.state.formValues.stores}
+                    />
+                  </Col>
+                </Row>
+                <Row>
+                  <Col sm="6">
+                    <BannerActiveParticipationChart data={this.state.participation}/>
+                  </Col>
+                  <Col sm="6">
+                    <br/>
+                    <ApiFormResultsTable
+                      results={this.state.participation}
+                      columns={columns}/>
+                  </Col>
+                </Row>
+              </CardBody>
+            </Card>
+          </Col>
+        </Row>
       </ApiForm>
     </div>
   }

@@ -48,6 +48,10 @@ export default {
           name: 'Active Participation',
           url: '/banners/active_participation'
         },
+        {
+          name: 'Historic Participation',
+          url: '/banners/historic_participation'
+        },
       ]
     },
     {
