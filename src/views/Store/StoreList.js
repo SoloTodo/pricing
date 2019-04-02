@@ -25,11 +25,11 @@ class StoreList extends React.Component {
 
   componentDidMount() {
     this.props.fetchAuth('store_update_logs/latest/')
-      .then(latestStoreUpdateLogs => {
-        this.setState({
-          latestStoreUpdateLogs
-        });
-      })
+        .then(latestStoreUpdateLogs => {
+          this.setState({
+            latestStoreUpdateLogs
+          });
+        })
   }
 
   setApiFormFieldChangeHandler = apiFormFieldChangeHandler => {
@@ -87,7 +87,7 @@ class StoreList extends React.Component {
           if (!storeLog) {
             return 'N/A'
           }
-          
+
           return settings.statusDict[storeLog.status];
         },
         cssClasses: 'hidden-xs-down'
@@ -118,32 +118,32 @@ class StoreList extends React.Component {
           onFormValueChange={this.handleFormValueChange}
           setFieldChangeHandler={this.setApiFormFieldChangeHandler}>
         <ApiFormChoiceField
-          name="ordering"
-          choices={createOrderingOptionChoices(['name', 'country', 'type'])}
-          hidden={true}
-          initial="name"
-          value={this.state.formValues.ordering}
-          onChange={this.state.apiFormFieldChangeHandler}
+            name="ordering"
+            choices={createOrderingOptionChoices(['name', 'country', 'type'])}
+            hidden={true}
+            initial="name"
+            value={this.state.formValues.ordering}
+            onChange={this.state.apiFormFieldChangeHandler}
         />
-      </ApiForm>
 
-      <div className="row">
-        <div className="col-12">
-          <div className="card">
-            <div className="card-header">
-              <i className="fa fa-align-justify"/>Tiendas
-            </div>
-            <div className="card-block">
-              <ApiFormResultsTable
-                results={this.state.stores}
-                columns={columns}
-                ordering={this.state.formValues.ordering}
-                onChange={this.state.apiFormFieldChangeHandler}
-              />
+        <div className="row">
+          <div className="col-12">
+            <div className="card">
+              <div className="card-header">
+                <i className="fa fa-align-justify"/>Tiendas
+              </div>
+              <div className="card-block">
+                <ApiFormResultsTable
+                    results={this.state.stores}
+                    columns={columns}
+                    ordering={this.state.formValues.ordering}
+                    onChange={this.state.apiFormFieldChangeHandler}
+                />
+              </div>
             </div>
           </div>
         </div>
-      </div>
+      </ApiForm>
     </div>
   }
 }

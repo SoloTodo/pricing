@@ -65,6 +65,13 @@ class CategoryDetailShareOfShelves extends React.Component {
     })
   };
 
+  handleFormFieldsChange = fieldsData => {
+    this.fieldsData = {
+        ...this.fieldsData,
+        ...fieldsData
+      };
+  };
+
   handleFormValueChange = formValues => {
     this.setState({formValues})
   };
@@ -275,6 +282,7 @@ class CategoryDetailShareOfShelves extends React.Component {
         fields={apiFormFields}
         onResultsChange={this.setResults}
         onFormValueChange={this.handleFormValueChange}
+        onFormFieldsChange={this.handleFormFieldsChange}
         setFieldChangeHandler={this.setApiFormFieldChangeHandler}>
         <Row>
           <Col sm="12" md="6" lg="8" xl="8">

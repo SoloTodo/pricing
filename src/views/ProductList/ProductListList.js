@@ -87,23 +87,23 @@ class ProductListList extends React.Component{
       {
         label: 'Reordenar',
         renderer: productList => <ProductListReorderButton
-          productList={productList}
-          onProductsReorder={this.listChangeHandler}/>
+            productList={productList}
+            onProductsReorder={this.listChangeHandler}/>
       },
       {
         label: 'Eliminar',
         renderer: productList => <ProductListDeleteButton
-          productList={productList}
-          onListDelete={this.listChangeHandler}/>
+            productList={productList}
+            onListDelete={this.listChangeHandler}/>
       }
     ];
     return <div>
       <ApiForm
-        endpoints={[this.state.endpoint]}
-        fields={['categories', 'page', 'page_size']}
-        onResultsChange={this.setProductLists}
-        onFormValueChange={this.handleFormValueChange}
-        setFieldChangeHandler={this.setApiFormFieldChangeHandler}>
+          endpoints={[this.state.endpoint]}
+          fields={['categories', 'page', 'page_size']}
+          onResultsChange={this.setProductLists}
+          onFormValueChange={this.handleFormValueChange}
+          setFieldChangeHandler={this.setApiFormFieldChangeHandler}>
         <Row>
           <Col sm="12">
             <Card>
@@ -113,35 +113,35 @@ class ProductListList extends React.Component{
                   <Col xs="12" sm="6">
                     <label htmlFor="categories">Categorías</label>
                     <ApiFormChoiceField
-                      name="categories"
-                      id="categories"
-                      choices={this.props.categories}
-                      multiple={true}
-                      onChange={this.state.apiFormFieldChangeHandler}
-                      value={this.state.formValues.categories}
-                      placeholder='Todas'/>
+                        name="categories"
+                        id="categories"
+                        choices={this.props.categories}
+                        multiple={true}
+                        onChange={this.state.apiFormFieldChangeHandler}
+                        value={this.state.formValues.categories}
+                        placeholder='Todas'/>
                   </Col>
                 </Row>
               </CardBody>
             </Card>
           </Col>
         </Row>
-      </ApiForm>
-      <Row>
-        <Col sm="12">
-          <ApiFormResultTableWithPagination
-            icon="fas fa-list"
-            label="Listas de Productos"
-            cardClass="card-body"
-            headerButton=<ProductListCreateButton callback={this.updateEndpoint}/>
+        <Row>
+          <Col sm="12">
+            <ApiFormResultTableWithPagination
+                icon="fas fa-list"
+                label="Listas de Productos"
+                cardClass="card-body"
+                headerButton=<ProductListCreateButton callback={this.updateEndpoint}/>
             page_size_choices={[10,20,50]}
             page={this.state.formValues.page}
             page_size={this.state.formValues.page_size}
             data={this.state.productLists}
             columns={columns}
             onChange={this.state.apiFormFieldChangeHandler}/>
-        </Col>
-      </Row>
+          </Col>
+        </Row>
+      </ApiForm>
     </div>
   }
 }
