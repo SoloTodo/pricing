@@ -12,31 +12,20 @@ class BannerActiveParticipation extends React.Component {
     super(props);
     this.state = {
       formValues: {},
-      apiFormFieldChangeHandler: undefined,
       participation: undefined,
       loading: false,
     };
     this.fieldsData = {}
   }
 
-  apiFormFieldChangeHandlerDecorator = apiFormFieldChangeHandler => {
-    return (updatedFieldsData={}, pushUrl) => {
-      this.fieldsData = {
-        ...this.fieldsData,
-        ...updatedFieldsData
-      };
-      apiFormFieldChangeHandler(updatedFieldsData, pushUrl)
-    }
-  };
-
-  setApiFormFieldChangeHandler = apiFormFieldChangeHandler => {
-    this.setState({
-      apiFormFieldChangeHandler: this.apiFormFieldChangeHandlerDecorator(apiFormFieldChangeHandler)
-    })
-  };
-
   handleFormValueChange = formValues => {
     this.setState({formValues})
+  };
+
+  handleFormFieldsChange = formFields => {
+    this.fieldsData = {
+      ...formFields
+    };
   };
 
   setParticipation = json => {
@@ -106,7 +95,7 @@ class BannerActiveParticipation extends React.Component {
         fields={['grouping_field', 'stores', 'brands', 'categories', 'sections']}
         onResultsChange={this.setParticipation}
         onFormValueChange={this.handleFormValueChange}
-        setFieldChangeHandler={this.setApiFormFieldChangeHandler}>
+        onFormFieldsChange={this.handleFormFieldsChange}>
         <Row>
           <Col sm="12">
             <Card>
@@ -120,7 +109,6 @@ class BannerActiveParticipation extends React.Component {
                       multiple={true}
                       choices={stores}
                       placeholder='Todas'
-                      onChange={this.state.apiFormFieldChangeHandler}
                       value={this.state.formValues.stores}
                     />
                   </Col>
@@ -131,7 +119,6 @@ class BannerActiveParticipation extends React.Component {
                       multiple={true}
                       choices={this.props.sections}
                       placeholder='Todas'
-                      onChange={this.state.apiFormFieldChangeHandler}
                       value={this.state.formValues.banner_sections}
                     />
                   </Col>
@@ -142,7 +129,6 @@ class BannerActiveParticipation extends React.Component {
                       multiple={true}
                       choices={this.props.subsection_types}
                       placeholder='Todas'
-                      onChange={this.state.apiFormFieldChangeHandler}
                       value={this.state.formValues.subsection_types}
                     />
                   </Col>
@@ -153,7 +139,6 @@ class BannerActiveParticipation extends React.Component {
                       multiple={true}
                       choices={this.props.brands}
                       placeholder='Todas'
-                      onChange={this.state.apiFormFieldChangeHandler}
                       value={this.state.formValues.brands}
                     />
                   </Col>
@@ -164,7 +149,6 @@ class BannerActiveParticipation extends React.Component {
                       multiple={true}
                       choices={this.props.categories}
                       placeholder='Todas'
-                      onChange={this.state.apiFormFieldChangeHandler}
                       value={this.state.formValues.categories}
                     />
                   </Col>
@@ -173,49 +157,47 @@ class BannerActiveParticipation extends React.Component {
             </Card>
           </Col>
         </Row>
+        <Row>
+          <Col sm="12">
+            <Card>
+              <CardHeader className="d-flex justify-content-between align-items-center">
+                Participación
+                <LaddaButton loading={this.state.loading}
+                             onClick={this.handleReportButtonClick}
+                             data-style={EXPAND_LEFT}
+                             className="btn btn-primary">
+                  {this.state.loading? 'Generando': 'Descargar'}
+                </LaddaButton>
+              </CardHeader>
+              <CardBody>
+                <Row>
+                  <Col sm="6">
+                    <label>Agrupar por</label>
+                    <ApiFormChoiceField
+                      name="grouping_field"
+                      choices={groupingFields}
+                      required={true}
+                      placeholder='Todas'
+                      value={this.state.formValues.stores}
+                    />
+                  </Col>
+                </Row>
+                <Row>
+                  <Col sm="6">
+                    <BannerActiveParticipationChart data={this.state.participation}/>
+                  </Col>
+                  <Col sm="6">
+                    <br/>
+                    <ApiFormResultsTable
+                      results={this.state.participation}
+                      columns={columns}/>
+                  </Col>
+                </Row>
+              </CardBody>
+            </Card>
+          </Col>
+        </Row>
       </ApiForm>
-      <Row>
-        <Col sm="12">
-          <Card>
-            <CardHeader className="d-flex justify-content-between align-items-center">
-              Participación
-              <LaddaButton loading={this.state.loading}
-                           onClick={this.handleReportButtonClick}
-                           data-style={EXPAND_LEFT}
-                           className="btn btn-primary">
-                {this.state.loading? 'Generando': 'Descargar'}
-              </LaddaButton>
-            </CardHeader>
-            <CardBody>
-              <Row>
-                <Col sm="6">
-                  <label>Agrupar por</label>
-                  <ApiFormChoiceField
-                    name="grouping_field"
-                    choices={groupingFields}
-                    required={true}
-                    placeholder='Todas'
-                    onChange={this.state.apiFormFieldChangeHandler}
-                    value={this.state.formValues.stores}
-                  />
-                </Col>
-              </Row>
-              <Row>
-                <Col sm="6">
-                  <BannerActiveParticipationChart data={this.state.participation}/>
-                </Col>
-                <Col sm="6">
-                  <br/>
-                  <ApiFormResultsTable
-                    results={this.state.participation}
-                    columns={columns}
-                    onChange={this.state.apiFormFieldChangeHandler}/>
-                </Col>
-              </Row>
-            </CardBody>
-          </Card>
-        </Col>
-      </Row>
     </div>
   }
 }
