@@ -37,6 +37,7 @@ import BannerHistoricParticipation from "../views/Banner/BannerHistoricParticipa
 import ProductListList from "../views/ProductList/ProductListList"
 import ProductListDetail from "../views/ProductList/ProductListDetail";
 import ProductListDetailBrowse from "../views/ProductList/ProductListDetailBrowse";
+import BrandComparisonList from "../views/BrandComparison/BrandComparisonList";
 
 // https://github.com/ReactTraining/react-router/tree/master/packages/react-router-config
 const routes = [
@@ -123,6 +124,9 @@ const routes = [
   { path: '/product_lists/:id', exact:true, name: params => ({apiResource: 'product_lists', apiResourceObjectId: params.id}), component:ProductListDetail},
   { path: '/product_lists/:id/current_prices', exact:true, name: 'Precios actuales', render: props => <RequiredResources resources={['stores', 'categories']}>
       <ResourceObjectPermission Http404={Page404} match={props.match} resource="product_lists" component={ProductListDetailBrowse} />
+    </RequiredResources>},
+  { path: '/brand_comparisons/', exact:true, name:'Comparación de Marcas', render: props => <RequiredResources resources={['categories']}>
+      <BrandComparisonList/>
     </RequiredResources>}
 ];
 
