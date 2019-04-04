@@ -1,17 +1,17 @@
 import React from 'react'
-import {connect} from "react-redux";
-import {Card, CardBody, CardHeader, Col, Row} from "reactstrap";
+import {Col, Row} from 'reactstrap';
 
 import {
   ApiForm,
   ApiFormChoiceField,
-  ApiFormResultsTable, createOrderingOptionChoices,
-} from "../../react-utils/api_forms";
+  ApiFormResultTableWithPagination,
+  createOrderingOptionChoices,
+} from '../../react-utils/api_forms';
 
-import {
-  apiResourceStateToPropsUtils,
-  filterApiResourceObjectsByType
-} from "../../react-utils/ApiResource";
+import BrandComparisonCreateButton
+  from '../../Components/BrandComparison/BrandComparisonCreateButton'
+import moment from 'moment';
+import {NavLink} from "react-router-dom";
 
 
 
@@ -20,8 +20,9 @@ class BrandComparisonList extends React.Component {
     super(props);
     this.state = {
       formValues: {},
-      brandComparisons: undefined
-    }
+      brandComparisons: undefined,
+      endpoint:'brand_comparisons'
+    };
   }
 
   handleFormValueChange = formValues => {
@@ -34,12 +35,18 @@ class BrandComparisonList extends React.Component {
     });
   };
 
+  updateEndpoint = () => {
+    this.setState({
+      endpoint: 'brand_comparisons/?_='+moment().format()
+    })
+  };
+
   render() {
     const columns = [
       {
         label: 'Nombre',
         ordering: 'name',
-        renderer: brandComparison => brandComparison.name
+        renderer: brandComparison => <NavLink to={`/brand_comparisons/${brandComparison.id}`}>{brandComparison.name}</NavLink>
       },
       {
         label: 'Categoría',
@@ -57,8 +64,8 @@ class BrandComparisonList extends React.Component {
     ];
 
     return <ApiForm
-      endpoints={['brand_comparisons/']}
-      fields={['ordering']}
+      endpoints={[this.state.endpoint]}
+      fields={['ordering', 'page', 'page_size']}
       onResultsChange={this.setBrandComparisons}
       onFormValueChange={this.handleFormValueChange}>
       <ApiFormChoiceField
@@ -69,29 +76,22 @@ class BrandComparisonList extends React.Component {
         value={this.state.formValues.ordering}/>
       <Row>
         <Col sm="12">
-          <Card>
-            <CardHeader>Lista</CardHeader>
-            <CardBody>
-              <ApiFormResultsTable
-                results={this.state.brandComparisons}
-                columns={columns}
-                ordering={this.state.formValues.ordering}
-              />
-            </CardBody>
-          </Card>
+          <ApiFormResultTableWithPagination
+            icon="fas fa-list"
+            label="Comparaciones de Marcas"
+            cardClass="card-body"
+            headerButton={<BrandComparisonCreateButton callback={this.updateEndpoint}/>}
+            page_size_choices={[15, 25, 50]}
+            page={this.state.formValues.page}
+            page_size={this.state.formValues.page_size}
+            data={this.state.brandComparisons}
+            columns={columns}
+            ordering={this.state.formValues.ordering}
+          />
         </Col>
       </Row>
     </ApiForm>
   }
 }
 
-function mapStateToProps(state) {
-  const {ApiResourceObject} = apiResourceStateToPropsUtils(state);
-
-  return {
-    ApiResourceObject,
-    categories: filterApiResourceObjectsByType(state.apiResourceObjects, 'categories')
-  }
-}
-
-export default connect(mapStateToProps)(BrandComparisonList);
+export default BrandComparisonList;
