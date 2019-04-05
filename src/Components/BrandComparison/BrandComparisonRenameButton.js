@@ -1,19 +1,24 @@
 import React from 'react'
-import {toast} from "react-toastify";
-import {apiResourceStateToPropsUtils} from "../../react-utils/ApiResource";
 import {connect} from "react-redux";
-import InputGroup from "reactstrap/es/InputGroup";
-import Input from "reactstrap/es/Input";
-import InputGroupAddon from "reactstrap/es/InputGroupAddon";
-import {Button} from "reactstrap";
+import {toast} from "react-toastify";
+import {Button, Input, InputGroup,InputGroupAddon} from "reactstrap";
+
+import {apiResourceStateToPropsUtils} from "../../react-utils/ApiResource";
 
 class BrandComparisonRenameButton extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      newName: ''
+      editingName:false,
+      newName: this.props.brandComparison.name
     }
   }
+
+  toggleEditingName = () => {
+    this.setState({
+      editingName: !this.state.editingName,
+    });
+  };
 
   inputNameChangeHandler = e => {
     this.setState({
@@ -23,6 +28,12 @@ class BrandComparisonRenameButton extends React.Component {
 
   renameComparison = () => {
     const name = this.state.newName;
+
+    if (this.props.brandComparison.name === name) {
+      this.toggleEditingName();
+      return
+    }
+
     this.props.fetchAuth(`brand_comparisons/${this.props.brandComparison.id}/`, {
       method: 'PATCH',
       body: JSON.stringify({
@@ -30,14 +41,21 @@ class BrandComparisonRenameButton extends React.Component {
       })
     }).then(json => {
       toast.success('Nombre cambiado');
-      this.props.fetchAuth(`brand_comparisons/${this.props.brandComparison.id}/`).then(json => {
-        this.props.addBrandComparison(json);
-        this.props.callback();
-      });
+      this.props.addBrandComparison(json);
+      this.toggleEditingName();
     });
   };
 
   render() {
+    if (!this.state.editingName) {
+      return <span className="align-self-center">
+        {this.props.brandComparison.name}
+        <Button color="link" className="pl-1">
+          <i className="fa fa-pencil" onClick={this.toggleEditingName}/>
+        </Button>
+      </span>
+    }
+
     return <div>
       <InputGroup>
         <Input defaultValue={this.props.brandComparison.name} onChange={this.inputNameChangeHandler}/>

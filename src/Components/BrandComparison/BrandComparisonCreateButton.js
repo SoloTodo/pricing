@@ -1,7 +1,7 @@
 import React from 'react'
 import {connect} from 'react-redux';
-import {Button, Modal, ModalHeader, ModalBody, ModalFooter, Label, Input} from 'reactstrap'
 import Select from 'react-select';
+import {Button, Modal, ModalHeader, ModalBody, ModalFooter, Label, Input} from 'reactstrap'
 
 import {
   apiResourceStateToPropsUtils,
@@ -56,8 +56,8 @@ class BrandComparisonCreateButton extends React.Component {
       body: JSON.stringify({
         name,
         category,
-        brand1,
-        brand2
+        brand_1:brand1,
+        brand_2:brand2
       })
     }).then(json => {
       this.props.callback()

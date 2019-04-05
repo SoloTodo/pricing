@@ -1,8 +1,8 @@
 import React from 'react'
-import {Button} from "reactstrap";
-import {toast} from "react-toastify";
-import {Modal, ModalHeader, ModalFooter} from "reactstrap";
 import {connect} from "react-redux";
+import {toast} from "react-toastify";
+import {Modal, ModalHeader, ModalFooter, Button} from "reactstrap";
+
 import {apiResourceStateToPropsUtils} from "../../react-utils/ApiResource";
 
 class BrandComparisonDeleteButton extends React.Component {

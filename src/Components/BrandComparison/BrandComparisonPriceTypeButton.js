@@ -1,8 +1,8 @@
 import React from 'react'
-import {DropdownMenu, DropdownToggle, UncontrolledButtonDropdown} from "reactstrap";
-import ListGroupItem from "reactstrap/es/ListGroupItem";
-import {apiResourceStateToPropsUtils} from "../../react-utils/ApiResource";
 import {connect} from "react-redux";
+import {DropdownMenu, DropdownToggle, UncontrolledButtonDropdown, ListGroupItem} from "reactstrap";
+
+import {apiResourceStateToPropsUtils} from "../../react-utils/ApiResource";
 
 class BrandComparisonPriceTypeButton extends React.Component {
   constructor(props) {
@@ -24,9 +24,7 @@ class BrandComparisonPriceTypeButton extends React.Component {
         price_type: priceType
       })
     }).then(json => {
-      this.props.fetchAuth(`brand_comparisons/${this.props.brandComparison.id}/`).then(json => {
-        this.props.addBrandComparison(json);
-      });
+      this.props.addBrandComparison(json);
     });
   };
 

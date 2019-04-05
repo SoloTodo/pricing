@@ -49,21 +49,21 @@ class AlertList extends React.Component{
       {
         label: 'Producto / SKU',
         renderer: result => result.entity?
-            <span>
+          <span>
             <NavLink to={'/products/' + result.entity.product.id}>{result.entity.product.name}</NavLink>&nbsp;
-              (<NavLink to={'/skus/' + result.entity.id}>{result.entity.sku}</NavLink>)
+            (<NavLink to={'/skus/' + result.entity.id}>{result.entity.sku}</NavLink>)
           </span> :
-            <NavLink to={'/products/' + result.alert.product.id}>{result.alert.product.name}</NavLink>
+          <NavLink to={'/products/' + result.alert.product.id}>{result.alert.product.name}</NavLink>
       },
       {
         label: 'Tiendas',
         renderer: result => result.entity?
-            this.props.stores.filter(store => store.url === result.entity.store)[0].name :
-            <div>
-              {result.alert.stores.map(store_url => <li key={store_url} className="list-without-decoration">
-                {this.props.stores.filter(store => store.url === store_url)[0].name}
-              </li>)}
-            </div>
+          this.props.stores.filter(store => store.url === result.entity.store)[0].name :
+          <div>
+            {result.alert.stores.map(store_url => <li key={store_url} className="list-without-decoration">
+              {this.props.stores.filter(store => store.url === store_url)[0].name}
+            </li>)}
+          </div>
       },
       {
         label: 'Fecha creación',
@@ -74,24 +74,24 @@ class AlertList extends React.Component{
 
     return <div>
       <ApiForm
-          endpoints={['user_alerts/']}
-          fields={['ordering']}
-          onResultsChange={this.setAlerts}
-          onFormValueChange={this.handleFormValueChange}>
+        endpoints={['user_alerts/']}
+        fields={['ordering']}
+        onResultsChange={this.setAlerts}
+        onFormValueChange={this.handleFormValueChange}>
         <ApiFormChoiceField
-            name="ordering"
-            choices={createOrderingOptionChoices(['id', 'alert__creation_date'])}
-            hidden={true}
-            initial='id' />
+          name="ordering"
+          choices={createOrderingOptionChoices(['id', 'alert__creation_date'])}
+          hidden={true}
+          initial='id' />
         <Row>
           <Col sm="12">
             <Card>
               <CardHeader>Alertas</CardHeader>
               <CardBody>
                 <ApiFormResultsTable
-                    results={this.state.alerts}
-                    columns={columns}
-                    ordering={this.state.formValues.ordering}/>
+                  results={this.state.alerts}
+                  columns={columns}
+                  ordering={this.state.formValues.ordering}/>
               </CardBody>
             </Card>
           </Col>
