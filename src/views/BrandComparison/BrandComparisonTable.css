@@ -1,0 +1,9 @@
+td.rotate {
+    width: 55px;
+}
+
+td.rotate > div > span {
+    writing-mode: vertical-rl;
+    white-space: nowrap;
+}
+

@@ -7,6 +7,7 @@ import BrandComparisonRenameButton from '../../Components/BrandComparison/BrandC
 import BrandComparisonPriceTypeButton from '../../Components/BrandComparison/BrandComparisonPriceTypeButton'
 import BrandComparisonDeleteButton from '../../Components/BrandComparison/BrandComparisonDeleteButton'
 import BrandComparisonSelectStoresButton from '../../Components/BrandComparison/BrandComparisonSelectStoresButton'
+import BrandComparisonTable from './BrandComparisonTable'
 import {apiResourceStateToPropsUtils} from "../../react-utils/ApiResource";
 
 class BrandComparisonDetail extends React.Component {
@@ -44,7 +45,7 @@ class BrandComparisonDetail extends React.Component {
           </div>
         </CardHeader>
         <CardBody>
-
+          <BrandComparisonTable brandComparison={brandComparison}/>
         </CardBody>
       </Card>
     </div>
