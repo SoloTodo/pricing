@@ -1,6 +1,5 @@
 import React from 'react'
 import {connect} from "react-redux";
-import {toast} from "react-toastify";
 import {Button, Input, InputGroup,InputGroupAddon} from "reactstrap";
 
 import {apiResourceStateToPropsUtils} from "../../react-utils/ApiResource";
@@ -40,7 +39,6 @@ class BrandComparisonRenameButton extends React.Component {
         name
       })
     }).then(json => {
-      toast.success('Nombre cambiado');
       this.props.addBrandComparison(json);
       this.toggleEditingName();
     });

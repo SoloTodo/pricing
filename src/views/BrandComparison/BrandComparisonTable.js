@@ -6,6 +6,11 @@ import {connect} from "react-redux";
 import BrandComparisonAddSegmentButton from "../../Components/BrandComparison/BrandComparisonAddSegmentButton"
 import BrandComparisonSegmentDeleteButton from "../../Components/BrandComparison/BrandComparisonSegmentDeleteButton"
 import BrandComparisonSegmentRenameButton from "../../Components/BrandComparison/BrandComparisonSegmentRenameButton"
+import BrandComparisonSegmentOrderingUpButton from "../../Components/BrandComparison/BrandComparisonSegmentMoveButton"
+import BrandComparisonSegmentAddRowButton from "../../Components/BrandComparison/BrandComparisonSegmentAddRowButton"
+import BrandComparisonSegmentRowDeleteButton from "../../Components/BrandComparison/BrandComparisonSegmentRowDeleteButton"
+import BrandComparisonSegmentRowMoveButton from "../../Components/BrandComparison/BrandComparisonSegmentRowMoveButton";
+
 import './BrandComparisonTable.css'
 
 class BrandComparisonTable extends React.Component {
@@ -23,34 +28,62 @@ class BrandComparisonTable extends React.Component {
         {brandComparison.stores.map(storeUrl => <th key={storeUrl} className="center-aligned">{storesDict[storeUrl].name}</th>)}
         <th className="center-aligned">{brandComparison.brand_2.name}</th>
         {brandComparison.stores.map(storeUrl => <th key={storeUrl} className="center-aligned">{storesDict[storeUrl].name}</th>)}
+        <th className="center-aligned">&nbsp;</th>
       </tr>
       </thead>
       <tbody>
       {brandComparison.segments.map(segment =>
         <React.Fragment key={segment.ordering}>
-          {segment.rows.map(row =>
+          {segment.rows.map((row, rowIndex) =>
             <tr key={row.ordering}>
-              {row.ordering === 1  &&
-              <td rowSpan={segment.rows.length} className="rotate d-flex justify-content-between">
-                <div className="d-flex flex-column">
-                  <BrandComparisonSegmentDeleteButton
-                    segment={segment}
-                    comparisonId={brandComparison.id}/>
-                  <BrandComparisonSegmentRenameButton
-                    segment={segment}
-                    comparisonId={brandComparison.id}/>
-                  <a><i className="fa fa-arrow-up"/></a>
-                  <a><i className="fa fa-arrow-down"/></a>
-                  <a><i className="fa fa-plus"/></a>
-                </div>
-                <div className="d-flex center-aligned">
-                  <span>{segment.name}</span>
+              {rowIndex === 0  &&
+              <td rowSpan={segment.rows.length} className="segment segment-border">
+                <div className="d-flex justify-content-between">
+                  <div className="d-flex flex-column">
+                    <BrandComparisonSegmentDeleteButton
+                      segment={segment}
+                      comparisonId={brandComparison.id}/>
+                    <BrandComparisonSegmentRenameButton
+                      segment={segment}
+                      comparisonId={brandComparison.id}/>
+                    <BrandComparisonSegmentOrderingUpButton
+                      segment={segment}
+                      comparisonId={brandComparison.id}
+                      direction='up'/>
+                    <BrandComparisonSegmentOrderingUpButton
+                      segment={segment}
+                      comparisonId={brandComparison.id}
+                      direction='down'/>
+                    <BrandComparisonSegmentAddRowButton
+                      segment={segment}
+                      comparisonId={brandComparison.id}/>
+                  </div>
+                  <div className="d-flex align-items-center">
+                    <span className="rotate">{segment.name}</span>
+                  </div>
                 </div>
               </td>}
-              <td>{row.product_1 && row.product_1.name}</td>
-              {brandComparison.stores.map(store_url => <td key={store_url}>Precio</td>)}
-              <td>{row.product_2 && row.product_2.name}</td>
-              {brandComparison.stores.map(store_url => <td key={store_url}>Precio</td>)}
+              <td className={rowIndex === 0 && 'segment-border'}>{row.product_1 && row.product_1.name}</td>
+              {brandComparison.stores.map(store_url => <td key={store_url} className={rowIndex === 0 && 'segment-border'}>Precio</td>)}
+              <td className={rowIndex === 0 && 'segment-border'}>{row.product_2 && row.product_2.name}</td>
+              {brandComparison.stores.map(store_url => <td key={store_url} className={rowIndex === 0 && 'segment-border'}>Precio</td>)}
+              <td className={`segment-row ${rowIndex === 0 && 'segment-border'}`}>
+                <div className="d-flex justify-content-between">
+                  <BrandComparisonSegmentRowMoveButton
+                    row={row}
+                    disabled={rowIndex === 0}
+                    comparisonId={brandComparison.id}
+                    direction='up'/>
+                  <BrandComparisonSegmentRowMoveButton
+                    row={row}
+                    disabled={rowIndex === segment.rows.length-1}
+                    comparisonId={brandComparison.id}
+                    direction='down'/>
+                  <BrandComparisonSegmentRowDeleteButton
+                    row={row}
+                    comparisonId={brandComparison.id}/>
+                </div>
+              </td>
             </tr>
           )}
         </React.Fragment>

@@ -1,9 +1,17 @@
-td.rotate {
-    width: 55px;
-}
-
-td.rotate > div > span {
+span.rotate {
     writing-mode: vertical-rl;
     white-space: nowrap;
 }
 
+td.segment {
+    width: 55px;
+    vertical-align: middle;
+}
+
+td.segment-row {
+    width: 60px;
+}
+
+td.segment-border {
+    border-top-width: thick;
+}

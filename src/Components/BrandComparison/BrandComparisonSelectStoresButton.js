@@ -1,6 +1,5 @@
 import React from 'react'
 import {connect} from "react-redux";
-import {toast} from "react-toastify";
 import {Container, Row, Col, Input, Label, Button, Modal, ModalHeader, ModalBody, ModalFooter} from "reactstrap";
 
 import {
@@ -48,7 +47,6 @@ class BrandComparisonSelectStoresButton extends React.Component {
         stores: this.state.selectedStores
       })
     }).then(json => {
-      toast.success('Tiendas guardadas');
       this.props.addBrandComparison(json);
       this.toggleStoreModal();
     })
