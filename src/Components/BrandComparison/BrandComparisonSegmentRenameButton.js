@@ -28,16 +28,18 @@ class BrandComparisonSegmentRenameButton extends React.Component {
 
   renameSegment = () => {
     const name = this.state.newName;
-    this.props.fetchAuth(`brand_comparison_segments/${this.props.segment.id}/`, {
-      method: 'PATCH',
-      body: JSON.stringify({
-        name
-      })
-    }).then(json => {
-      this.props.fetchAuth(`brand_comparisons/${this.props.comparisonId}/`).then(json => {
-        this.props.updateBrandComparison(json)
+
+    if (name !== this.props.segment.name) {
+      this.props.fetchAuth(`brand_comparison_segments/${this.props.segment.id}/`, {
+        method: 'PATCH',
+        body: JSON.stringify({
+          name
+        })
+      }).then(json => {
+        this.props.onComparisonChange()
       });
-    });
+    }
+
     this.toggleRenameModal()
   };
 
@@ -66,15 +68,4 @@ function mapStateToProps(state) {
   }
 }
 
-function mapDispatchToProps(dispatch) {
-  return {
-    updateBrandComparison: brandComparison => {
-      return dispatch({
-        type: 'addApiResourceObject',
-        apiResource: brandComparison
-      })
-    }
-  }
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(BrandComparisonSegmentRenameButton)
+export default connect(mapStateToProps)(BrandComparisonSegmentRenameButton)

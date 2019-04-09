@@ -1,8 +1,8 @@
 import React from 'react'
-import {Button, Modal, ModalHeader, ModalBody, ModalFooter, Label, Input} from "reactstrap";
-import {apiResourceStateToPropsUtils} from "../../react-utils/ApiResource";
 import {connect} from "react-redux";
+import {Button, Modal, ModalHeader, ModalBody, ModalFooter, Label, Input} from "reactstrap";
 
+import {apiResourceStateToPropsUtils} from "../../react-utils/ApiResource";
 
 class BrandComparisonAddSegmentButton extends React.Component {
   constructor(props) {
@@ -13,7 +13,7 @@ class BrandComparisonAddSegmentButton extends React.Component {
     }
   }
 
-  toggleAddSegmentModalOpen = e => {
+  toggleAddSegmentModalOpen = () => {
     this.setState({
       addSegmentModalOpen: !this.state.addSegmentModalOpen
     })
@@ -33,7 +33,7 @@ class BrandComparisonAddSegmentButton extends React.Component {
         name
       })
     }).then(json => {
-      this.props.updateBrandComparison(json);
+      this.props.onComparisonChange(json);
       this.toggleAddSegmentModalOpen()
     })
   };
@@ -65,15 +65,4 @@ function mapStateToProps(state) {
   }
 }
 
-function mapDispatchToProps(dispatch) {
-  return {
-    updateBrandComparison: brandComparison => {
-      return dispatch({
-        type: 'addApiResourceObject',
-        apiResource: brandComparison
-      })
-    }
-  }
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(BrandComparisonAddSegmentButton);
+export default connect(mapStateToProps)(BrandComparisonAddSegmentButton);

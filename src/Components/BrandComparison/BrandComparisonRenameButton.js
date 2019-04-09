@@ -39,7 +39,7 @@ class BrandComparisonRenameButton extends React.Component {
         name
       })
     }).then(json => {
-      this.props.addBrandComparison(json);
+      this.props.onComparisonChange(json);
       this.toggleEditingName();
     });
   };
@@ -71,15 +71,4 @@ function mapStateToProps(state) {
   }
 }
 
-function mapDispatchToProps(dispatch) {
-  return {
-    addBrandComparison: brandComparison => {
-      return dispatch({
-        type: 'addApiResourceObject',
-        apiResource: brandComparison
-      })
-    }
-  }
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(BrandComparisonRenameButton);
+export default connect(mapStateToProps)(BrandComparisonRenameButton);

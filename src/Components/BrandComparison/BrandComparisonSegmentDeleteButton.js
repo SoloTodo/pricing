@@ -23,10 +23,8 @@ class BrandComparisonSegmentDeleteButton extends React.Component {
     this.props.fetchAuth(`brand_comparison_segments/${this.props.segment.id}/`, {
       method: 'DELETE'
     }).then(json => {
-      this.props.fetchAuth(`brand_comparisons/${this.props.comparisonId}/`).then(json => {
-        this.toggleDeleteModal();
-        this.props.updateBrandComparison(json);
-      })
+      this.toggleDeleteModal();
+      this.props.onComparisonChange();
     });
   };
 
@@ -50,15 +48,4 @@ function mapStateToProps(state) {
   }
 }
 
-function mapDispatchToProps(dispatch) {
-  return {
-    updateBrandComparison: brandComparison => {
-      return dispatch({
-        type: 'addApiResourceObject',
-        apiResource: brandComparison
-      })
-    }
-  }
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(BrandComparisonSegmentDeleteButton)
+export default connect(mapStateToProps)(BrandComparisonSegmentDeleteButton)

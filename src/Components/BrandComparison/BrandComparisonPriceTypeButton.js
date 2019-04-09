@@ -24,7 +24,7 @@ class BrandComparisonPriceTypeButton extends React.Component {
         price_type: priceType
       })
     }).then(json => {
-      this.props.addBrandComparison(json);
+      this.props.onComparisonChange(json);
     });
   };
 
@@ -51,15 +51,4 @@ function mapStateToProps(state) {
   }
 }
 
-function mapDispatchToProps(dispatch) {
-  return {
-    addBrandComparison: brandComparison => {
-      return dispatch({
-        type: 'addApiResourceObject',
-        apiResource: brandComparison
-      })
-    }
-  }
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(BrandComparisonPriceTypeButton);
+export default connect(mapStateToProps)(BrandComparisonPriceTypeButton);

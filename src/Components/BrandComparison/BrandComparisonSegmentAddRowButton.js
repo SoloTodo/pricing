@@ -1,6 +1,7 @@
 import React from 'react'
-import {apiResourceStateToPropsUtils} from "../../react-utils/ApiResource";
 import {connect} from "react-redux";
+
+import {apiResourceStateToPropsUtils} from "../../react-utils/ApiResource";
 
 class BrandComparisonSegmentAddRowButton extends React.Component {
   buttonClickHandler = e => {
@@ -8,9 +9,7 @@ class BrandComparisonSegmentAddRowButton extends React.Component {
     this.props.fetchAuth(`brand_comparison_segments/${this.props.segment.id}/add_row/`, {
       method:'POST'
     }).then(json => {
-      this.props.fetchAuth(`brand_comparisons/${this.props.comparisonId}/`).then(json => {
-        this.props.updateBrandComparison(json)
-      });
+      this.props.onComparisonChange();
     })
   };
 
@@ -26,15 +25,4 @@ function mapStateToProps(state) {
   }
 }
 
-function mapDispatchToProps(dispatch) {
-  return {
-    updateBrandComparison: brandComparison => {
-      return dispatch({
-        type: 'addApiResourceObject',
-        apiResource: brandComparison
-      })
-    }
-  }
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(BrandComparisonSegmentAddRowButton)
+export default connect(mapStateToProps)(BrandComparisonSegmentAddRowButton)

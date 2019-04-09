@@ -1,24 +1,29 @@
 import React from 'react'
-import {apiResourceStateToPropsUtils} from "../../react-utils/ApiResource";
 import {connect} from "react-redux";
+
+import {apiResourceStateToPropsUtils} from "../../react-utils/ApiResource";
 
 class BrandComparisonSegmentMoveButton extends React.Component {
   buttonClickHandler = e => {
     e.preventDefault();
+    if (this.props.disabled) {
+      return
+    }
+
     this.props.fetchAuth(`brand_comparison_segments/${this.props.segment.id}/move/`, {
       method: 'POST',
       body: JSON.stringify({
         direction: this.props.direction
       })
     }).then(json => {
-      this.props.fetchAuth(`brand_comparisons/${this.props.comparisonId}/`).then(json => {
-        this.props.updateBrandComparison(json)
-      });
+      this.props.onComparisonChange();
     })
   };
 
   render() {
-    return <a href='/' onClick={this.buttonClickHandler}><i className={`fa fa-arrow-${this.props.direction}`}/></a>
+    return <a href='/' className={this.props.disabled? "text-secondary" : ""} onClick={this.buttonClickHandler}>
+      <i className={`fa fa-arrow-${this.props.direction}`}/>
+    </a>
   }
 }
 
@@ -29,15 +34,4 @@ function mapStateToProps(state) {
   }
 }
 
-function mapDispatchToProps(dispatch) {
-  return {
-    updateBrandComparison: brandComparison => {
-      return dispatch({
-        type: 'addApiResourceObject',
-        apiResource: brandComparison
-      })
-    }
-  }
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(BrandComparisonSegmentMoveButton)
+export default connect(mapStateToProps)(BrandComparisonSegmentMoveButton)

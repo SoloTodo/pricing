@@ -24,6 +24,16 @@ class BrandComparisonDetail extends React.Component {
     })
   };
 
+  handleComparisonChange = (updatedBrandComparison) => {
+    if (updatedBrandComparison) {
+      this.props.updateBrandComparison(updatedBrandComparison)
+    } else {
+      this.props.fetchAuth(`brand_comparisons/${this.props.apiResourceObject.id}/`).then(json => {
+        this.props.updateBrandComparison(json)
+      });
+    }
+  };
+
   render() {
     if (this.state.deleted){
       return <Redirect to={{pathname: '/brand_comparisons'}}/>
@@ -33,19 +43,24 @@ class BrandComparisonDetail extends React.Component {
       <Card>
         <CardHeader className="d-flex justify-content-between ">
           <BrandComparisonRenameButton
-            brandComparison={brandComparison}/>
+            brandComparison={brandComparison}
+            onComparisonChange={this.handleComparisonChange}/>
           <div>
             <BrandComparisonSelectStoresButton
-              brandComparison={brandComparison}/>
+              brandComparison={brandComparison}
+              onComparisonChange={this.handleComparisonChange}/>
             <BrandComparisonPriceTypeButton
-              brandComparison={brandComparison}/>
+              brandComparison={brandComparison}
+              onComparisonChange={this.handleComparisonChange}/>
             <BrandComparisonDeleteButton
               brandComparison={brandComparison}
               callback={this.deleteCallback}/>
           </div>
         </CardHeader>
         <CardBody>
-          <BrandComparisonTable brandComparison={brandComparison}/>
+          <BrandComparisonTable
+            brandComparison={brandComparison}
+            onComparisonChange={this.handleComparisonChange}/>
         </CardBody>
       </Card>
     </div>
@@ -59,4 +74,15 @@ function mapStateToProps(state) {
   }
 }
 
-export default connect(mapStateToProps)(BrandComparisonDetail);
+function mapDispatchToProps(dispatch) {
+  return {
+    updateBrandComparison: brandComparison => {
+      return dispatch({
+        type: 'addApiResourceObject',
+        apiResource: brandComparison
+      })
+    }
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(BrandComparisonDetail);

@@ -7,7 +7,6 @@ import {
   filterApiResourceObjectsByType
 } from "../../react-utils/ApiResource";
 
-
 class BrandComparisonSelectStoresButton extends React.Component {
   constructor(props) {
     super(props);
@@ -47,7 +46,7 @@ class BrandComparisonSelectStoresButton extends React.Component {
         stores: this.state.selectedStores
       })
     }).then(json => {
-      this.props.addBrandComparison(json);
+      this.props.onComparisonChange(json);
       this.toggleStoreModal();
     })
   };
@@ -95,15 +94,4 @@ function mapStateToProps(state) {
   }
 }
 
-function mapDispatchToProps(dispatch) {
-  return {
-    addBrandComparison: brandComparison => {
-      return dispatch({
-        type: 'addApiResourceObject',
-        apiResource: brandComparison
-      })
-    }
-  }
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(BrandComparisonSelectStoresButton);
+export default connect(mapStateToProps)(BrandComparisonSelectStoresButton);
