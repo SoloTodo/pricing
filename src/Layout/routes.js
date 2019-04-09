@@ -129,7 +129,7 @@ const routes = [
   { path: '/brand_comparisons', exact:true, name:'Comparación de Marcas', render: props => <RequiredResources resources={['categories', 'brands']}>
       <BrandComparisonList/>
     </RequiredResources>},
-  { path: '/brand_comparisons/:id', exact: true, name: params => ({apiResource: 'brand_comparisons', apiResourceObjectId: params.id}), render: props => <RequiredResources resources={['stores']}>
+  { path: '/brand_comparisons/:id', exact: true, name: params => ({apiResource: 'brand_comparisons', apiResourceObjectId: params.id}), render: props => <RequiredResources resources={['stores', 'currencies']}>
       <ResourceObjectPermission Http404={Page404} match={props.match} resource="brand_comparisons" component={BrandComparisonDetail} />
     </RequiredResources>}
 ];

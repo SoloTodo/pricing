@@ -13,6 +13,9 @@ import BrandComparisonSegmentMoveButton from "../../Components/BrandComparison/B
 import BrandComparisonSegmentAddRowButton from "../../Components/BrandComparison/BrandComparisonSegmentAddRowButton"
 import BrandComparisonSegmentRowDeleteButton from "../../Components/BrandComparison/BrandComparisonSegmentRowDeleteButton"
 import BrandComparisonSegmentRowMoveButton from "../../Components/BrandComparison/BrandComparisonSegmentRowMoveButton";
+import BrandComparisonProductSelect from "../../Components/BrandComparison/BrandComparisonProductSelect"
+import BrandComparisonSegmentRowPriceCell from "../../Components/BrandComparison/BrandComparisonSegmentRowPriceCell"
+
 
 import './BrandComparisonTable.css'
 
@@ -24,6 +27,10 @@ class BrandComparisonTable extends React.Component {
     for (const store of this.props.stores) {
       storesDict[store.url] = store
     }
+
+    const brand1Products = this.props.brand1RowData.map(row => row.product);
+    const brand2Products = this.props.brand2RowData.map(row => row.product);
+
     return <Table bordered size="sm">
       <thead>
       <tr>
@@ -69,10 +76,38 @@ class BrandComparisonTable extends React.Component {
                   </div>
                 </div>
               </td>}
-              <td className={rowIndex === 0? "segment-border" : ""}>{row.product_1 && row.product_1.name}</td>
-              {brandComparison.stores.map(store_url => <td key={store_url} className={rowIndex === 0? "segment-border" : ""}>Precio</td>)}
-              <td className={rowIndex === 0? "segment-border" : ""}>{row.product_2 && row.product_2.name}</td>
-              {brandComparison.stores.map(store_url => <td key={store_url} className={rowIndex === 0? "segment-border" : ""}>Precio</td>)}
+              <td className={rowIndex === 0? "segment-border" : ""}>
+                <BrandComparisonProductSelect
+                  products={brand1Products}
+                  row = {row}
+                  brandIndex="1"
+                  onComparisonChange={this.props.onComparisonChange}/>
+              </td>
+              {brandComparison.stores.map(storeUrl =>
+                <td key={storeUrl} className={rowIndex === 0? "segment-border" : ""}>
+                  <BrandComparisonSegmentRowPriceCell
+                    storefoo={storeUrl}
+                    product={row.product_1}
+                    rowData={this.props.brand1RowData}
+                    priceType={brandComparison.price_type}/>
+                </td>
+              )}
+              <td className={rowIndex === 0? "segment-border" : ""}>
+                <BrandComparisonProductSelect
+                  products={brand2Products}
+                  row = {row}
+                  brandIndex="2"
+                  onComparisonChange={this.props.onComparisonChange}/>
+              </td>
+              {brandComparison.stores.map(storeUrl =>
+                <td key={storeUrl} className={rowIndex === 0? "segment-border" : ""}>
+                  <BrandComparisonSegmentRowPriceCell
+                    storeUrl={storeUrl}
+                    product={row.product_2}
+                    rowData={this.props.brand2RowData}
+                    priceType={brandComparison.price_type}/>
+                </td>
+              )}
               <td className={`segment-row ${rowIndex === 0 && 'segment-border'}`}>
                 <div className="d-flex justify-content-between">
                   <BrandComparisonSegmentRowMoveButton
