@@ -1,7 +1,7 @@
 import React from 'react'
 import {connect} from "react-redux";
 
-import {formatCurrency} from "../../react-utils/utils";
+import {formatCurrency} from "../../react-utils/next_utils";
 import {filterApiResourceObjectsByType} from "../../react-utils/ApiResource";
 import {pricingStateToPropsUtils} from "../../utils";
 
@@ -12,12 +12,14 @@ class BrandComparisonSegmentRowPriceCell extends React.Component {
 
     if (product) {
       const rowData = this.props.rowData.filter(row => row.product.id === product.id)[0];
-      const entity = rowData.entities.filter(entity => entity.store === this.props.storeUrl);
+      const entities = rowData.entities.filter(entity => entity.store === this.props.storeUrl);
 
-      if (entity.length) {
-        value = entity[0].active_registry[`${this.props.priceType}_price`];
-        //const entityCurrency = this.props.currencies.filter(currency => currency.url === entity.currency)[0]
-        //value = formatCurrency(value, entityCurrency, this.props.preferredCurrency)
+      if (entities.length) {
+        value = entities[0].active_registry[`${this.props.priceType}_price`];
+        const entityCurrency = this.props.currencies.filter(currency => currency.url === entities[0].currency)[0]
+        value = formatCurrency(value, entityCurrency, this.props.preferredCurrency, this.props.preferredNumberFormat.thousands_separator, this.props.preferredNumberFormat.decimal_separator)
+      } else {
+        value = '-'
       }
     }
 
@@ -26,11 +28,12 @@ class BrandComparisonSegmentRowPriceCell extends React.Component {
 }
 
 function mapStateToProps(state) {
-  const {preferredCurrency} = pricingStateToPropsUtils(state);
+  const {preferredCurrency, preferredNumberFormat} = pricingStateToPropsUtils(state);
 
   return {
     preferredCurrency,
-    currencies: filterApiResourceObjectsByType(state.apiResourceObjects, 'currency'),
+    preferredNumberFormat,
+    currencies: filterApiResourceObjectsByType(state.apiResourceObjects, 'currencies'),
   }
 }
 

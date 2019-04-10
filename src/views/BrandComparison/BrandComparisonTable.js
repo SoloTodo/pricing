@@ -86,7 +86,7 @@ class BrandComparisonTable extends React.Component {
               {brandComparison.stores.map(storeUrl =>
                 <td key={storeUrl} className={rowIndex === 0? "segment-border" : ""}>
                   <BrandComparisonSegmentRowPriceCell
-                    storefoo={storeUrl}
+                    storeUrl={storeUrl}
                     product={row.product_1}
                     rowData={this.props.brand1RowData}
                     priceType={brandComparison.price_type}/>
