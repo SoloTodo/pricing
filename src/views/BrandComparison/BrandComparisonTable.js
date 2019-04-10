@@ -5,6 +5,7 @@ import {Table} from "reactstrap";
 import {
   filterApiResourceObjectsByType
 } from "../../react-utils/ApiResource";
+import {createOptions} from '../../react-utils/form_utils';
 
 import BrandComparisonAddSegmentButton from "../../Components/BrandComparison/BrandComparisonAddSegmentButton"
 import BrandComparisonSegmentDeleteButton from "../../Components/BrandComparison/BrandComparisonSegmentDeleteButton"
@@ -20,6 +21,36 @@ import BrandComparisonSegmentRowPriceCell from "../../Components/BrandComparison
 import './BrandComparisonTable.css'
 
 class BrandComparisonTable extends React.Component {
+  createOptionsWithGroup = (rowData) => {
+    const customCreateOptions = localRowData => createOptions(localRowData.map(data => ({...data, name: data.product.name, id: data.product.id})));
+
+    return [
+      {label: 'Pendientes', options: customCreateOptions(rowData.filter(data => data.entities.length && !data.rowIds.length))},
+      {label: 'Ya ingresados', options:customCreateOptions(rowData.filter(data => data.entities.length && data.rowIds.length))},
+      {label: 'No disponibles', options:customCreateOptions(rowData.filter(data => !data.entities.length))}
+    ]
+  };
+
+  processRowData = (rawRowData, brandIndex) => {
+    const comparison = this.props.brandComparison;
+    const rowData = rawRowData.map(result => ({
+      ...result,
+      rowIds: [],
+    }));
+
+    for (const segment of comparison.segments) {
+      for (const row of segment.rows) {
+        if (row[`product_${brandIndex}`]) {
+          const result = rowData.filter(result => result.product.id === row[`product_${brandIndex}`].id)[0];
+          if (result) {
+            result.rowIds.push(row.id)
+          }
+        }
+      }
+    }
+
+    return rowData
+  };
 
   render() {
     const brandComparison = this.props.brandComparison;
@@ -28,8 +59,11 @@ class BrandComparisonTable extends React.Component {
       storesDict[store.url] = store
     }
 
-    const brand1Products = this.props.brand1RowData.map(row => row.product);
-    const brand2Products = this.props.brand2RowData.map(row => row.product);
+    const brand1RowData = this.processRowData(this.props.brand1RawRowData, '1');
+    const brand2RowData = this.processRowData(this.props.brand2RawRowData, '2');
+
+    const brand1Options = this.createOptionsWithGroup(brand1RowData);
+    const brand2Options = this.createOptionsWithGroup(brand2RowData);
 
     return <Table bordered size="sm">
       <thead>
@@ -78,7 +112,7 @@ class BrandComparisonTable extends React.Component {
               </td>}
               <td className={rowIndex === 0? "segment-border" : ""}>
                 <BrandComparisonProductSelect
-                  products={brand1Products}
+                  options={brand1Options}
                   row = {row}
                   brandIndex="1"
                   onComparisonChange={this.props.onComparisonChange}/>
@@ -88,13 +122,13 @@ class BrandComparisonTable extends React.Component {
                   <BrandComparisonSegmentRowPriceCell
                     storeUrl={storeUrl}
                     product={row.product_1}
-                    rowData={this.props.brand1RowData}
+                    rowData={brand1RowData}
                     priceType={brandComparison.price_type}/>
                 </td>
               )}
               <td className={rowIndex === 0? "segment-border" : ""}>
                 <BrandComparisonProductSelect
-                  products={brand2Products}
+                  options={brand2Options}
                   row = {row}
                   brandIndex="2"
                   onComparisonChange={this.props.onComparisonChange}/>
@@ -104,7 +138,7 @@ class BrandComparisonTable extends React.Component {
                   <BrandComparisonSegmentRowPriceCell
                     storeUrl={storeUrl}
                     product={row.product_2}
-                    rowData={this.props.brand2RowData}
+                    rowData={brand2RowData}
                     priceType={brandComparison.price_type}/>
                 </td>
               )}

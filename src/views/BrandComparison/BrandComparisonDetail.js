@@ -36,13 +36,15 @@ class BrandComparisonDetail extends React.Component {
     }
 
     this.props.fetchAuth(endpoint + `db_brands=${comparison[`brand_${brandIndex}`].id}`).then(json => {
-      const results = json['results'];
+      const rawRowData = json['results'];
 
       for (const segment of comparison.segments) {
         for (const row of segment.rows) {
           if (row[`product_${brandIndex}`]) {
-            if (!results.some(result => result.product.id === row[`product_${brandIndex}`].id)) {
-              results.push({
+            // Manually add the products referenced by the comparison (in case they are not avaialble)
+            const result = rawRowData.filter(result => result.product.id === row[`product_${brandIndex}`].id)[0];
+            if (!result) {
+              rawRowData.push({
                 entities: [],
                 product: row[`product_${brandIndex}`]
               })
@@ -50,8 +52,9 @@ class BrandComparisonDetail extends React.Component {
           }
         }
       }
+
       this.setState({
-        [`brand${brandIndex}RowData`]: results
+        [`brand${brandIndex}RawRowData`]: rawRowData
       })
     });
   };
@@ -77,7 +80,7 @@ class BrandComparisonDetail extends React.Component {
       return <Redirect to={{pathname: '/brand_comparisons'}}/>
     }
 
-    if (!this.state.brand1RowData || !this.state.brand2RowData) {
+    if (!this.state.brand1RawRowData || !this.state.brand2RawRowData) {
       return <div>Loading...</div>
     }
 
@@ -104,8 +107,8 @@ class BrandComparisonDetail extends React.Component {
           <BrandComparisonTable
             brandComparison={brandComparison}
             onComparisonChange={this.handleComparisonChange}
-            brand1RowData={this.state.brand1RowData}
-            brand2RowData={this.state.brand2RowData}
+            brand1RawRowData={this.state.brand1RawRowData}
+            brand2RawRowData={this.state.brand2RawRowData}
           />
         </CardBody>
       </Card>
