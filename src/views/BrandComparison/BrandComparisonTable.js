@@ -31,27 +31,6 @@ class BrandComparisonTable extends React.Component {
     ]
   };
 
-  processRowData = (rawRowData, brandIndex) => {
-    const comparison = this.props.brandComparison;
-    const rowData = rawRowData.map(result => ({
-      ...result,
-      rowIds: [],
-    }));
-
-    for (const segment of comparison.segments) {
-      for (const row of segment.rows) {
-        if (row[`product_${brandIndex}`]) {
-          const result = rowData.filter(result => result.product.id === row[`product_${brandIndex}`].id)[0];
-          if (result) {
-            result.rowIds.push(row.id)
-          }
-        }
-      }
-    }
-
-    return rowData
-  };
-
   render() {
     const brandComparison = this.props.brandComparison;
     const storesDict = {};
@@ -59,20 +38,17 @@ class BrandComparisonTable extends React.Component {
       storesDict[store.url] = store
     }
 
-    const brand1RowData = this.processRowData(this.props.brand1RawRowData, '1');
-    const brand2RowData = this.processRowData(this.props.brand2RawRowData, '2');
+    const brand1Options = this.createOptionsWithGroup(this.props.brand1RowData);
+    const brand2Options = this.createOptionsWithGroup(this.props.brand2RowData);
 
-    const brand1Options = this.createOptionsWithGroup(brand1RowData);
-    const brand2Options = this.createOptionsWithGroup(brand2RowData);
-
-    return <Table bordered size="sm">
+    return <Table className="comparison-table" bordered size="sm">
       <thead>
       <tr>
         <th className="center-aligned">&nbsp;</th>
         <th className="center-aligned">{brandComparison.brand_1.name}</th>
-        {brandComparison.stores.map(storeUrl => <th key={storeUrl} className="center-aligned">{storesDict[storeUrl].name}</th>)}
+        {brandComparison.stores.map(storeUrl => <th key={storeUrl} className="center-aligned pricing-cell">{storesDict[storeUrl].name}</th>)}
         <th className="center-aligned">{brandComparison.brand_2.name}</th>
-        {brandComparison.stores.map(storeUrl => <th key={storeUrl} className="center-aligned">{storesDict[storeUrl].name}</th>)}
+        {brandComparison.stores.map(storeUrl => <th key={storeUrl} className="center-aligned pricing-cell">{storesDict[storeUrl].name}</th>)}
         <th className="center-aligned">&nbsp;</th>
       </tr>
       </thead>
@@ -110,7 +86,7 @@ class BrandComparisonTable extends React.Component {
                   </div>
                 </div>
               </td>}
-              <td className={rowIndex === 0? "segment-border" : ""}>
+              <td className={`row-cell ${rowIndex === 0? "segment-border" : ""}`}>
                 <BrandComparisonProductSelect
                   options={brand1Options}
                   row = {row}
@@ -118,15 +94,17 @@ class BrandComparisonTable extends React.Component {
                   onComparisonChange={this.props.onComparisonChange}/>
               </td>
               {brandComparison.stores.map(storeUrl =>
-                <td key={storeUrl} className={rowIndex === 0? "segment-border" : ""}>
+                <td key={storeUrl} className={`row-cell ${rowIndex === 0? "segment-border" : ""}`}>
                   <BrandComparisonSegmentRowPriceCell
                     storeUrl={storeUrl}
                     product={row.product_1}
-                    rowData={brand1RowData}
+                    rowData={this.props.brand1RowData}
+                    comparisonProduct={row.product_2}
+                    comparisonRowData={this.props.brand2RowData}
                     priceType={brandComparison.price_type}/>
                 </td>
               )}
-              <td className={rowIndex === 0? "segment-border" : ""}>
+              <td className={`row-cell ${rowIndex === 0? "segment-border" : ""}`}>
                 <BrandComparisonProductSelect
                   options={brand2Options}
                   row = {row}
@@ -134,11 +112,11 @@ class BrandComparisonTable extends React.Component {
                   onComparisonChange={this.props.onComparisonChange}/>
               </td>
               {brandComparison.stores.map(storeUrl =>
-                <td key={storeUrl} className={rowIndex === 0? "segment-border" : ""}>
+                <td key={storeUrl} className={`row-cell ${rowIndex === 0? "segment-border" : ""}`}>
                   <BrandComparisonSegmentRowPriceCell
                     storeUrl={storeUrl}
                     product={row.product_2}
-                    rowData={brand2RowData}
+                    rowData={this.props.brand2RowData}
                     priceType={brandComparison.price_type}/>
                 </td>
               )}

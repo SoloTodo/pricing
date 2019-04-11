@@ -15,7 +15,8 @@ class BrandComparisonAddSegmentButton extends React.Component {
 
   toggleAddSegmentModalOpen = () => {
     this.setState({
-      addSegmentModalOpen: !this.state.addSegmentModalOpen
+      addSegmentModalOpen: !this.state.addSegmentModalOpen,
+      name: ''
     })
   };
 

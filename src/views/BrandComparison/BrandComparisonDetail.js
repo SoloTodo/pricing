@@ -7,9 +7,12 @@ import BrandComparisonRenameButton from '../../Components/BrandComparison/BrandC
 import BrandComparisonPriceTypeButton from '../../Components/BrandComparison/BrandComparisonPriceTypeButton'
 import BrandComparisonDeleteButton from '../../Components/BrandComparison/BrandComparisonDeleteButton'
 import BrandComparisonSelectStoresButton from '../../Components/BrandComparison/BrandComparisonSelectStoresButton'
+import BrandComparisonPendingProductsButton from "../../Components/BrandComparison/BrandComparisonPendingProductsButton";
 import BrandComparisonTable from './BrandComparisonTable'
 
 import {apiResourceStateToPropsUtils, filterApiResourceObjectsByType} from "../../react-utils/ApiResource";
+import {areListsEqual} from "../../react-utils/utils";
+
 
 class BrandComparisonDetail extends React.Component {
   constructor(props) {
@@ -24,8 +27,15 @@ class BrandComparisonDetail extends React.Component {
     this.setRowData('2');
   }
 
-  setRowData = brandIndex => {
-    const comparison = this.props.apiResourceObject;
+  componentWillReceiveProps(nextProps, nextContext) {
+    if(!areListsEqual(this.props.apiResourceObject.stores, nextProps.apiResourceObject.stores)){
+      this.setRowData('1', nextProps.apiResourceObject);
+      this.setRowData('2', nextProps.apiResourceObject);
+    }
+  }
+
+  setRowData = (brandIndex, comparison) => {
+    comparison = comparison || this.props.apiResourceObject;
     const categoryId = comparison.category.id;
     const selectedStores = comparison.stores.map(store_url => this.props.stores.filter(store => store.url === store_url)[0].id);
 
@@ -59,6 +69,28 @@ class BrandComparisonDetail extends React.Component {
     });
   };
 
+  processRowData = (rawRowData, brandIndex) => {
+    const comparison = this.props.apiResourceObject;
+    const rowData = rawRowData.map(result => ({
+      ...result,
+      rowIds: [],
+    }));
+
+    for (const segment of comparison.segments) {
+      for (const row of segment.rows) {
+        if (row[`product_${brandIndex}`]) {
+          const result = rowData.filter(result => result.product.id === row[`product_${brandIndex}`].id)[0];
+          if (result) {
+            result.rowIds.push(row.id)
+          }
+        }
+      }
+    }
+
+    return rowData
+  };
+
+
   deleteCallback = () => {
     this.setState({
       deleted:true
@@ -84,6 +116,9 @@ class BrandComparisonDetail extends React.Component {
       return <div>Loading...</div>
     }
 
+    const brand1RowData = this.processRowData(this.state.brand1RawRowData, '1');
+    const brand2RowData = this.processRowData(this.state.brand2RawRowData, '2');
+
     const brandComparison = this.props.apiResourceObject;
     return <div>
       <Card>
@@ -92,6 +127,10 @@ class BrandComparisonDetail extends React.Component {
             brandComparison={brandComparison}
             onComparisonChange={this.handleComparisonChange}/>
           <div>
+            <BrandComparisonPendingProductsButton
+              brandComparison={brandComparison}
+              brand1RowData={brand1RowData}
+              brand2RowData={brand2RowData}/>
             <BrandComparisonSelectStoresButton
               brandComparison={brandComparison}
               onComparisonChange={this.handleComparisonChange}/>
@@ -107,9 +146,8 @@ class BrandComparisonDetail extends React.Component {
           <BrandComparisonTable
             brandComparison={brandComparison}
             onComparisonChange={this.handleComparisonChange}
-            brand1RawRowData={this.state.brand1RawRowData}
-            brand2RawRowData={this.state.brand2RawRowData}
-          />
+            brand1RowData={brand1RowData}
+            brand2RowData={brand2RowData}/>
         </CardBody>
       </Card>
     </div>

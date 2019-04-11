@@ -31,7 +31,7 @@ class BrandComparisonPriceTypeButton extends React.Component {
   render() {
     const brandComparison = this.props.brandComparison;
     return <UncontrolledButtonDropdown className="mr-2">
-      <DropdownToggle color="primary" caret>Tipo Precio: {this.priceTypes[brandComparison.price_type]}</DropdownToggle>
+      <DropdownToggle color="primary" caret>Tipo precio: {this.priceTypes[brandComparison.price_type]}</DropdownToggle>
       <DropdownMenu>
         <ListGroupItem className="d-flex justify-content-between" action onClick={() => this.priceTypeChangeHandler('normal')}>
           Normal {brandComparison.price_type === 'normal'? <i className="fa fa-check"/>:''}

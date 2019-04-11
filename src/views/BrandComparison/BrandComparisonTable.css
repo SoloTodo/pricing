@@ -1,3 +1,11 @@
+.comparison-table {
+    font-size: 12px;
+}
+
+.pricing-cell {
+    width: 100px;
+}
+
 span.rotate {
     writing-mode: vertical-rl;
     white-space: nowrap;
@@ -5,6 +13,9 @@ span.rotate {
 
 td.segment {
     width: 55px;
+    vertical-align: middle;
+}
+td.row-cell {
     vertical-align: middle;
 }
 
