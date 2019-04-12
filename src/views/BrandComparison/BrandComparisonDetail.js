@@ -12,6 +12,7 @@ import BrandComparisonTable from './BrandComparisonTable'
 
 import {apiResourceStateToPropsUtils, filterApiResourceObjectsByType} from "../../react-utils/ApiResource";
 import {areListsEqual} from "../../react-utils/utils";
+import LaddaButton, {EXPAND_LEFT} from "react-ladda"
 
 
 class BrandComparisonDetail extends React.Component {
@@ -19,6 +20,7 @@ class BrandComparisonDetail extends React.Component {
     super(props);
     this.state = {
       deleted: false,
+      loading: false,
     };
   }
 
@@ -33,6 +35,20 @@ class BrandComparisonDetail extends React.Component {
       this.setRowData('2', nextProps.apiResourceObject);
     }
   }
+
+  handleReportButtonClick = e => {
+    e.preventDefault();
+    this.setState({
+      loading: true
+    });
+
+    this.props.fetchAuth(`brand_comparisons/${this.props.apiResourceObject.id}/get_xls`).then(json => {
+      window.location = json.url;
+      this.setState({
+        loading:false
+      })
+    })
+  };
 
   setRowData = (brandIndex, comparison) => {
     comparison = comparison || this.props.apiResourceObject;
@@ -137,6 +153,12 @@ class BrandComparisonDetail extends React.Component {
             <BrandComparisonPriceTypeButton
               brandComparison={brandComparison}
               onComparisonChange={this.handleComparisonChange}/>
+            <LaddaButton loading={this.state.loading}
+                         onClick={this.handleReportButtonClick}
+                         data-style={EXPAND_LEFT}
+                         className="btn btn-primary mr-2">
+              {this.state.loading? 'Generando': 'Descargar'}
+            </LaddaButton>
             <BrandComparisonDeleteButton
               brandComparison={brandComparison}
               callback={this.deleteCallback}/>
