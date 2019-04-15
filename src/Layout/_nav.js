@@ -25,6 +25,12 @@ export default {
       requiredPermission: 'solotodo.backend_list_products'
     },
     {
+      name: 'Comparación de Marcas',
+      url: '/brand_comparisons',
+      icon: 'fas fa-tags',
+      requiredPermission: 'brand_comparisons.backend_list_brand_comparisons'
+    },
+    {
       name: 'Listas de Productos',
       url: '/product_lists',
       icon: 'fas fa-list',

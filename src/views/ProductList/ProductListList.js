@@ -132,13 +132,13 @@ class ProductListList extends React.Component{
                 icon="fas fa-list"
                 label="Listas de Productos"
                 cardClass="card-body"
-                headerButton=<ProductListCreateButton callback={this.updateEndpoint}/>
-            page_size_choices={[10,20,50]}
-            page={this.state.formValues.page}
-            page_size={this.state.formValues.page_size}
-            data={this.state.productLists}
-            columns={columns}
-            onChange={this.state.apiFormFieldChangeHandler}/>
+                headerButton={<ProductListCreateButton callback={this.updateEndpoint}/>}
+                page_size_choices={[10,20,50]}
+                page={this.state.formValues.page}
+                page_size={this.state.formValues.page_size}
+                data={this.state.productLists}
+                columns={columns}
+                onChange={this.state.apiFormFieldChangeHandler}/>
           </Col>
         </Row>
       </ApiForm>

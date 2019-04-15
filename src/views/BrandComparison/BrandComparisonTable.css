@@ -1,0 +1,29 @@
+.comparison-table {
+    font-size: 12px;
+}
+
+.pricing-cell {
+    width: 100px;
+}
+
+span.rotate {
+    writing-mode: vertical-rl;
+    white-space: nowrap;
+}
+
+td.segment {
+    width: 55px;
+    vertical-align: middle;
+}
+td.row-cell {
+    vertical-align: middle;
+}
+
+td.segment-row {
+    width: 40px;
+    vertical-align: middle;
+}
+
+td.segment-border {
+    border-top-width: thick;
+}
