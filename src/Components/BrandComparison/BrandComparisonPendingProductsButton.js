@@ -1,10 +1,6 @@
 import React from 'react'
-import Button from "reactstrap/es/Button";
-import Modal from "reactstrap/es/Modal";
-import ModalHeader from "reactstrap/es/ModalHeader";
-import ModalBody from "reactstrap/es/ModalBody";
-import Row from "reactstrap/es/Row";
-import Col from "reactstrap/es/Col";
+import {Row, Col, Modal, ModalHeader, ModalBody, Button} from 'reactstrap'
+import {NavLink} from "react-router-dom";
 
 class BrandComparisonPendingProductsButton extends React.Component {
   constructor(props) {
@@ -28,12 +24,12 @@ class BrandComparisonPendingProductsButton extends React.Component {
 
     for (const data of this.props.brand1RowData){
       if (!data.rowIds.length) {
-        pendingProducts.brand1.push(data.product.name)
+        pendingProducts.brand1.push(data.product)
       }
     }
     for (const data of this.props.brand2RowData){
       if (!data.rowIds.length) {
-        pendingProducts.brand2.push(data.product.name)
+        pendingProducts.brand2.push(data.product)
       }
     }
 
@@ -53,14 +49,14 @@ class BrandComparisonPendingProductsButton extends React.Component {
               <h4>{this.props.brandComparison.brand_1.name}</h4>
               <ul>
                 {pendingProducts.brand1.map(product=>
-                  <li key={product}>{product}</li>)}
+                  <li key={product.id}><NavLink to={`/products/${product.id}`}>{product.name}</NavLink></li>)}
               </ul>
             </Col>
              <Col sm="6">
                <h4>{this.props.brandComparison.brand_2.name}</h4>
               <ul>
                 {pendingProducts.brand2.map(product=>
-                  <li key={product}>{product}</li>)}
+                  <li key={product.id}><NavLink to={`/products/${product.id}`}>{product.name}</NavLink></li>)}
               </ul>
             </Col>
           </Row>

@@ -77,9 +77,6 @@ class BrandComparisonTable extends React.Component {
                       direction='down'
                       disabled={segmentIndex === brandComparison.segments.length-1}
                       onComparisonChange={this.props.onComparisonChange}/>
-                    <BrandComparisonSegmentAddRowButton
-                      segment={segment}
-                      onComparisonChange={this.props.onComparisonChange}/>
                   </div>
                   <div className="d-flex align-items-center">
                     <span className="rotate">{segment.name}</span>
@@ -121,20 +118,29 @@ class BrandComparisonTable extends React.Component {
                 </td>
               )}
               <td className={`segment-row ${rowIndex === 0 && 'segment-border'}`}>
-                <div className="d-flex justify-content-between">
-                  <BrandComparisonSegmentRowMoveButton
-                    row={row}
-                    direction='up'
-                    disabled={rowIndex === 0}
-                    onComparisonChange={this.props.onComparisonChange}/>
-                  <BrandComparisonSegmentRowMoveButton
-                    row={row}
-                    direction='down'
-                    disabled={rowIndex === segment.rows.length-1}
-                    onComparisonChange={this.props.onComparisonChange}/>
-                  <BrandComparisonSegmentRowDeleteButton
-                    row={row}
-                    onComparisonChange={this.props.onComparisonChange}/>
+                <div className="d-flex flex-column">
+                  <div className="d-flex justify-content-between">
+                    <BrandComparisonSegmentRowMoveButton
+                      row={row}
+                      direction='up'
+                      disabled={rowIndex === 0}
+                      onComparisonChange={this.props.onComparisonChange}/>
+                    <BrandComparisonSegmentRowDeleteButton
+                      row={row}
+                      disabled={segment.rows.length === 1}
+                      onComparisonChange={this.props.onComparisonChange}/>
+                  </div>
+                  <div className="d-flex justify-content-between">
+                    <BrandComparisonSegmentRowMoveButton
+                      row={row}
+                      direction='down'
+                      disabled={rowIndex === segment.rows.length-1}
+                      onComparisonChange={this.props.onComparisonChange}/>
+                    <BrandComparisonSegmentAddRowButton
+                      segment={segment}
+                      row={row}
+                      onComparisonChange={this.props.onComparisonChange}/>
+                  </div>
                 </div>
               </td>
             </tr>

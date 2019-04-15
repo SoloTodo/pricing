@@ -3,6 +3,7 @@ import {connect} from "react-redux";
 import {Modal, ModalHeader, ModalFooter, Button} from "reactstrap";
 
 import {apiResourceStateToPropsUtils} from "../../react-utils/ApiResource";
+import {toast} from "react-toastify";
 
 class BrandComparisonSegmentRowDeleteButton extends React.Component {
   constructor(props) {
@@ -14,6 +15,9 @@ class BrandComparisonSegmentRowDeleteButton extends React.Component {
 
   toggleDeleteModal = e => {
     e && e.preventDefault();
+    if (this.props.disabled) {
+      return
+    }
     this.setState({
       deleteModalOpen: !this.state.deleteModalOpen,
     })
@@ -25,13 +29,16 @@ class BrandComparisonSegmentRowDeleteButton extends React.Component {
     }).then(json => {
       this.toggleDeleteModal();
       this.props.onComparisonChange()
-
+    }).catch(async error => {
+      const json = await error.json();
+      this.toggleDeleteModal();
+      toast.error(json.errors)
     });
   };
 
   render() {
     return <React.Fragment>
-      <a href="/" onClick={this.toggleDeleteModal}><i className="fa fa-close"/></a>
+      <a href="/" className={this.props.disabled? "text-secondary" : ""} onClick={this.toggleDeleteModal}><i className="fa fa-close"/></a>
       <Modal centered isOpen={this.state.deleteModalOpen} toggle={this.toggleDeleteModal}>
         <ModalHeader>Confirmar eliminación de la fila</ModalHeader>
         <ModalFooter>
