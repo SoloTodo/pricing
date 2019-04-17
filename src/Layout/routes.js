@@ -39,6 +39,7 @@ import ProductListDetail from "../views/ProductList/ProductListDetail";
 import ProductListDetailBrowse from "../views/ProductList/ProductListDetailBrowse";
 import BrandComparisonList from "../views/BrandComparison/BrandComparisonList";
 import BrandComparisonDetail from "../views/BrandComparison/BrandComparisonDetail";
+import SkuPositionList from "../views/SkuPosition/SkuPositionList";
 
 // https://github.com/ReactTraining/react-router/tree/master/packages/react-router-config
 const routes = [
@@ -131,7 +132,8 @@ const routes = [
     </RequiredResources>},
   { path: '/brand_comparisons/:id', exact: true, name: params => ({apiResource: 'brand_comparisons', apiResourceObjectId: params.id}), render: props => <RequiredResources resources={['stores', 'currencies']}>
       <ResourceObjectPermission Http404={Page404} match={props.match} resource="brand_comparisons" component={BrandComparisonDetail} />
-    </RequiredResources>}
+    </RequiredResources>},
+  { path: '/sku_positions', exact: true, name: 'Posiciones SKUs', render: props => <SkuPositionList/>}
 ];
 
 export default routes;
