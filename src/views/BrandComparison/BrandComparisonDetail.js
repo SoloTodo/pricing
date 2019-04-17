@@ -42,7 +42,7 @@ class BrandComparisonDetail extends React.Component {
       loading: true
     });
 
-    this.props.fetchAuth(`brand_comparisons/${this.props.apiResourceObject.id}/get_xls`).then(json => {
+    this.props.fetchAuth(`brand_comparisons/${this.props.apiResourceObject.id}/?export_format=xls`).then(json => {
       window.location = json.url;
       this.setState({
         loading:false
