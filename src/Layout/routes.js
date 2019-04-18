@@ -39,7 +39,7 @@ import ProductListDetail from "../views/ProductList/ProductListDetail";
 import ProductListDetailBrowse from "../views/ProductList/ProductListDetailBrowse";
 import BrandComparisonList from "../views/BrandComparison/BrandComparisonList";
 import BrandComparisonDetail from "../views/BrandComparison/BrandComparisonDetail";
-import SkuPositionList from "../views/SkuPosition/SkuPositionList";
+import SkuDetailPositionHistory from "../views/Sku/SkuDetailPositionHistory";
 
 // https://github.com/ReactTraining/react-router/tree/master/packages/react-router-config
 const routes = [
@@ -56,6 +56,9 @@ const routes = [
     </RequiredResources>},
   { path: '/skus/:id/pricing_history', exact:true, name:'Historial de precios', render: props => <RequiredResources resources={['stores']}>
       <ResourceObjectPermission match={props.match} resource="entities" component={SkuDetailPricingHistory} />
+    </RequiredResources>},
+  { path: '/skus/:id/position_history', exact:true, name:'Historial de posiciones', render: props => <RequiredResources resources={['stores', 'categories']}>
+      <ResourceObjectPermission match={props.match} resource="entities" component={SkuDetailPositionHistory} />
     </RequiredResources>},
   { path: '/categories', exact: true, name: 'Categorías', render: props => <RequiredResources resources={['categories']}>
       <CategoryList />
@@ -132,8 +135,7 @@ const routes = [
     </RequiredResources>},
   { path: '/brand_comparisons/:id', exact: true, name: params => ({apiResource: 'brand_comparisons', apiResourceObjectId: params.id}), render: props => <RequiredResources resources={['stores', 'currencies']}>
       <ResourceObjectPermission Http404={Page404} match={props.match} resource="brand_comparisons" component={BrandComparisonDetail} />
-    </RequiredResources>},
-  { path: '/sku_positions', exact: true, name: 'Posiciones SKUs', render: props => <SkuPositionList/>}
+    </RequiredResources>}
 ];
 
 export default routes;

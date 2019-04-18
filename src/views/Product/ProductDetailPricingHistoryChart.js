@@ -74,6 +74,7 @@ class ProductDetailPricingHistoryChart extends React.Component {
         pricingHistory
       })
     }
+    console.log(result);
 
     return result;
   }
