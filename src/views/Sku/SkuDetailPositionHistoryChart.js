@@ -1,7 +1,15 @@
 import React from 'react'
-import {apiResourceStateToPropsUtils, filterApiResourceObjectsByType} from "../../react-utils/ApiResource";
 import {connect} from "react-redux";
 import moment from "moment";
+
+import {
+  apiResourceStateToPropsUtils
+} from "../../react-utils/ApiResource";
+import {
+  chartColors,
+  lightenDarkenColor
+} from "../../react-utils/colors";
+import {Line} from "react-chartjs-2";
 
 class SkuDetailPositionHistoryChart extends React.Component {
   constructor(props) {
@@ -11,31 +19,11 @@ class SkuDetailPositionHistoryChart extends React.Component {
     }
   }
 
-  userHasPositionPermissions = entity => {
-    const store = this.props.stores.filter(store => store.url === entity.store)[0];
-    const category = this.props.categories.filter(category => category.url === entity.category)[0];
-
-    return store.permissions.includes('view_store_entity_positions')
-      && category.permissions.includes('view_category_entity_positions')
-  };
-
-  componentDidMount() {
-    if (this.userHasPositionPermissions(this.props.entity)) {
-      const entity = this.props.entity;
-      const positionEndpoint = `entity_section_positions/?entities=${entity.id}`;
-      this.props.fetchAuth(positionEndpoint).then(json => {
-        this.setState({
-          entityPositions: json.results
-        })
-      })
-    }
-  }
-
   preparePositionHistoryChartData = () => {
     let result = [];
     const convertedData = {};
 
-    for (const position of this.state.entityPositions) {
+    for (const position of this.props.chart.data) {
       const key = position.section.name;
       if (!convertedData[key]) {
         convertedData[key] = []
@@ -54,7 +42,7 @@ class SkuDetailPositionHistoryChart extends React.Component {
         const timestamp = data['timestamp'];
 
         if (lastTimestampSeen) {
-          positionHistory = positionHistory.concat([])
+          positionHistory = positionHistory.concat(this.fillTimeLapse(lastTimestampSeen, timestamp))
         }
 
         let value = data['value'];
@@ -71,16 +59,103 @@ class SkuDetailPositionHistoryChart extends React.Component {
       })
     }
 
-    console.log(result)
+    return result
+  };
+
+  makeEmptyDataPoint = (date) => {
+    return {
+      timestamp: date,
+      value: NaN,
+    }
+  };
+
+  fillTimeLapse = (startDate, endDate) => {
+    const result = [];
+    const targetDate = endDate.clone().startOf('day');
+    let iterDate = startDate.clone().add(1, 'days').startOf('day');
+
+    while (iterDate < targetDate) {
+      result.push(this.makeEmptyDataPoint(iterDate.clone()));
+      iterDate.add(1, 'days')
+    }
+    return result;
   };
 
   render() {
-    if (!this.state.entityPositions) {
-      return null
+    if (!this.props.chart) {
+      return <div/>
     }
 
-    this.preparePositionHistoryChartData();
-    return <div>Hola</div>
+    const entity = this.props.entity;
+    const filledChartData = this.preparePositionHistoryChartData();
+
+    const maxValue = filledChartData.reduce((acum, datapoint) => {
+      const localMax = datapoint.positionHistory.reduce((localAcum, valuePoint) => Math.max(localAcum, valuePoint.value || 0), 0);
+      return Math.max(acum, localMax)
+    }, 0);
+
+    const yAxes = [
+      {id: 'value-axis',
+        ticks: {
+          suggestedMax: maxValue * 1.1,
+          callback: function (value, index, values) {
+            return value
+          }
+        }
+      }
+    ];
+
+    const endDate = this.props.chart.endDate.clone().add(1, 'days');
+
+    const datasets = filledChartData.map((dataset, idx) => {
+      const color = chartColors[idx % chartColors.length];
+      let datasetLabel = dataset.section;
+
+      return {
+        label: datasetLabel,
+        data: dataset.positionHistory.map(datapoint => ({
+          x: datapoint.timestamp,
+          y: datapoint.value.toString(),
+        })),
+        fill: false,
+        borderColor: color,
+        backgroundColor: lightenDarkenColor(color, 40),
+        lineTension: 0
+      }
+    });
+
+    const chartOptions = {
+      title: {
+        display: true,
+        text: entity.name
+      },
+      scales: {
+        xAxes: [{
+          type: 'time',
+          time: {
+            min: this.props.chart.startDate.format('YYYY-MM-DD'),
+            max: endDate.format('YYYY-MM-DD'),
+            displayFormats: {
+              day: 'MMM DD'
+            },
+            unit: 'day'
+          }
+        }],
+        yAxes: yAxes
+      },
+      legend: {
+        position: 'bottom'
+      },
+      maintainAspectRatio:false
+    };
+
+    const chartData = {
+      datasets: datasets
+    };
+
+    return <div id="chart-container" className="flex-grow">
+      <Line data={chartData} options={chartOptions}/>
+    </div>
   }
 }
 
@@ -89,8 +164,6 @@ function mapStateToProps(state) {
 
   return {
     fetchAuth,
-    categories: filterApiResourceObjectsByType(state.apiResourceObjects, 'categories'),
-    stores: filterApiResourceObjectsByType(state.apiResourceObjects, 'stores')
   }
 }
 

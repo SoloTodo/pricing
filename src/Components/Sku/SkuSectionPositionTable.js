@@ -1,8 +1,9 @@
 import React from 'react'
 import {connect} from 'react-redux'
-import {Card, CardHeader, CardBody, Table} from 'reactstrap'
+import {Card, CardHeader, CardBody, Table, Button} from 'reactstrap'
 
 import {apiResourceStateToPropsUtils} from "../../react-utils/ApiResource";
+import {NavLink} from "react-router-dom";
 
 class SkuSectionPositionTable extends React.Component {
   constructor(props) {
@@ -64,7 +65,14 @@ class SkuSectionPositionTable extends React.Component {
     }
 
     return <Card>
-      <CardHeader> Posicionamiento actual</CardHeader>
+      <CardHeader className="d-flex justify-content-between align-items-center">
+        Posicionamiento actual
+        <NavLink to={`/skus/${this.props.entity.id}/position_history`}>
+          <Button color='primary' type="button" className="btn">
+            Ver historial
+          </Button>
+        </NavLink>
+      </CardHeader>
       <CardBody>
         {content}
       </CardBody>
