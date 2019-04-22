@@ -1,5 +1,6 @@
 import React from 'react'
 import {connect} from "react-redux";
+import {Redirect} from "react-router-dom";
 import moment from "moment";
 import {Row, Col, Card, CardHeader, CardBody} from 'reactstrap'
 
@@ -13,7 +14,6 @@ import {
 } from "../../react-utils/api_forms";
 
 import SkuDetailPositionHistoryChart from './SkuDetailPositionHistoryChart'
-
 
 class SkuDetailPositionHistory extends React.Component {
   constructor(props) {
@@ -55,7 +55,7 @@ class SkuDetailPositionHistory extends React.Component {
     const entity = this.props.apiResourceObject;
 
     if (!this.userHasPositionPermissions(entity)) {
-      return <div>No permission</div>
+      return <Redirect to={`/skus/${entity.id}`}/>
     }
 
     const dateRangeInitialMin = moment().startOf('day').subtract(30, 'days');

@@ -35,8 +35,6 @@ class SkuSectionPositionTable extends React.Component {
       return null;
     }
 
-    console.log(this.state.entityPositions);
-
     let content;
 
     if (this.props.entity.activeRegistry) {

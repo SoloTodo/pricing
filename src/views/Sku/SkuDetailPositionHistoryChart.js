@@ -1,10 +1,6 @@
 import React from 'react'
-import {connect} from "react-redux";
 import moment from "moment";
 
-import {
-  apiResourceStateToPropsUtils
-} from "../../react-utils/ApiResource";
 import {
   chartColors,
   lightenDarkenColor
@@ -20,7 +16,7 @@ class SkuDetailPositionHistoryChart extends React.Component {
   }
 
   preparePositionHistoryChartData = () => {
-    let result = [];
+    const result = [];
     const convertedData = {};
 
     for (const position of this.props.chart.data) {
@@ -45,11 +41,9 @@ class SkuDetailPositionHistoryChart extends React.Component {
           positionHistory = positionHistory.concat(this.fillTimeLapse(lastTimestampSeen, timestamp))
         }
 
-        let value = data['value'];
         lastTimestampSeen = timestamp;
         positionHistory.push({
-          section,
-          value,
+          value: data['value'],
           timestamp
         })
       }
@@ -159,12 +153,5 @@ class SkuDetailPositionHistoryChart extends React.Component {
   }
 }
 
-function mapStateToProps(state) {
-  const {fetchAuth} = apiResourceStateToPropsUtils(state);
 
-  return {
-    fetchAuth,
-  }
-}
-
-export default connect(mapStateToProps)(SkuDetailPositionHistoryChart);
+export default SkuDetailPositionHistoryChart;
