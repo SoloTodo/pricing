@@ -16,7 +16,7 @@ export default {
       name: 'SKUs',
       url: '/skus',
       icon: 'fas fa-inbox',
-      requiredPermission: 'solotodo.backend_list_entities'
+      requiredPermission: 'solotodo.backend_list_entities',
     },
     {
       name: 'Productos',

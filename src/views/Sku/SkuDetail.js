@@ -13,6 +13,7 @@ import imageNotAvailable from '../../images/image-not-available.svg';
 import {Row, Col, Card, CardHeader, CardBody, Table, UncontrolledAlert, Button} from "reactstrap";
 // import SkuUserAlertButton from "../../Components/Sku/SkuUserAlertButton";
 import SkuDetailPricingHistoryChart from "./SkuDetailPricingHistoryChart";
+import SkuSectionPositionTable from '../../Components/Sku/SkuSectionPositionTable'
 
 class SkuDetail extends React.Component {
   initialState = {
@@ -227,6 +228,7 @@ class SkuDetail extends React.Component {
                 {/*<SkuUserAlertButton entity={entity}/>*/}
               {/*</CardBody>*/}
             {/*</Card>*/}
+            <SkuSectionPositionTable entity={entity}/>
           </Col>
         </Row>
         <Row>

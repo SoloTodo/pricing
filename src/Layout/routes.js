@@ -39,6 +39,8 @@ import ProductListDetail from "../views/ProductList/ProductListDetail";
 import ProductListDetailBrowse from "../views/ProductList/ProductListDetailBrowse";
 import BrandComparisonList from "../views/BrandComparison/BrandComparisonList";
 import BrandComparisonDetail from "../views/BrandComparison/BrandComparisonDetail";
+import SkuDetailPositionHistory from "../views/Sku/SkuDetailPositionHistory";
+import ReportCurrentSkuPositions from "../views/Report/ReportCurrentSkuPositions";
 
 // https://github.com/ReactTraining/react-router/tree/master/packages/react-router-config
 const routes = [
@@ -55,6 +57,9 @@ const routes = [
     </RequiredResources>},
   { path: '/skus/:id/pricing_history', exact:true, name:'Historial de precios', render: props => <RequiredResources resources={['stores']}>
       <ResourceObjectPermission match={props.match} resource="entities" component={SkuDetailPricingHistory} />
+    </RequiredResources>},
+  { path: '/skus/:id/position_history', exact:true, name:'Historial de posiciones', render: props => <RequiredResources resources={['stores', 'categories']}>
+      <ResourceObjectPermission match={props.match} resource="entities" component={SkuDetailPositionHistory} />
     </RequiredResources>},
   { path: '/categories', exact: true, name: 'Categorías', render: props => <RequiredResources resources={['categories']}>
       <CategoryList />
@@ -109,6 +114,9 @@ const routes = [
     </RequiredResources>},
   { path: '/reports/wtb_report', exact: true, name: 'Reporte donde comprar', render: props => <RequiredResources resources={['wtb_brands', 'categories', 'stores', 'currencies', 'store_types', 'countries']}>
       <ReportWtb />
+    </RequiredResources>},
+  { path: '/reports/current_entity_positions_report', exact: true, name: 'Posicionamiento actual de skus', render: props => <RequiredResources resources={['categories', 'stores', 'brands']}>
+      <ReportCurrentSkuPositions />
     </RequiredResources>},
   { path: '/banners', exact:true, name: 'Banners', render: props => <RequiredResources resources={['stores', 'banner_sections']}>
       <BannerList/>
