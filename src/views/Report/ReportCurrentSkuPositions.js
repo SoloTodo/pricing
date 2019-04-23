@@ -78,7 +78,6 @@ class ReportCurrentSkuPositions extends React.Component {
                   <label>Threshold</label>
                   <ApiFormTextField
                     name="position_threshold"
-                    initialValue="20"
                     debounceTimeout={1}/>
                 </Col>
                 <Col xs="12" sm="7" md="6" lg="12" xl="12">
