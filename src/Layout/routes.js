@@ -41,6 +41,7 @@ import BrandComparisonList from "../views/BrandComparison/BrandComparisonList";
 import BrandComparisonDetail from "../views/BrandComparison/BrandComparisonDetail";
 import SkuDetailPositionHistory from "../views/Sku/SkuDetailPositionHistory";
 import ReportCurrentSkuPositions from "../views/Report/ReportCurrentSkuPositions";
+import ReportHistoricSkuPositions from "../views/Report/ReportHistoricSkuPositions";
 
 // https://github.com/ReactTraining/react-router/tree/master/packages/react-router-config
 const routes = [
@@ -117,6 +118,9 @@ const routes = [
     </RequiredResources>},
   { path: '/reports/current_entity_positions_report', exact: true, name: 'Posicionamiento actual de skus', render: props => <RequiredResources resources={['categories', 'stores', 'brands']}>
       <ReportCurrentSkuPositions />
+    </RequiredResources>},
+  { path: '/reports/historic_entity_positions_report', exact: true, name: 'Posicionamiento historico de skus', render: props => <RequiredResources resources={['categories', 'stores', 'brands']}>
+      <ReportHistoricSkuPositions />
     </RequiredResources>},
   { path: '/banners', exact:true, name: 'Banners', render: props => <RequiredResources resources={['stores', 'banner_sections']}>
       <BannerList/>
