@@ -40,6 +40,7 @@ class StoreDetail extends React.Component {
               <Nav vertical>
                 <NavItem><NavLink to={'/stores/' + store.id}>Información General</NavLink></NavItem>
                 <NavItem><NavLink to={'/stores/' + store.id + '/update_logs'}>Registros de actualización</NavLink></NavItem>
+                <NavItem><NavLink to={'/stores/' + store.id + '/current_sku_positions'}>Posicionamiento actual de SKUs</NavLink></NavItem>
               </Nav>
             </CardBody>
           </Card>

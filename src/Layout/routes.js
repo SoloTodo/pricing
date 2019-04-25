@@ -42,6 +42,7 @@ import BrandComparisonDetail from "../views/BrandComparison/BrandComparisonDetai
 import SkuDetailPositionHistory from "../views/Sku/SkuDetailPositionHistory";
 import ReportCurrentSkuPositions from "../views/Report/ReportCurrentSkuPositions";
 import ReportHistoricSkuPositions from "../views/Report/ReportHistoricSkuPositions";
+import StoreCurrentSkuPositionsReport from "../views/Store/StoreCurrentSkuPositionsReport";
 
 // https://github.com/ReactTraining/react-router/tree/master/packages/react-router-config
 const routes = [
@@ -51,6 +52,9 @@ const routes = [
   { path: '/stores/:id', exact: true, name: params => ({apiResource: 'stores', apiResourceObjectId: params.id}), render: props => <ResourceObjectPermission match={props.match} resource="stores" component={StoreDetail} />},
   { path: '/stores/:id/update_logs', exact: true, name: 'Registros de actualización', render: props => <RequiredResources resources={['categories']}>
       <ResourceObjectPermission match={props.match} resource="stores" permission="view_store_update_logs" component={StoreDetailUpdateLogs} />
+    </RequiredResources>},
+  { path: '/stores/:id/current_sku_positions', exact: true, name: 'Posicionamiento actual de SKUs', render: props => <RequiredResources resources={['categories', 'brands']}>
+      <ResourceObjectPermission match={props.match} resource="stores" permission="view_store_update_logs" component={StoreCurrentSkuPositionsReport} />
     </RequiredResources>},
   { path: '/skus', exact: true, name:'SKUs', render: props => <RequiredResources resources={['categories', 'stores']}><SkuList/></RequiredResources>},
   { path: '/skus/:id', exact: true, name: params => ({apiResource: 'entities', apiResourceObjectId: params.id}), render: props => <RequiredResources resources={['stores', 'categories', 'users_with_staff_actions']}>
