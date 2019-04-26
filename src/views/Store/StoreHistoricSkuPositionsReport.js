@@ -1,5 +1,6 @@
 import React from 'react'
 import {connect} from "react-redux";
+import moment from "moment";
 import {Row, Col, Card, CardHeader, CardBody} from "reactstrap";
 
 import {
@@ -10,8 +11,9 @@ import {
 } from "../../react-utils/api_forms";
 
 import {filterApiResourceObjectsByType} from "../../react-utils/ApiResource";
+import ApiFormDateRangeField from "../../react-utils/api_forms/ApiFormDateRangeField";
 
-class ReportCurrentSkuPositions extends React.Component {
+class StoreHistoricSkuPositionsReport extends React.Component {
   constructor(props) {
     super(props);
 
@@ -34,9 +36,13 @@ class ReportCurrentSkuPositions extends React.Component {
   };
 
   render() {
+    const today = moment().startOf('day');
+    const todayMinus30Days = moment().startOf('day').subtract(30, 'days');
+
+
     return <ApiForm
-      endpoints={['reports/current_entity_positions_report/']}
-      fields={['categories', 'stores', 'brands', 'position_threshold', 'submit']}
+      endpoints={[`stores/${this.props.apiResourceObject.id}/historic_entity_positions_report/`]}
+      fields={['timestamp', 'categories', 'brands', 'position_threshold', 'submit']}
       onResultsChange={this.setDownloadLink}
       requiresSubmit={true}>
       <Row>
@@ -48,20 +54,18 @@ class ReportCurrentSkuPositions extends React.Component {
             <CardBody>
               <Row className="api-form-filters">
                 <Col xs="12" sm="6" md="6" lg="6" xl="6">
+                  <label>Rango de fechas (desde / hasta)</label>
+                  <ApiFormDateRangeField
+                    name="timestamp"
+                    id="timestamp"
+                    initial={[todayMinus30Days, today]}/>
+                </Col>
+                <Col xs="12" sm="6" md="6" lg="6" xl="6">
                   <label>Categorías</label>
                   <ApiFormChoiceField
                     name="categories"
                     multiple={true}
                     choices={this.props.categories}
-                    searchable={true}
-                    placeholder="Todas"/>
-                </Col>
-                <Col xs="12" sm="6" md="6" lg="6" xl="6">
-                  <label>Tiendas</label>
-                  <ApiFormChoiceField
-                    name="stores"
-                    multiple={true}
-                    choices={this.props.stores}
                     searchable={true}
                     placeholder="Todas"/>
                 </Col>
@@ -98,10 +102,9 @@ class ReportCurrentSkuPositions extends React.Component {
 
 function mapStateToProps(state) {
   return {
-    stores: filterApiResourceObjectsByType(state.apiResourceObjects, 'stores').filter(store => store.permissions.includes('view_store_entity_positions')),
     categories: filterApiResourceObjectsByType(state.apiResourceObjects, 'categories').filter(category => category.permissions.includes('view_category_entity_positions')),
     brands: filterApiResourceObjectsByType(state.apiResourceObjects, 'brands'),
   }
 }
 
-export default connect(mapStateToProps)(ReportCurrentSkuPositions);
+export default connect(mapStateToProps)(StoreHistoricSkuPositionsReport);
