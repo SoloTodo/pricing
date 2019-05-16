@@ -40,7 +40,9 @@ import ProductListDetailBrowse from "../views/ProductList/ProductListDetailBrows
 import BrandComparisonList from "../views/BrandComparison/BrandComparisonList";
 import BrandComparisonDetail from "../views/BrandComparison/BrandComparisonDetail";
 import SkuDetailPositionHistory from "../views/Sku/SkuDetailPositionHistory";
-import ReportCurrentSkuPositions from "../views/Report/ReportCurrentSkuPositions";
+import StoreCurrentSkuPositionsReport from "../views/Store/StoreCurrentSkuPositionsReport";
+import StoreHistoricSkuPositionsReport from "../views/Store/StoreHistoricSkuPositionsReport";
+
 
 // https://github.com/ReactTraining/react-router/tree/master/packages/react-router-config
 const routes = [
@@ -50,6 +52,12 @@ const routes = [
   { path: '/stores/:id', exact: true, name: params => ({apiResource: 'stores', apiResourceObjectId: params.id}), render: props => <ResourceObjectPermission match={props.match} resource="stores" component={StoreDetail} />},
   { path: '/stores/:id/update_logs', exact: true, name: 'Registros de actualización', render: props => <RequiredResources resources={['categories']}>
       <ResourceObjectPermission match={props.match} resource="stores" permission="view_store_update_logs" component={StoreDetailUpdateLogs} />
+    </RequiredResources>},
+  { path: '/stores/:id/current_sku_positions', exact: true, name: 'Posicionamiento actual de SKUs', render: props => <RequiredResources resources={['categories', 'brands']}>
+      <ResourceObjectPermission match={props.match} resource="stores" permission="view_store_entity_positions" component={StoreCurrentSkuPositionsReport} />
+    </RequiredResources>},
+  { path: '/stores/:id/historic_sku_positions', exact: true, name: 'Posicionamiento historico de SKUs', render: props => <RequiredResources resources={['categories', 'brands']}>
+      <ResourceObjectPermission match={props.match} resource="stores" permission="view_store_entity_positions" component={StoreHistoricSkuPositionsReport} />
     </RequiredResources>},
   { path: '/skus', exact: true, name:'SKUs', render: props => <RequiredResources resources={['categories', 'stores']}><SkuList/></RequiredResources>},
   { path: '/skus/:id', exact: true, name: params => ({apiResource: 'entities', apiResourceObjectId: params.id}), render: props => <RequiredResources resources={['stores', 'categories', 'users_with_staff_actions']}>
@@ -114,9 +122,6 @@ const routes = [
     </RequiredResources>},
   { path: '/reports/wtb_report', exact: true, name: 'Reporte donde comprar', render: props => <RequiredResources resources={['wtb_brands', 'categories', 'stores', 'currencies', 'store_types', 'countries']}>
       <ReportWtb />
-    </RequiredResources>},
-  { path: '/reports/current_entity_positions_report', exact: true, name: 'Posicionamiento actual de skus', render: props => <RequiredResources resources={['categories', 'stores', 'brands']}>
-      <ReportCurrentSkuPositions />
     </RequiredResources>},
   { path: '/banners', exact:true, name: 'Banners', render: props => <RequiredResources resources={['stores', 'banner_sections']}>
       <BannerList/>
