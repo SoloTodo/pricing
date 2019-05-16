@@ -42,6 +42,7 @@ import BrandComparisonDetail from "../views/BrandComparison/BrandComparisonDetai
 import SkuDetailPositionHistory from "../views/Sku/SkuDetailPositionHistory";
 import StoreCurrentSkuPositionsReport from "../views/Store/StoreCurrentSkuPositionsReport";
 import StoreHistoricSkuPositionsReport from "../views/Store/StoreHistoricSkuPositionsReport";
+import KeywordSearchList from "../views/KeywordSearch/KeywordSearchList";
 
 
 // https://github.com/ReactTraining/react-router/tree/master/packages/react-router-config
@@ -144,6 +145,9 @@ const routes = [
     </RequiredResources>},
   { path: '/brand_comparisons/:id', exact: true, name: params => ({apiResource: 'brand_comparisons', apiResourceObjectId: params.id}), render: props => <RequiredResources resources={['stores', 'currencies']}>
       <ResourceObjectPermission Http404={Page404} match={props.match} resource="brand_comparisons" component={BrandComparisonDetail} />
+    </RequiredResources>},
+  { path: '/keyword_searches', exact:true, name: 'Keyword visibility', render: props => <RequiredResources resources={['stores', 'categories']}>
+      <KeywordSearchList/>
     </RequiredResources>}
 ];
 

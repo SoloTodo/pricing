@@ -42,7 +42,7 @@ export default {
       icon: 'fas fa-bell'
     },
     {
-      name: 'Banner Visibiliy',
+      name: 'Banner Visibility',
       icon: 'fas fa-eye',
       requiredPermission: 'banners.backend_list_banners',
       children: [
@@ -59,6 +59,13 @@ export default {
           url: '/banners/historic_participation'
         },
       ]
+    },
+    {
+      name: 'Keyword Visibility',
+      url: '/keyword_searches',
+      icon: 'fas fa-key',
+      requiredPermission: 'keyword_search_positions.backend_list_keyword_searches'
+
     },
     {
       name: 'Reportes',
