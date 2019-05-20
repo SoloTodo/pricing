@@ -78,7 +78,10 @@ class KeywordSearchList extends React.Component {
       <Row>
         <Col sm="12">
           <Card>
-            <CardHeader className="d-flex justify-content-between align-items-center">Keywords <KeywordSearchCreateButton/></CardHeader>
+            <CardHeader className="d-flex justify-content-between align-items-center">
+              Keywords
+              <KeywordSearchCreateButton callback={this.updateEndpoint}/>
+            </CardHeader>
             <CardBody>
               <ApiFormResultsTable
                 results={this.state.keywordSearches}

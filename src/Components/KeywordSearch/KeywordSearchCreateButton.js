@@ -43,8 +43,8 @@ class KeywordSearchCreateButton extends React.Component {
   };
 
   createKeywordSearch = () => {
-    const store = this.state.newSearchStore;
-    const category = this.state.newSearchCategory;
+    const store = this.state.newSearchStore.value;
+    const category = this.state.newSearchCategory.value;
     const keyword = this.state.newSearchKeyword;
     const threshold = this.state.newSearchThreshold;
     this.props.fetchAuth('keyword_searches/', {
