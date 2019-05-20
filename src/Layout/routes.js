@@ -43,6 +43,8 @@ import SkuDetailPositionHistory from "../views/Sku/SkuDetailPositionHistory";
 import StoreCurrentSkuPositionsReport from "../views/Store/StoreCurrentSkuPositionsReport";
 import StoreHistoricSkuPositionsReport from "../views/Store/StoreHistoricSkuPositionsReport";
 import KeywordSearchList from "../views/KeywordSearch/KeywordSearchList";
+import KeywordSearchDetail from "../views/KeywordSearch/KeywordSearchDetail";
+import KeywordSearchUpdateList from "../views/KeywordSearch/KeywordSearchUpdateList";
 
 
 // https://github.com/ReactTraining/react-router/tree/master/packages/react-router-config
@@ -50,7 +52,8 @@ const routes = [
   //{ path: '/', exact: true, name: 'Home', component:Layout },
   { path: '/account/password_change', exact: true, name: 'Cambiar contraseña', component: PasswordChange },
   { path: '/stores', exact: true, name: 'Tiendas', component: StoreList },
-  { path: '/stores/:id', exact: true, name: params => ({apiResource: 'stores', apiResourceObjectId: params.id}), render: props => <ResourceObjectPermission match={props.match} resource="stores" component={StoreDetail} />},
+  { path: '/stores/:id', exact: true, name: params => ({apiResource: 'stores', apiResourceObjectId: params.id}), render: props =>
+      <ResourceObjectPermission match={props.match} resource="stores" component={StoreDetail} />},
   { path: '/stores/:id/update_logs', exact: true, name: 'Registros de actualización', render: props => <RequiredResources resources={['categories']}>
       <ResourceObjectPermission match={props.match} resource="stores" permission="view_store_update_logs" component={StoreDetailUpdateLogs} />
     </RequiredResources>},
@@ -148,7 +151,11 @@ const routes = [
     </RequiredResources>},
   { path: '/keyword_searches', exact:true, name: 'Keyword visibility', render: props => <RequiredResources resources={['stores', 'categories']}>
       <KeywordSearchList/>
-    </RequiredResources>}
+    </RequiredResources>},
+  { path: '/keyword_searches/:id', exact: true, name: params => ({apiResource: 'keyword_searches', apiResourceObjectId: params.id}), render: props =>
+      <ResourceObjectPermission match={props.match} resource='keyword_searches' component={KeywordSearchDetail}/> },
+  { path: '/keyword_searches/:id/updates', exact:true, name: 'Actualizaciones', render: props =>
+      <ResourceObjectPermission match={props.match} resource='keyword_searches' component={KeywordSearchUpdateList}/>}
 ];
 
 export default routes;

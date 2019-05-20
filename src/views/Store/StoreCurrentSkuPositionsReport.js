@@ -66,7 +66,7 @@ class StoreCurrentSkuPositionsReport extends React.Component {
                     placeholder="Todas"/>
                 </Col>
                 <Col xs="12" sm="6" md="6" lg="6" xl="6">
-                  <label>Threshold</label>
+                  <label>Umbral</label>
                   <ApiFormTextField
                     name="position_threshold"
                     debounceTimeout={1}/>

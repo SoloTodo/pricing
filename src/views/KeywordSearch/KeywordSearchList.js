@@ -14,6 +14,7 @@ import {
   createOrderingOptionChoices
 } from "../../react-utils/api_forms";
 import KeywordSearchCreateButton from "../../Components/KeywordSearch/KeywordSearchCreateButton";
+import {NavLink} from "react-router-dom";
 
 
 class KeywordSearchList extends React.Component {
@@ -45,6 +46,10 @@ class KeywordSearchList extends React.Component {
   render() {
     const columns = [
       {
+        label: 'Id',
+        renderer: keywordSearch => <NavLink to={'/keyword_searches/' + keywordSearch.id}>{keywordSearch.id}</NavLink>
+      },
+      {
         label: 'Tienda',
         ordering: 'store',
         renderer: keywordSearch => keywordSearch.store.name
@@ -59,7 +64,7 @@ class KeywordSearchList extends React.Component {
         renderer: keywordSearch => keywordSearch.keyword
       },
       {
-        label: 'Threshold',
+        label: 'Umbral',
         renderer: keywordSearch => keywordSearch.threshold
       },
     ];
