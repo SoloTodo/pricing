@@ -45,6 +45,7 @@ import StoreHistoricSkuPositionsReport from "../views/Store/StoreHistoricSkuPosi
 import KeywordSearchList from "../views/KeywordSearch/KeywordSearchList";
 import KeywordSearchDetail from "../views/KeywordSearch/KeywordSearchDetail";
 import KeywordSearchUpdateList from "../views/KeywordSearch/KeywordSearchUpdateList";
+import KeywordSearchUpdateDetail from "../views/KeywordSearch/KeywordSearchUpdateDetail";
 
 
 // https://github.com/ReactTraining/react-router/tree/master/packages/react-router-config
@@ -155,7 +156,10 @@ const routes = [
   { path: '/keyword_searches/:id', exact: true, name: params => ({apiResource: 'keyword_searches', apiResourceObjectId: params.id}), render: props =>
       <ResourceObjectPermission match={props.match} resource='keyword_searches' component={KeywordSearchDetail}/> },
   { path: '/keyword_searches/:id/updates', exact:true, name: 'Actualizaciones', render: props =>
-      <ResourceObjectPermission match={props.match} resource='keyword_searches' component={KeywordSearchUpdateList}/>}
+      <ResourceObjectPermission match={props.match} resource='keyword_searches' component={KeywordSearchUpdateList}/>},
+  { path: '/keyword_search_updates/:id', exact: true, name: params => ({apiResource: 'keyword_search_updates', apiResourceObjectId: params.id}), render: props =>
+      <ResourceObjectPermission match={props.match} resource={'keyword_search_updates'} component={KeywordSearchUpdateDetail}/>
+  }
 ];
 
 export default routes;
