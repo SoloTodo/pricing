@@ -1,5 +1,6 @@
 import React from 'react'
 import {connect} from "react-redux";
+import {NavLink} from "react-router-dom";
 import moment from 'moment';
 import {Row, Col, Card, CardHeader, CardBody} from "reactstrap";
 
@@ -14,7 +15,8 @@ import {
   createOrderingOptionChoices
 } from "../../react-utils/api_forms";
 import KeywordSearchCreateButton from "../../Components/KeywordSearch/KeywordSearchCreateButton";
-import {NavLink} from "react-router-dom";
+import KeywordSearchDeleteButton from "../../Components/KeywordSearch/KeywordSearchDeleteButton";
+
 
 
 class KeywordSearchList extends React.Component {
@@ -67,6 +69,11 @@ class KeywordSearchList extends React.Component {
         label: 'Umbral',
         renderer: keywordSearch => keywordSearch.threshold
       },
+      {
+        label: 'Eliminar',
+        renderer: keywordSearch => <KeywordSearchDeleteButton
+          keywordSearch={keywordSearch} callback={this.updateEndpoint}/>
+      }
     ];
 
     return <ApiForm
@@ -84,7 +91,7 @@ class KeywordSearchList extends React.Component {
         <Col sm="12">
           <Card>
             <CardHeader className="d-flex justify-content-between align-items-center">
-              Keywords
+              Búsquedas por keywords
               <KeywordSearchCreateButton callback={this.updateEndpoint}/>
             </CardHeader>
             <CardBody>

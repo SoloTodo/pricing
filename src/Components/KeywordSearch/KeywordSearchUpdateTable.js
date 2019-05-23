@@ -8,17 +8,19 @@ class KeywordSearchUpdateTable extends React.Component{
   constructor(props) {
     super(props);
     this.state = {
-      positions: undefined
+      positions: []
     }
   }
 
   componentDidMount() {
-    const endpoint = this.props.updateUrl + 'positions/';
-    this.props.fetchAuth(endpoint).then(positions => {
-      this.setState({
-        positions
+    if (this.props.updateUrl) {
+      const endpoint = this.props.updateUrl + 'positions/';
+      this.props.fetchAuth(endpoint).then(positions => {
+        this.setState({
+          positions
+        })
       })
-    })
+    }
   }
 
   render() {
@@ -30,12 +32,15 @@ class KeywordSearchUpdateTable extends React.Component{
       </tr>
       </thead>
       <tbody>
-      {this.state.positions && this.state.positions.map(position =>
+      {this.props.updateUrl? this.state.positions.map(position =>
         <tr key={position.value}>
           <td><NavLink to={'/skus/' + position.entity.id}>{position.entity.name}</NavLink></td>
           <td>{position.value}</td>
+        </tr>) :
+        <tr>
+          <td colSpan="2"><i>No hay información de posiciones en este momento.</i></td>
         </tr>
-      )}
+      }
       </tbody>
 
     </Table>
