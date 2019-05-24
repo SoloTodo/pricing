@@ -1,24 +1,19 @@
 import React from 'react'
 import {connect} from "react-redux";
-import moment from "moment";
-import {Row, Col, Card, CardHeader, CardBody} from "reactstrap";
+import {Row, Col, Card, CardHeader, CardBody} from 'reactstrap'
 
 import {
   ApiForm,
   ApiFormChoiceField,
-  ApiFormSubmitButton,
-  ApiFormTextField
+  ApiFormSubmitButton
 } from "../../react-utils/api_forms";
-
 import {filterApiResourceObjectsByType} from "../../react-utils/ApiResource";
-import ApiFormDateRangeField from "../../react-utils/api_forms/ApiFormDateRangeField";
 
-class StoreHistoricSkuPositionsReport extends React.Component {
+class KeywordSearchActiveReport extends React.Component {
   constructor(props) {
     super(props);
-
     this.state = {
-      downloadLink: undefined
+      downloadLink:undefined
     }
   }
 
@@ -36,60 +31,50 @@ class StoreHistoricSkuPositionsReport extends React.Component {
   };
 
   render() {
-    const today = moment().startOf('day');
-    const todayMinus30Days = moment().startOf('day').subtract(30, 'days');
-
-
     return <ApiForm
-      endpoints={[`stores/${this.props.apiResourceObject.id}/historic_entity_positions_report/`]}
-      fields={['timestamp', 'categories', 'brands', 'position_threshold', 'submit']}
+      endpoints={['keyword_searches/active_positions_report/']}
+      fields={['store', 'categories', 'brands', 'submit']}
       onResultsChange={this.setDownloadLink}
       requiresSubmit={true}>
       <Row>
         <Col sm="12">
           <Card>
             <CardHeader>
-              <i className="fas fa-search">&nbsp;</i>Filtros
+              <i className="fas fa-search"/> Filtros
             </CardHeader>
             <CardBody>
               <Row className="api-form-filters">
                 <Col xs="12" sm="6" md="6" lg="6" xl="6">
-                  <label>Rango de fechas (desde / hasta)</label>
-                  <ApiFormDateRangeField
-                    name="timestamp"
-                    id="timestamp"
-                    initial={[todayMinus30Days, today]}/>
+                  <label>Tienda</label>
+                  <ApiFormChoiceField
+                    name="store"
+                    required={true}
+                    choices={this.props.stores}
+                    searchable={true}/>
                 </Col>
                 <Col xs="12" sm="6" md="6" lg="6" xl="6">
                   <label>Categorías</label>
                   <ApiFormChoiceField
                     name="categories"
-                    multiple={true}
                     choices={this.props.categories}
-                    searchable={true}
-                    placeholder="Todas"/>
+                    multiple={true}
+                    placeholder='Todas'
+                    searchable={true}/>
                 </Col>
                 <Col xs="12" sm="6" md="6" lg="6" xl="6">
                   <label>Marcas</label>
                   <ApiFormChoiceField
                     name="brands"
-                    multiple={true}
                     choices={this.props.brands}
-                    searchable={true}
-                    placeholder="Todas"/>
-                </Col>
-                <Col xs="12" sm="6" md="6" lg="6" xl="6">
-                  <label>Umbral</label>
-                  <ApiFormTextField
-                    name="position_threshold"
-                    debounceTimeout={1}/>
+                    multiple={true}
+                    placeholder='Todas'
+                    searchable={true}/>
                 </Col>
                 <Col xs="12" sm="7" md="6" lg="12" xl="12">
                   <label htmlFor="submit">&nbsp;</label>
                   <ApiFormSubmitButton
-                    label="Generar"
-                    loadingLabel="Generando"
-                    loading={this.state.downloadLink === null}/>
+                    label='Generar'
+                    loadingLabel='Generando'/>
                 </Col>
               </Row>
             </CardBody>
@@ -102,9 +87,10 @@ class StoreHistoricSkuPositionsReport extends React.Component {
 
 function mapStateToProps(state) {
   return {
-    categories: filterApiResourceObjectsByType(state.apiResourceObjects, 'categories').filter(category => category.permissions.includes('view_category_entity_positions')),
+    stores: filterApiResourceObjectsByType(state.apiResourceObjects, 'stores').filter(store => store.permissions.includes('create_store_keyword_search')),
+    categories: filterApiResourceObjectsByType(state.apiResourceObjects, 'categories').filter(category => category.permissions.includes('create_category_keyword_search')),
     brands: filterApiResourceObjectsByType(state.apiResourceObjects, 'brands'),
   }
 }
 
-export default connect(mapStateToProps)(StoreHistoricSkuPositionsReport);
+export default connect(mapStateToProps)(KeywordSearchActiveReport);

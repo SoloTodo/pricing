@@ -42,6 +42,11 @@ import BrandComparisonDetail from "../views/BrandComparison/BrandComparisonDetai
 import SkuDetailPositionHistory from "../views/Sku/SkuDetailPositionHistory";
 import StoreCurrentSkuPositionsReport from "../views/Store/StoreCurrentSkuPositionsReport";
 import StoreHistoricSkuPositionsReport from "../views/Store/StoreHistoricSkuPositionsReport";
+import KeywordSearchList from "../views/KeywordSearch/KeywordSearchList";
+import KeywordSearchDetail from "../views/KeywordSearch/KeywordSearchDetail";
+import KeywordSearchUpdateList from "../views/KeywordSearch/KeywordSearchUpdateList";
+import KeywordSearchUpdateDetail from "../views/KeywordSearch/KeywordSearchUpdateDetail";
+import KeywordSearchActiveReport from "../views/KeywordSearch/KeywordSearchActiveReport";
 
 
 // https://github.com/ReactTraining/react-router/tree/master/packages/react-router-config
@@ -49,7 +54,8 @@ const routes = [
   //{ path: '/', exact: true, name: 'Home', component:Layout },
   { path: '/account/password_change', exact: true, name: 'Cambiar contraseña', component: PasswordChange },
   { path: '/stores', exact: true, name: 'Tiendas', component: StoreList },
-  { path: '/stores/:id', exact: true, name: params => ({apiResource: 'stores', apiResourceObjectId: params.id}), render: props => <ResourceObjectPermission match={props.match} resource="stores" component={StoreDetail} />},
+  { path: '/stores/:id', exact: true, name: params => ({apiResource: 'stores', apiResourceObjectId: params.id}), render: props =>
+      <ResourceObjectPermission match={props.match} resource="stores" component={StoreDetail} />},
   { path: '/stores/:id/update_logs', exact: true, name: 'Registros de actualización', render: props => <RequiredResources resources={['categories']}>
       <ResourceObjectPermission match={props.match} resource="stores" permission="view_store_update_logs" component={StoreDetailUpdateLogs} />
     </RequiredResources>},
@@ -144,7 +150,20 @@ const routes = [
     </RequiredResources>},
   { path: '/brand_comparisons/:id', exact: true, name: params => ({apiResource: 'brand_comparisons', apiResourceObjectId: params.id}), render: props => <RequiredResources resources={['stores', 'currencies']}>
       <ResourceObjectPermission Http404={Page404} match={props.match} resource="brand_comparisons" component={BrandComparisonDetail} />
-    </RequiredResources>}
+    </RequiredResources>},
+  { path: '/keyword_searches', exact:true, name: 'Keyword visibility', render: props => <RequiredResources resources={['stores', 'categories']}>
+      <KeywordSearchList/>
+    </RequiredResources>},
+  { path: '/keyword_searches/active_report', exact: true, name: 'Reporte actual', render: props => <RequiredResources resources={['stores', 'categories', 'brands']}>
+      <KeywordSearchActiveReport/>
+    </RequiredResources>},
+  { path: '/keyword_searches/:id', exact: true, name: params => ({apiResource: 'keyword_searches', apiResourceObjectId: params.id}), render: props =>
+      <ResourceObjectPermission match={props.match} resource='keyword_searches' component={KeywordSearchDetail}/> },
+  { path: '/keyword_searches/:id/updates', exact:true, name: 'Actualizaciones', render: props =>
+      <ResourceObjectPermission match={props.match} resource='keyword_searches' component={KeywordSearchUpdateList}/>},
+  { path: '/keyword_search_updates/:id', exact: true, name: params => ({apiResource: 'keyword_search_updates', apiResourceObjectId: params.id}), render: props =>
+      <ResourceObjectPermission match={props.match} resource={'keyword_search_updates'} component={KeywordSearchUpdateDetail}/>
+  },
 ];
 
 export default routes;
