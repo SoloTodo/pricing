@@ -46,6 +46,7 @@ import KeywordSearchList from "../views/KeywordSearch/KeywordSearchList";
 import KeywordSearchDetail from "../views/KeywordSearch/KeywordSearchDetail";
 import KeywordSearchUpdateList from "../views/KeywordSearch/KeywordSearchUpdateList";
 import KeywordSearchUpdateDetail from "../views/KeywordSearch/KeywordSearchUpdateDetail";
+import KeywordSearchActiveReport from "../views/KeywordSearch/KeywordSearchActiveReport";
 
 
 // https://github.com/ReactTraining/react-router/tree/master/packages/react-router-config
@@ -153,13 +154,16 @@ const routes = [
   { path: '/keyword_searches', exact:true, name: 'Keyword visibility', render: props => <RequiredResources resources={['stores', 'categories']}>
       <KeywordSearchList/>
     </RequiredResources>},
+  { path: '/keyword_searches/active_report', exact: true, name: 'Reporte actual', render: props => <RequiredResources resources={['stores', 'categories', 'brands']}>
+      <KeywordSearchActiveReport/>
+    </RequiredResources>},
   { path: '/keyword_searches/:id', exact: true, name: params => ({apiResource: 'keyword_searches', apiResourceObjectId: params.id}), render: props =>
       <ResourceObjectPermission match={props.match} resource='keyword_searches' component={KeywordSearchDetail}/> },
   { path: '/keyword_searches/:id/updates', exact:true, name: 'Actualizaciones', render: props =>
       <ResourceObjectPermission match={props.match} resource='keyword_searches' component={KeywordSearchUpdateList}/>},
   { path: '/keyword_search_updates/:id', exact: true, name: params => ({apiResource: 'keyword_search_updates', apiResourceObjectId: params.id}), render: props =>
       <ResourceObjectPermission match={props.match} resource={'keyword_search_updates'} component={KeywordSearchUpdateDetail}/>
-  }
+  },
 ];
 
 export default routes;

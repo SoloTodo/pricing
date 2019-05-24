@@ -62,9 +62,18 @@ export default {
     },
     {
       name: 'Keyword Visibility',
-      url: '/keyword_searches',
       icon: 'fas fa-key',
-      requiredPermission: 'keyword_search_positions.backend_list_keyword_searches'
+      requiredPermission: 'keyword_search_positions.backend_list_keyword_searches',
+      children: [
+        {
+          name: 'Búsquedas',
+          url: '/keyword_searches'
+        },
+        {
+          name: 'Reporte actual',
+          url: '/keyword_searches/active_report'
+        }
+      ]
 
     },
     {
