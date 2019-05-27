@@ -11,6 +11,7 @@ import {
 } from "../../react-utils/ApiResource";
 
 import ApiFormTextField from "../../react-utils/api_forms/ApiFormTextField";
+import {toast} from "react-toastify";
 
 
 class ReportCurrentPrices extends Component {
@@ -20,7 +21,7 @@ class ReportCurrentPrices extends Component {
     this.state = {
       formValues: {},
       apiFormFieldChangeHandler: undefined,
-      downloadLink: undefined
+      loading: undefined
     }
   }
 
@@ -34,15 +35,13 @@ class ReportCurrentPrices extends Component {
     this.setState({formValues})
   };
 
-  setDownloadLink = json => {
+  setLoading = json => {
     if (json) {
-      window.location = json.payload.url;
-      this.setState({
-        downloadLink: undefined
-      })
+      toast.success('El reporte esta siendo generado. Una vez finalizado este será enviado a su correo.',
+        {autoClose: false})
     } else {
       this.setState({
-        downloadLink: null
+        loading: null
       })
     }
   };
@@ -57,7 +56,7 @@ class ReportCurrentPrices extends Component {
           <ApiForm
             endpoints={['reports/current_prices/']}
             fields={['category', 'stores', 'countries', 'store_types', 'currency', 'filename', 'submit']}
-            onResultsChange={this.setDownloadLink}
+            onResultsChange={this.setLoading}
             onFormValueChange={this.handleFormValueChange}
             setFieldChangeHandler={this.setApiFormFieldChangeHandler}
             requiresSubmit={true}>
@@ -134,7 +133,7 @@ class ReportCurrentPrices extends Component {
                     label="Generar"
                     loadingLabel="Generando"
                     onChange={this.state.apiFormFieldChangeHandler}
-                    loading={this.state.downloadLink === null}/>
+                    loading={this.state.loading === null}/>
                 </Col>
               </Row>
             </CardBody>
