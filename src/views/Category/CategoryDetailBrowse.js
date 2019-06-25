@@ -50,24 +50,15 @@ class CategoryDetailBrowse extends React.Component {
     this.fieldsData = {};
   }
 
-  apiFormFieldChangeHandlerDecorator = apiFormFieldChangeHandler => {
-    return (updatedFieldsData={}, pushUrl) => {
-      this.fieldsData = {
-        ...this.fieldsData,
-        ...updatedFieldsData
-      };
-      apiFormFieldChangeHandler(updatedFieldsData, pushUrl)
-    }
-  };
-
-  setApiFormFieldChangeHandler = apiFormFieldChangeHandler => {
-    this.setState({
-      apiFormFieldChangeHandler: this.apiFormFieldChangeHandlerDecorator(apiFormFieldChangeHandler)
-    })
-  };
-
   handleFormValueChange = formValues => {
     this.setState({formValues})
+  };
+
+  handleFormFieldsChange = updatedFieldsData  => {
+    this.fieldsData = {
+      ...this.fieldsData,
+      ...updatedFieldsData
+    };
   };
 
   setResults = json => {
@@ -203,7 +194,7 @@ class CategoryDetailBrowse extends React.Component {
 
     this.props.fetchAuth(`${endpoint}&${apiSearch}`)
       .then(json => {
-        window.location = json.url;
+        toast.info('El reporte sera enviado a su correo una vez termine de generarse.', {autoClose: false});
         this.setState({
           loading: false,
         });
@@ -498,7 +489,7 @@ class CategoryDetailBrowse extends React.Component {
         fields={apiFormFields}
         onResultsChange={this.setResults}
         onFormValueChange={this.handleFormValueChange}
-        setFieldChangeHandler={this.setApiFormFieldChangeHandler}>
+        onFormFieldsChange={this.handleFormFieldsChange}>
         <Row>
           <Col sm="12" md="6" lg="8" xl="8">
             <Card>
@@ -506,41 +497,41 @@ class CategoryDetailBrowse extends React.Component {
                 <i className="fas fa-search"/>Parámetros Pricing
               </CardHeader>
               <UncontrolledCollapse toggler="#pricing-parameters">
-              <CardBody>
-                <Row className="api-form-filters">
-                  <Col xs="12" sm="6" md="6" lg="6" xl="6">
-                    <label htmlFor="stores">Tiendas</label>
-                    <ApiFormChoiceField
-                      name="stores"
-                      id="stores"
-                      choices={this.props.stores}
-                      multiple={true}
-                      searchable={!this.props.isExtraSmall}
-                      onChange={this.state.apiFormFieldChangeHandler}
-                      placeholder="Todas"/>
-                  </Col>
-                  <Col xs="12" sm="6" md="6" lg="6" xl="6">
-                    <label htmlFor="countries">Países</label>
-                    <ApiFormChoiceField
-                      name="countries"
-                      id="countries"
-                      choices={countries}
-                      multiple={true}
-                      onChange={this.state.apiFormFieldChangeHandler}
-                      placeholder="Todos"/>
-                  </Col>
-                  <Col xs="12" sm="6" md="6" lg="6" xl="6">
-                    <label htmlFor="store_types">Tipos</label>
-                    <ApiFormChoiceField
-                      name="store_types"
-                      id="store_types"
-                      choices={storeTypes}
-                      multiple={true}
-                      onChange={this.state.apiFormFieldChangeHandler}
-                      placeholder="Todos"/>
-                  </Col>
-                </Row>
-              </CardBody>
+                <CardBody>
+                  <Row className="api-form-filters">
+                    <Col xs="12" sm="6" md="6" lg="6" xl="6">
+                      <label htmlFor="stores">Tiendas</label>
+                      <ApiFormChoiceField
+                        name="stores"
+                        id="stores"
+                        choices={this.props.stores}
+                        multiple={true}
+                        searchable={!this.props.isExtraSmall}
+                        onChange={this.state.apiFormFieldChangeHandler}
+                        placeholder="Todas"/>
+                    </Col>
+                    <Col xs="12" sm="6" md="6" lg="6" xl="6">
+                      <label htmlFor="countries">Países</label>
+                      <ApiFormChoiceField
+                        name="countries"
+                        id="countries"
+                        choices={countries}
+                        multiple={true}
+                        onChange={this.state.apiFormFieldChangeHandler}
+                        placeholder="Todos"/>
+                    </Col>
+                    <Col xs="12" sm="6" md="6" lg="6" xl="6">
+                      <label htmlFor="store_types">Tipos</label>
+                      <ApiFormChoiceField
+                        name="store_types"
+                        id="store_types"
+                        choices={storeTypes}
+                        multiple={true}
+                        onChange={this.state.apiFormFieldChangeHandler}
+                        placeholder="Todos"/>
+                    </Col>
+                  </Row>
+                </CardBody>
               </UncontrolledCollapse>
             </Card>
           </Col>
@@ -548,9 +539,9 @@ class CategoryDetailBrowse extends React.Component {
             <Card>
               <CardHeader id="filters"><i className="fas fa-search"/> Filtros</CardHeader>
               <UncontrolledCollapse toggler="#filters">
-              <CardBody id="category-browse-filters">
-                {filtersComponent}
-              </CardBody>
+                <CardBody id="category-browse-filters">
+                  {filtersComponent}
+                </CardBody>
               </UncontrolledCollapse>
             </Card>
           </Col>
