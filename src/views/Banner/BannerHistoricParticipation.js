@@ -25,7 +25,6 @@ class BannerHistoricParticipation extends React.Component {
   }
 
   setDownloadLink = json => {
-    console.log(json);
     if (json) {
       window.location = json.payload.url;
       this.setState({
