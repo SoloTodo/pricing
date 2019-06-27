@@ -12,6 +12,7 @@ import {
 
 import {filterApiResourceObjectsByType} from "../../react-utils/ApiResource";
 import ApiFormDateRangeField from "../../react-utils/api_forms/ApiFormDateRangeField";
+import {toast} from "react-toastify";
 
 class StoreHistoricSkuPositionsReport extends React.Component {
   constructor(props) {
@@ -22,15 +23,13 @@ class StoreHistoricSkuPositionsReport extends React.Component {
     }
   }
 
-  setDownloadLink = json => {
+  setLoading = json => {
     if (json) {
-      window.location = json.payload.url;
-      this.setState({
-        downloadLink: undefined
-      })
+      toast.success('El reporte esta siendo generado. Una vez finalizado este será enviado a su correo.',
+        {autoClose: false})
     } else {
       this.setState({
-        downloadLink: null
+        loading: null
       })
     }
   };
@@ -43,7 +42,7 @@ class StoreHistoricSkuPositionsReport extends React.Component {
     return <ApiForm
       endpoints={[`stores/${this.props.apiResourceObject.id}/historic_entity_positions_report/`]}
       fields={['timestamp', 'categories', 'brands', 'position_threshold', 'submit']}
-      onResultsChange={this.setDownloadLink}
+      onResultsChange={this.setLoading}
       requiresSubmit={true}>
       <Row>
         <Col sm="12">
