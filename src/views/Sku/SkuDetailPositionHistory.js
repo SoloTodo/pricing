@@ -58,8 +58,8 @@ class SkuDetailPositionHistory extends React.Component {
       return <Redirect to={`/skus/${entity.id}`}/>
     }
 
-    const dateRangeInitialMin = moment().startOf('day').subtract(30, 'days');
-    const dateRangeInitialMax = moment().startOf('day');
+    const dateRangeInitialMin = moment.utc().startOf('day').subtract(30, 'days');
+    const dateRangeInitialMax = moment.utc().startOf('day');
 
     return <ApiForm
       endpoints={[`${entity.url}position_history/`]}

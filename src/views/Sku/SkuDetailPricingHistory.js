@@ -21,16 +21,9 @@ class SkuDetailPricingHistory extends React.Component {
 
     this.state = {
       formValues: {},
-      apiFormFieldChangeHandler: undefined,
       chart: undefined
     }
   }
-
-  setApiFormFieldChangeHandler = apiFormFieldChangeHandler => {
-    this.setState({
-      apiFormFieldChangeHandler
-    })
-  };
 
   handleFormValueChange = formValues => {
     this.setState({formValues})
@@ -59,15 +52,16 @@ class SkuDetailPricingHistory extends React.Component {
   render() {
     const entity = this.props.ApiResourceObject(this.props.apiResourceObject);
 
-    const entityCreationDate = moment(entity.creationDate).startOf('day');
-    const todayMinus30Days = moment().startOf('day').subtract(30, 'days');
+    const entityCreationDate = moment.utc(entity.creationDate).startOf('day');
+    const todayMinus30Days = moment.utc().startOf('day').subtract(30, 'days');
 
     let dateRangeInitialMin = entityCreationDate;
     if (entityCreationDate.isBefore(todayMinus30Days)) {
       dateRangeInitialMin = todayMinus30Days;
     }
 
-    const dateRangeInitialMax = moment().startOf('day');
+
+    const dateRangeInitialMax = moment.utc().startOf('day');
 
     const currencyOptions = this.props.currencies.map(currency => {
       let priority = 3;
@@ -101,8 +95,7 @@ class SkuDetailPricingHistory extends React.Component {
               endpoints={[entity.url + 'pricing_history/']}
               fields={['timestamp', 'currency']}
               onResultsChange={this.setChartData}
-              onFormValueChange={this.handleFormValueChange}
-              setFieldChangeHandler={this.setApiFormFieldChangeHandler}>
+              onFormValueChange={this.handleFormValueChange}>
             <Card>
               <CardHeader>Filtros</CardHeader>
               <CardBody>
@@ -117,8 +110,7 @@ class SkuDetailPricingHistory extends React.Component {
                         label={'Rango de fechas (desde / hasta)'}
                         min={entityCreationDate}
                         initial={[dateRangeInitialMin, dateRangeInitialMax]}
-                        value={this.state.formValues.timestamp}
-                        onChange={this.state.apiFormFieldChangeHandler}/>
+                        value={this.state.formValues.timestamp}/>
                   </Col>
                   <Col xs="12" sm="6" md="6" lg="4" xl="4">
                     <label id="currency_label" className="dashed" htmlFor="currency">
@@ -131,8 +123,7 @@ class SkuDetailPricingHistory extends React.Component {
                         choices={currencyOptions}
                         required={true}
                         searchable={false}
-                        value={this.state.formValues.currency}
-                        onChange={this.state.apiFormFieldChangeHandler}/>
+                        value={this.state.formValues.currency}/>
                   </Col>
                 </Row>
               </CardBody>

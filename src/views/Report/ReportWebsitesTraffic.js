@@ -49,8 +49,8 @@ class ReportWebsitesTraffic extends Component {
   };
 
   render() {
-    const today = moment().startOf('day');
-    const todayMinus7Days = moment().startOf('day').subtract(7, 'days');
+    const today = moment.utc().startOf('day');
+    const todayMinus7Days = moment.utc().startOf('day').subtract(7, 'days');
 
     return <Row>
       <Col sm="12">

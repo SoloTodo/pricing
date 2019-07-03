@@ -74,7 +74,6 @@ class ProductDetailPricingHistoryChart extends React.Component {
         pricingHistory
       })
     }
-    console.log(result);
 
     return result;
   }
@@ -146,7 +145,12 @@ class ProductDetailPricingHistoryChart extends React.Component {
 
       return {
         label: datasetLabel,
-        data: dataset.pricingHistory.map(datapoint => ({x: datapoint.timestamp, y: datapoint.price.toString(), formattedPrice: datapoint.formattedPrice, store: dataset.entity.store.name, cellPlan: dataset.entity.cellPlan})),
+        data: dataset.pricingHistory.map(datapoint => ({
+          x: datapoint.timestamp,
+          y: datapoint.price.toString(),
+          formattedPrice: datapoint.formattedPrice,
+          store: dataset.entity.store.name,
+          cellPlan: dataset.entity.cellPlan})),
         fill: false,
         borderColor: color,
         backgroundColor: lightenDarkenColor(color, 40),
@@ -163,7 +167,7 @@ class ProductDetailPricingHistoryChart extends React.Component {
         xAxes: [{
           type: 'time',
           time: {
-            min: this.props.chart.startDate.format('YYYY-MM-DD'),
+            min: this.props.chart.startDate.format('YfYYY-MM-DD'),
             max: endDate.format('YYYY-MM-DD'),
             displayFormats: {
               day: 'MMM DD'
@@ -183,7 +187,7 @@ class ProductDetailPricingHistoryChart extends React.Component {
             return tooltipItems.length && tooltipItems[0].xLabel.format('llll')
           },
           label: (tooltipItem, data) => {
-            const datapoint = data.datasets[tooltipItem.datasetIndex].data[0];
+            const datapoint = data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index];
             if (datapoint.cellPlan) {
               return `${datapoint.store} (${datapoint.cellPlan.name}): ${datapoint.formattedPrice}`
             } else {
@@ -191,7 +195,7 @@ class ProductDetailPricingHistoryChart extends React.Component {
             }
           }
         },
-        mode: 'nearest',
+        mode: 'point',
         intersect: false,
         // position: 'nearest'
       }

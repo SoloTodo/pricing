@@ -26,12 +26,6 @@ class ReportDailyPrices extends Component {
     }
   }
 
-  setApiFormFieldChangeHandler = apiFormFieldChangeHandler => {
-    this.setState({
-      apiFormFieldChangeHandler
-    })
-  };
-
   handleFormValueChange = formValues => {
     this.setState({formValues})
   };
@@ -48,8 +42,8 @@ class ReportDailyPrices extends Component {
   };
 
   render() {
-    const today = moment().startOf('day');
-    const todayMinus7Days = moment().startOf('day').subtract(7, 'days');
+    const today = moment.utc().startOf('day');
+    const todayMinus7Days = moment.utc().startOf('day').subtract(7, 'days');
 
     return <Row>
       <Col sm="12">
@@ -62,7 +56,6 @@ class ReportDailyPrices extends Component {
             fields={['timestamp', 'category', 'stores', 'countries', 'store_types', 'currency', 'brand', 'exclude_unavailable', 'filename', 'submit']}
             onResultsChange={this.setDownloadLink}
             onFormValueChange={this.handleFormValueChange}
-            setFieldChangeHandler={this.setApiFormFieldChangeHandler}
             requiresSubmit={true}>
             <CardBody>
               <Row className="api-form-filters">
@@ -73,7 +66,6 @@ class ReportDailyPrices extends Component {
                     id="timestamp"
                     initial={[todayMinus7Days, today]}
                     value={this.state.formValues.timestamp}
-                    onChange={this.state.apiFormFieldChangeHandler}
                   />
                 </Col>
 
@@ -83,7 +75,6 @@ class ReportDailyPrices extends Component {
                     name="category"
                     required={true}
                     choices={this.props.categories}
-                    onChange={this.state.apiFormFieldChangeHandler}
                     value={this.state.formValues.category}/>
                 </Col>
 
@@ -93,7 +84,6 @@ class ReportDailyPrices extends Component {
                     name="currency"
                     choices={this.props.currencies}
                     placeholder="No convertir"
-                    onChange={this.state.apiFormFieldChangeHandler}
                     value={this.state.formValues.currency}/>
                 </Col>
 
@@ -105,7 +95,6 @@ class ReportDailyPrices extends Component {
                     multiple={true}
                     placeholder="Todas"
                     searchable={true}
-                    onChange={this.state.apiFormFieldChangeHandler}
                     value={this.state.formValues.stores}/>
                 </Col>
 
@@ -116,7 +105,6 @@ class ReportDailyPrices extends Component {
                     choices={this.props.countries}
                     multiple={true}
                     placeholder="Todos"
-                    onChange={this.state.apiFormFieldChangeHandler}
                     value={this.state.formValues.countries}/>
                 </Col>
 
@@ -127,7 +115,6 @@ class ReportDailyPrices extends Component {
                     choices={this.props.store_types}
                     multiple={true}
                     placeholder="Todos"
-                    onChange={this.state.apiFormFieldChangeHandler}
                     value={this.state.formValues.store_types}/>
                 </Col>
 
@@ -136,7 +123,6 @@ class ReportDailyPrices extends Component {
                   <ApiFormTextField
                     name="brand"
                     placeholder="Opcional"
-                    onChange={this.state.apiFormFieldChangeHandler}
                     debounceTimeout={1}/>
                 </Col>
 
@@ -146,8 +132,7 @@ class ReportDailyPrices extends Component {
                   <ApiFormChoiceField
                     name="exclude_unavailable"
                     choices={booleanChoices}
-                    required={true}
-                    onChange={this.state.apiFormFieldChangeHandler}/>
+                    required={true}/>
                 </Col>
 
                 <Col xs="12" sm="6" md="6" lg="6" xl="6">
@@ -155,7 +140,6 @@ class ReportDailyPrices extends Component {
                   <ApiFormTextField
                     name="filename"
                     placeholder="Opcional"
-                    onChange={this.state.apiFormFieldChangeHandler}
                     debounceTimeout={1}/>
                 </Col>
 
@@ -165,7 +149,6 @@ class ReportDailyPrices extends Component {
                     value={this.state.formValues.submit}
                     label="Generar"
                     loadingLabel="Generar"
-                    onChange={this.state.apiFormFieldChangeHandler}
                     loading={this.state.downloadLink === null}/>
                 </Col>
               </Row>

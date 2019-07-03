@@ -38,8 +38,8 @@ class BannerHistoricParticipation extends React.Component {
   };
 
   render() {
-    const today = moment().startOf('day');
-    const todayMinus30Days = moment().startOf('day').subtract(30, 'days');
+    const today = moment.utc().startOf('day');
+    const todayMinus30Days = moment.utc().startOf('day').subtract(30, 'days');
     const groupingFields = [
       {id: 'brand', name: 'Marca'},
       {id: 'category', name: 'Categoría'},

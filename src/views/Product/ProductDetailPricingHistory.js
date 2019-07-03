@@ -61,8 +61,8 @@ class ProductDetailPricingHistory extends React.Component {
   render() {
     const product = this.props.ApiResourceObject(this.props.apiResourceObject);
 
-    const dateRangeInitialMin = moment().startOf('day').subtract(30, 'days');
-    const dateRangeInitialMax = moment().startOf('day');
+    const dateRangeInitialMin = moment.utc().startOf('day').subtract(30, 'days');
+    const dateRangeInitialMax = moment.utc().startOf('day');
 
     const currencyOptions = this.props.currencies.map(currency => {
       const priority = currency.id === this.props.preferredCurrency.id ? 1 : 2;
