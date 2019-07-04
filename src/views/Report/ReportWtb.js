@@ -1,6 +1,6 @@
 import React from 'react'
 import {connect} from "react-redux";
-import {Row, Col, Card, CardHeader, CardBody} from 'reactstrap'
+import {Row, Col, Card, CardHeader, CardBody, Button} from 'reactstrap'
 import {
   ApiForm,
   ApiFormChoiceField,
@@ -9,6 +9,7 @@ import {
 import {
   filterApiResourceObjectsByType,
 } from "../../react-utils/ApiResource";
+import {pricingStateToPropsUtils} from "../../utils";
 
 
 class ReportWtb extends React.Component {
@@ -43,6 +44,23 @@ class ReportWtb extends React.Component {
         downloadLink: null
       })
     }
+  };
+
+  selectStores = () => {
+    const storeUrls = this.state.formValues.wtb_brand.stores;
+    const storeIds = this.props.stores.filter(store => storeUrls.includes(store.url)).map(store => store.id);
+
+    let urlStores = '';
+
+    for (const storeId of storeIds) {
+      urlStores += `stores=${storeId}&`
+    }
+
+    urlStores += `wtb_brand=${this.state.formValues.wtb_brand.id}`;
+
+    console.log(urlStores)
+
+    window.location = window.location.pathname + '?' + urlStores;
   };
 
   render() {
@@ -135,6 +153,9 @@ class ReportWtb extends React.Component {
                     loadingLabel="Generando"
                     onChange={this.state.apiFormFieldChangeHandler}
                     loading={this.state.downloadLink === null}/>
+                  {this.props.user.is_superuser &&
+                  <Button className="ml-3" onClick={this.selectStores}>Seleccionar Tiendas</Button>
+                  }
                 </Col>
               </Row>
             </CardBody>
@@ -149,8 +170,10 @@ function mapStateToProps(state) {
   const stores = filterApiResourceObjectsByType(state.apiResourceObjects, 'stores').filter(store => store.permissions.includes('view_store_reports'));
   const countryList = stores.map(store => store.country);
   const countries = filterApiResourceObjectsByType(state.apiResourceObjects, 'countries').filter(country => countryList.includes(country.url));
+  const {user} = pricingStateToPropsUtils(state);
 
   return {
+    user,
     stores,
     categories: filterApiResourceObjectsByType(state.apiResourceObjects, 'categories').filter(category => category.permissions.includes('view_category_reports')),
     currencies: filterApiResourceObjectsByType(state.apiResourceObjects, 'currencies'),
