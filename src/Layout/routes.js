@@ -47,6 +47,7 @@ import KeywordSearchDetail from "../views/KeywordSearch/KeywordSearchDetail";
 import KeywordSearchUpdateList from "../views/KeywordSearch/KeywordSearchUpdateList";
 import KeywordSearchUpdateDetail from "../views/KeywordSearch/KeywordSearchUpdateDetail";
 import KeywordSearchActiveReport from "../views/KeywordSearch/KeywordSearchActiveReport";
+import ReportSoicosConversion from "../views/Report/ReportSoicosConversion";
 
 
 // https://github.com/ReactTraining/react-router/tree/master/packages/react-router-config
@@ -128,6 +129,9 @@ const routes = [
     </RequiredResources>},
   { path: '/reports/wtb_report', exact: true, name: 'Reporte donde comprar', render: props => <RequiredResources resources={['wtb_brands', 'categories', 'stores', 'currencies', 'store_types', 'countries']}>
       <ReportWtb />
+    </RequiredResources>},
+  { path: '/reports/soicos_conversions', exact: true, name: 'Reporte conversiones soicos', render: props => <RequiredResources resources={['stores', 'categories', 'websites']}>
+      <ReportSoicosConversion />
     </RequiredResources>},
   { path: '/banners', exact:true, name: 'Banners', render: props => <RequiredResources resources={['stores', 'banner_sections']}>
       <BannerList/>
