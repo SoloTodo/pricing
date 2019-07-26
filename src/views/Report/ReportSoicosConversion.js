@@ -14,8 +14,6 @@ import {
   filterApiResourceObjectsByType,
 } from "../../react-utils/ApiResource";
 
-import {pricingStateToPropsUtils} from "../../utils";
-
 
 class ReportSoicosConversion extends React.Component {
   constructor(props) {
