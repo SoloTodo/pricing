@@ -167,7 +167,7 @@ class ProductDetailPricingHistoryChart extends React.Component {
         xAxes: [{
           type: 'time',
           time: {
-            min: this.props.chart.startDate.format('YfYYY-MM-DD'),
+            min: this.props.chart.startDate.format('YYYY-MM-DD'),
             max: endDate.format('YYYY-MM-DD'),
             displayFormats: {
               day: 'MMM DD'

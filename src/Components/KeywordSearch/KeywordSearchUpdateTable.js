@@ -8,6 +8,7 @@ class KeywordSearchUpdateTable extends React.Component{
   constructor(props) {
     super(props);
     this.state = {
+      update: undefined,
       positions: []
     }
   }
@@ -15,6 +16,11 @@ class KeywordSearchUpdateTable extends React.Component{
   componentDidMount() {
     if (this.props.updateUrl) {
       const endpoint = this.props.updateUrl + 'positions/';
+      this.props.fetchAuth(this.props.updateUrl).then(update => {
+        this.setState({
+          update
+        })
+      });
       this.props.fetchAuth(endpoint).then(positions => {
         this.setState({
           positions
@@ -24,6 +30,25 @@ class KeywordSearchUpdateTable extends React.Component{
   }
 
   render() {
+    const SUCESS = 2;
+    const ERROR = 3;
+
+    if (!this.state.update || !this.state.positions) {
+      return <div/>
+    }
+
+    let noProductsMessage = "Búsqueda de keyword en Proceso.";
+
+    // Exitoso
+    if (this.state.update.status === SUCESS) {
+      noProductsMessage = "La búsqueda del keyword no generó ningún resultado."
+    }
+
+    // Error
+    if (this.state.update.status === ERROR) {
+      noProductsMessage = "Ocurrió un error durante la búsqueda del keyword."
+    }
+
     return <Table striped>
       <thead>
       <tr>
@@ -32,17 +57,16 @@ class KeywordSearchUpdateTable extends React.Component{
       </tr>
       </thead>
       <tbody>
-      {this.props.updateUrl? this.state.positions.map(position =>
+      {this.state.positions.length ? this.state.positions.map(position =>
         <tr key={position.value}>
           <td><NavLink to={'/skus/' + position.entity.id}>{position.entity.name}</NavLink></td>
           <td>{position.value}</td>
         </tr>) :
         <tr>
-          <td colSpan="2"><i>No hay información de posiciones en este momento.</i></td>
+          <td colSpan="2"><i>{noProductsMessage}</i></td>
         </tr>
       }
       </tbody>
-
     </Table>
   }
 }
