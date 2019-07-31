@@ -62,7 +62,8 @@ class KeywordSearchCreateButton extends React.Component {
   };
 
   render() {
-    const stores = this.props.stores.filter(store => store.permissions.includes('create_store_keyword_search'));
+    const validStoresIds = [60, 18, 5, 11, 30, 88, 43, 9, 67, 87];
+    const stores = this.props.stores.filter(store => store.permissions.includes('create_store_keyword_search') && validStoresIds.includes(store.id));
     const categories = this.props.categories.filter(category => category.permissions.includes('create_category_keyword_search'));
 
     return <React.Fragment>
