@@ -1,19 +1,20 @@
 import React from 'react'
-import ReactTable from 'react-table'
-import 'react-table/react-table.css'
-import Big from 'big.js';
-import flatten from 'lodash/flatten'
 import connect from "react-redux/es/connect/connect";
+import {Link} from "react-router-dom";
+import flatten from 'lodash/flatten'
+import {Accordion, AccordionItem} from "react-sanfona";
+import ReactTable from 'react-table'
+import Big from 'big.js';
+
 import {
   apiResourceStateToPropsUtils,
   filterApiResourceObjectsByType
 } from "../../react-utils/ApiResource";
 import {listToObject} from '../../react-utils/utils'
-
 import {pricingStateToPropsUtils} from '../../utils'
-import {Link} from "react-router-dom";
-import {Accordion, AccordionItem} from "react-sanfona";
 import EntityExternalLink from "../../Components/EntityExternalLink";
+
+import 'react-table/react-table.css'
 
 
 class CategoryDetailBrowseResult extends React.Component {
@@ -180,6 +181,87 @@ class CategoryDetailBrowseResult extends React.Component {
     ];
 
     columns.push({
+      Header: preferredStore.name,
+      columns: priceTypes.map(priceType => {
+        const {label, field} = priceType;
+        const priceField = `converted_${field}_price`;
+
+        return {
+          Header: label,
+          id: `${preferredStore.id}_store_${field}_price`,
+          accessor: d => d.entities.filter(entity => entity.store === preferredStore.url),
+          sortMethod: (a, b) => {
+            if (!a.length && !b.length) {
+              return 0
+            }
+
+            if (a.length && !b.length) {
+              return -1
+            }
+
+            if (b.length && !a.length) {
+              return 1
+            }
+
+            return parseFloat(a[0][priceField].minus(b[0][priceField]))
+          },
+          aggregate: values => {
+            return flatten(values).sort((a, b) => parseFloat(a[priceField].minus(b[priceField])));
+          },
+          Aggregated: row => {
+            if (!row.value.length) {
+              return null
+            }
+
+            const bestPrice = row.row[`min_${field}_price`][0][priceField];
+            const storeBestPrice = row.value[0][priceField];
+
+            return <div className={storeBestPrice.eq(bestPrice) ? 'green' : ''}>
+              {row.value.length === 1 ?
+                  <EntityExternalLink
+                      entity={row.value[0]}
+                      label={this.props.formatCurrency(storeBestPrice, preferredCurrency)} />
+                  :
+                  <Accordion>
+                    <AccordionItem
+                        title={this.props.formatCurrency(storeBestPrice, preferredCurrency)}
+                        titleTag="span">
+                      <ul className="list-unstyled mb-0">
+                        {row.value.map(entity => <li key={entity.id}>
+                          <EntityExternalLink
+                              entity={entity}
+                              label={this.props.formatCurrency(entity[priceField], preferredCurrency)} />
+                        </li>)}
+                      </ul>
+                    </AccordionItem>
+                  </Accordion>
+              }
+            </div>
+          },
+          Cell: entitiesData => {
+            if (!entitiesData.value.length) {
+              return null
+            }
+
+            const bestPrice = entitiesData.row[`min_${field}_price`][0][priceField];
+            const bestPriceInEntities = entitiesData.value.some(entity => entity[priceField].eq(bestPrice));
+
+            return <div className={bestPriceInEntities ? 'green' : ''}>
+              {entitiesData.value.map(entity => <div key={entity.id}>
+                <Link to={'/skus/' + entity.id}>
+                  {this.props.formatCurrency(entity[priceField], preferredCurrency)}
+                </Link>
+                <a href={entity.external_url} target="_blank" rel="noopener noreferrer" className="ml-2">
+                  <span className="fas fa-link"/>
+                </a>
+              </div>)}
+            </div>
+          }
+        }
+      })
+    });
+
+    columns.push({
       Header: 'Mínimo',
       columns: priceTypes.map(priceType => {
         const {label, field} = priceType;
@@ -235,6 +317,149 @@ class CategoryDetailBrowseResult extends React.Component {
       })
     });
 
+    columns.push({
+      Header: 'Diferencia con Mínimo',
+      columns: priceTypes.map(priceType => {
+        const {label, field} = priceType;
+        const priceField = `converted_${field}_price`;
+
+
+        return {
+          Header: label,
+          id: `min_${field}_diff`,
+          accessor: d => {
+            d.entities.sort((a, b) => parseFloat(a[priceField].minus(b[priceField])));
+            const minPrice = d.entities[0][priceField];
+            const storeEntity= d.entities.filter(entity => entity.store === preferredStore.url)[0];
+            const storePrice = storeEntity? storeEntity[priceField] : null;
+            return storePrice? (100*(storePrice - minPrice)/minPrice).toFixed(2) : null;
+          },
+          sortMethod: (a, b) => {
+            if (a === null) {
+              return -1
+            }
+
+            if (b === null) {
+              return 1
+            }
+
+            return a - b
+          },
+          aggregate: values => {
+            const numValues = values.filter(value => value !== null);
+            if (!numValues.length) {
+              return null
+            }
+            return Math.max(numValues);
+          },
+          Cell: data => {
+            return data.value === null? 'N/A' : `${data.value}%`
+          }
+        }
+      })
+    });
+
+    columns.push({
+      Header: 'Mediana',
+      columns: priceTypes.map(priceType => {
+        const {label, field} = priceType;
+        const priceField = `converted_${field}_price`;
+
+        return {
+          Header: label,
+          id: `med_${field}_price`,
+          accessor: d => {
+            d.entities.sort((a, b) => parseFloat(a[priceField].minus(b[priceField])));
+            let index = Math.floor(d.entities.length / 2)-1;
+            index = index < 0? 0 : index;
+            return [d.entities[index]]
+          },
+          sortMethod: (a, b) => parseFloat(a[0][priceField].minus(b[0][priceField])),
+          aggregate: values => {
+            const entities = flatten(values);
+            entities.sort((a, b) => parseFloat(a[priceField].minus(b[priceField])));
+            let index = Math.floor(entities.length/2)-1;
+            index = index < 0? 0 : index;
+            return [entities[index]]
+          },
+          Aggregated: row => {
+            return <Accordion>
+              <AccordionItem
+                  title={this.props.formatCurrency(row.value[0][priceField], preferredCurrency)}
+                  titleTag="span">
+                <ul className="list-unstyled mb-0">
+                  {row.value.map(entity => <li key={entity.id}>
+                    <EntityExternalLink
+                        entity={entity}
+                        label={storesDict[entity.store].name} />
+                  </li>)}
+                </ul>
+              </AccordionItem>
+            </Accordion>
+          },
+          Cell: entitiesData => {
+            return <Accordion>
+              <AccordionItem
+                  title={this.props.formatCurrency(entitiesData.value[0][priceField], preferredCurrency)}
+                  titleTag="span">
+                <ul className="list-unstyled mb-0">
+                  {entitiesData.value.map(entity => <li key={entity.id}>
+                    <EntityExternalLink
+                        entity={entity}
+                        label={storesDict[entity.store].name} />
+                  </li>)}
+                </ul>
+              </AccordionItem>
+            </Accordion>
+          }
+        }
+      })
+    });
+
+    columns.push({
+      Header: 'Diferencia con Mediana',
+      columns: priceTypes.map(priceType => {
+        const {label, field} = priceType;
+        const priceField = `converted_${field}_price`;
+
+
+        return {
+          Header: label,
+          id: `median_${field}_diff`,
+          accessor: d => {
+            d.entities.sort((a, b) => parseFloat(a[priceField].minus(b[priceField])));
+            let index = Math.floor(d.entities.length / 2)-1;
+            index = index < 0? 0 : index;
+            const medianPrice = d.entities[index][priceField];
+            const storeEntity= d.entities.filter(entity => entity.store === preferredStore.url)[0];
+            const storePrice = storeEntity? storeEntity[priceField] : null;
+            return storePrice? (100*(storePrice - medianPrice)/medianPrice).toFixed(2) : null;
+          },
+          sortMethod: (a, b) => {
+            if (a === null) {
+              return -1
+            }
+
+            if (b === null) {
+              return 1
+            }
+
+            return a - b
+          },
+          aggregate: values => {
+            const numValues = values.filter(value => value !== null);
+            if (!numValues.length) {
+              return null
+            }
+            return Math.max(numValues);
+          },
+          Cell: data => {
+            return data.value === null? 'N/A' : `${data.value}%`
+          }
+        }
+      })
+    });
+
     const storeUrlsSet = new Set();
 
     for (const entry of data) {
@@ -245,19 +470,10 @@ class CategoryDetailBrowseResult extends React.Component {
 
     const stores = this.props.stores.filter(store => storeUrlsSet.has(store.url));
 
-    if (preferredStore) {
-      stores.sort((a, b) => {
-        if (a.id === preferredStore.id) {
-          return -1
-        } else if (b.id === preferredStore.id) {
-          return 1
-        } else {
-          return a.name.localeCompare(b.name)
-        }
-      });
-    }
-
     for (const store of stores) {
+      if (store.id === preferredStore.id) {
+        continue
+      }
       const storeColumns = priceTypes.map(priceType => {
         const {label, field} = priceType;
         const priceField = `converted_${field}_price`;
@@ -363,9 +579,10 @@ class CategoryDetailBrowseResult extends React.Component {
 
 function mapStateToProps(state) {
   const {ApiResourceObject} = apiResourceStateToPropsUtils(state);
-  const {formatCurrency, preferredCurrency, preferredStore} = pricingStateToPropsUtils(state);
+  const {formatCurrency, preferredCurrency, preferredStore, user} = pricingStateToPropsUtils(state);
 
   return {
+    user: user,
     stores: filterApiResourceObjectsByType(state.apiResourceObjects, 'stores'),
     currencies: filterApiResourceObjectsByType(state.apiResourceObjects, 'currencies'),
     ApiResourceObject,
