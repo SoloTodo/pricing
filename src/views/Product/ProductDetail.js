@@ -8,7 +8,7 @@ import ProductDetailPricesTable from "./ProductDetailPricesTable";
 import {NavLink} from "react-router-dom";
 import {Row, Col, Card, CardHeader, CardBody} from "reactstrap";
 import './ProductDetail.css'
-// import ProductUserAlertButton from "../../Components/Product/ProductUserAlertButton";
+import ProductUserAlertButton from "../../Components/Product/ProductUserAlertButton";
 import ProductAddOrRemoveFromListButton from '../../Components/Product/ProductAddOrRemoveFromListButton'
 import ProductDetailPricingHistoryChart from "./ProductDetailPricingHistoryChart";
 import moment from "moment";
@@ -129,7 +129,7 @@ class ProductDetail extends Component {
           <Card>
             <CardHeader>Opciones</CardHeader>
             <CardBody>
-              {/*<ProductUserAlertButton product={product}/>*/}
+              <ProductUserAlertButton product={product}/>
               <ProductAddOrRemoveFromListButton product={product}/>
             </CardBody>
           </Card>

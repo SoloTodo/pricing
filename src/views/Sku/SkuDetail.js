@@ -11,7 +11,7 @@ import {formatCurrency, formatDateStr} from "../../react-utils/utils";
 import {pricingStateToPropsUtils} from "../../utils";
 import imageNotAvailable from '../../images/image-not-available.svg';
 import {Row, Col, Card, CardHeader, CardBody, Table, UncontrolledAlert, Button} from "reactstrap";
-// import SkuUserAlertButton from "../../Components/Sku/SkuUserAlertButton";
+import SkuUserAlertButton from "../../Components/Sku/SkuUserAlertButton";
 import SkuDetailPricingHistoryChart from "./SkuDetailPricingHistoryChart";
 import SkuSectionPositionTable from '../../Components/Sku/SkuSectionPositionTable'
 
@@ -222,12 +222,12 @@ class SkuDetail extends React.Component {
                 </Table>
               </CardBody>
             </Card>
-            {/*<Card>*/}
-              {/*<CardHeader>Opciones</CardHeader>*/}
-              {/*<CardBody>*/}
-                {/*<SkuUserAlertButton entity={entity}/>*/}
-              {/*</CardBody>*/}
-            {/*</Card>*/}
+            <Card>
+              <CardHeader>Opciones</CardHeader>
+              <CardBody>
+                <SkuUserAlertButton entity={entity}/>
+              </CardBody>
+            </Card>
             <SkuSectionPositionTable entity={entity}/>
           </Col>
         </Row>
