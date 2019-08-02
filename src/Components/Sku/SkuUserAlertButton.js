@@ -16,7 +16,7 @@ class SkuUserAlertButton extends React.Component{
       entity: this.props.entity.id
     });
 
-    this.props.fetchAuth(settings.apiResourceEndpoints.anonymous_alerts, {
+    this.props.fetchAuth(settings.apiResourceEndpoints.user_alerts, {
       method: 'POST',
       body:formData
     }).then(json => {
