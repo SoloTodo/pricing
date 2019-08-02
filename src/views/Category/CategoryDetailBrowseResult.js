@@ -53,7 +53,7 @@ class CategoryDetailBrowseResult extends React.Component {
           converted_offer_price = offer_price
         } else {
           const exchangeRate = preferredCurrency.exchangeRate.div(currenciesDict[entity.currency].exchangeRate)
-          converted_normal_price = normal_price.times(exchangeRate)
+          converted_normal_price = normal_price.times(exchangeRate);
           converted_offer_price = offer_price.times(exchangeRate)
         }
 
@@ -180,86 +180,88 @@ class CategoryDetailBrowseResult extends React.Component {
       }
     ];
 
-    columns.push({
-      Header: preferredStore.name,
-      columns: priceTypes.map(priceType => {
-        const {label, field} = priceType;
-        const priceField = `converted_${field}_price`;
+    if (preferredStore) {
+      columns.push({
+        Header: preferredStore.name,
+        columns: priceTypes.map(priceType => {
+          const {label, field} = priceType;
+          const priceField = `converted_${field}_price`;
 
-        return {
-          Header: label,
-          id: `${preferredStore.id}_store_${field}_price`,
-          accessor: d => d.entities.filter(entity => entity.store === preferredStore.url),
-          sortMethod: (a, b) => {
-            if (!a.length && !b.length) {
-              return 0
-            }
+          return {
+            Header: label,
+            id: `${preferredStore.id}_store_${field}_price`,
+            accessor: d => d.entities.filter(entity => entity.store === preferredStore.url),
+            sortMethod: (a, b) => {
+              if (!a.length && !b.length) {
+                return 0
+              }
 
-            if (a.length && !b.length) {
-              return -1
-            }
+              if (a.length && !b.length) {
+                return -1
+              }
 
-            if (b.length && !a.length) {
-              return 1
-            }
+              if (b.length && !a.length) {
+                return 1
+              }
 
-            return parseFloat(a[0][priceField].minus(b[0][priceField]))
-          },
-          aggregate: values => {
-            return flatten(values).sort((a, b) => parseFloat(a[priceField].minus(b[priceField])));
-          },
-          Aggregated: row => {
-            if (!row.value.length) {
-              return null
-            }
+              return parseFloat(a[0][priceField].minus(b[0][priceField]))
+            },
+            aggregate: values => {
+              return flatten(values).sort((a, b) => parseFloat(a[priceField].minus(b[priceField])));
+            },
+            Aggregated: row => {
+              if (!row.value.length) {
+                return null
+              }
 
-            const bestPrice = row.row[`min_${field}_price`][0][priceField];
-            const storeBestPrice = row.value[0][priceField];
+              const bestPrice = row.row[`min_${field}_price`][0][priceField];
+              const storeBestPrice = row.value[0][priceField];
 
-            return <div className={storeBestPrice.eq(bestPrice) ? 'green' : ''}>
-              {row.value.length === 1 ?
+              return <div className={storeBestPrice.eq(bestPrice) ? 'green' : ''}>
+                {row.value.length === 1 ?
                   <EntityExternalLink
-                      entity={row.value[0]}
-                      label={this.props.formatCurrency(storeBestPrice, preferredCurrency)} />
+                    entity={row.value[0]}
+                    label={this.props.formatCurrency(storeBestPrice, preferredCurrency)}/>
                   :
                   <Accordion>
                     <AccordionItem
-                        title={this.props.formatCurrency(storeBestPrice, preferredCurrency)}
-                        titleTag="span">
+                      title={this.props.formatCurrency(storeBestPrice, preferredCurrency)}
+                      titleTag="span">
                       <ul className="list-unstyled mb-0">
                         {row.value.map(entity => <li key={entity.id}>
                           <EntityExternalLink
-                              entity={entity}
-                              label={this.props.formatCurrency(entity[priceField], preferredCurrency)} />
+                            entity={entity}
+                            label={this.props.formatCurrency(entity[priceField], preferredCurrency)}/>
                         </li>)}
                       </ul>
                     </AccordionItem>
                   </Accordion>
+                }
+              </div>
+            },
+            Cell: entitiesData => {
+              if (!entitiesData.value.length) {
+                return null
               }
-            </div>
-          },
-          Cell: entitiesData => {
-            if (!entitiesData.value.length) {
-              return null
+
+              const bestPrice = entitiesData.row[`min_${field}_price`][0][priceField];
+              const bestPriceInEntities = entitiesData.value.some(entity => entity[priceField].eq(bestPrice));
+
+              return <div className={bestPriceInEntities ? 'green' : ''}>
+                {entitiesData.value.map(entity => <div key={entity.id}>
+                  <Link to={'/skus/' + entity.id}>
+                    {this.props.formatCurrency(entity[priceField], preferredCurrency)}
+                  </Link>
+                  <a href={entity.external_url} target="_blank" rel="noopener noreferrer" className="ml-2">
+                    <span className="fas fa-link"/>
+                  </a>
+                </div>)}
+              </div>
             }
-
-            const bestPrice = entitiesData.row[`min_${field}_price`][0][priceField];
-            const bestPriceInEntities = entitiesData.value.some(entity => entity[priceField].eq(bestPrice));
-
-            return <div className={bestPriceInEntities ? 'green' : ''}>
-              {entitiesData.value.map(entity => <div key={entity.id}>
-                <Link to={'/skus/' + entity.id}>
-                  {this.props.formatCurrency(entity[priceField], preferredCurrency)}
-                </Link>
-                <a href={entity.external_url} target="_blank" rel="noopener noreferrer" className="ml-2">
-                  <span className="fas fa-link"/>
-                </a>
-              </div>)}
-            </div>
           }
-        }
-      })
-    });
+        })
+      });
+    }
 
     columns.push({
       Header: 'Mínimo',
@@ -317,47 +319,54 @@ class CategoryDetailBrowseResult extends React.Component {
       })
     });
 
-    columns.push({
-      Header: 'Diferencia con Mínimo',
-      columns: priceTypes.map(priceType => {
-        const {label, field} = priceType;
-        const priceField = `converted_${field}_price`;
+    if (preferredStore) {
+      columns.push({
+        Header: 'Diferencia con Mínimo',
+        columns: priceTypes.map(priceType => {
+          const {label, field} = priceType;
+          const priceField = `converted_${field}_price`;
 
+          const getColumnValue = (entities, preferredStore, priceField) => {
+            const storeEntity = entities.filter(entity => entity.store === preferredStore.url)[0];
+            const storePrice = storeEntity ? storeEntity[priceField] : null;
 
-        return {
-          Header: label,
-          id: `min_${field}_diff`,
-          accessor: d => {
-            d.entities.sort((a, b) => parseFloat(a[priceField].minus(b[priceField])));
-            const minPrice = d.entities[0][priceField];
-            const storeEntity= d.entities.filter(entity => entity.store === preferredStore.url)[0];
-            const storePrice = storeEntity? storeEntity[priceField] : null;
-            return storePrice? (100*(storePrice - minPrice)/minPrice).toFixed(2) : null;
-          },
-          sortMethod: (a, b) => {
-            if (a === null) {
-              return -1
+            const minPrice = entities[0][priceField];
+
+            return storePrice ? (100 * (storePrice - minPrice) / minPrice).toFixed(2) : null;
+          };
+
+          return {
+            Header: label,
+            id: `min_${field}_diff`,
+            accessor: d => {
+              d.entities.sort((a, b) => parseFloat(a[priceField].minus(b[priceField])));
+              return d.entities;
+            },
+            sortMethod: (a, b) => {
+              const aValue = getColumnValue(a, preferredStore, priceField);
+              const bValue = getColumnValue(b, preferredStore, priceField);
+              if (aValue === null) {
+                return -1
+              }
+
+              if (bValue === null) {
+                return 1
+              }
+
+              return aValue - bValue
+            },
+            aggregate: allEntities => {
+              const entities = flatten(allEntities);
+              return entities.sort((a, b) => parseFloat(a[priceField].minus(b[priceField])));
+            },
+            Cell: data => {
+              const difference = getColumnValue(data.value, preferredStore, priceField);
+              return difference === null ? 'N/A' : `${difference}%`
             }
-
-            if (b === null) {
-              return 1
-            }
-
-            return a - b
-          },
-          aggregate: values => {
-            const numValues = values.filter(value => value !== null);
-            if (!numValues.length) {
-              return null
-            }
-            return Math.max(numValues);
-          },
-          Cell: data => {
-            return data.value === null? 'N/A' : `${data.value}%`
           }
-        }
-      })
-    });
+        })
+      });
+    }
 
     columns.push({
       Header: 'Mediana',
@@ -370,95 +379,81 @@ class CategoryDetailBrowseResult extends React.Component {
           id: `med_${field}_price`,
           accessor: d => {
             d.entities.sort((a, b) => parseFloat(a[priceField].minus(b[priceField])));
-            let index = Math.floor(d.entities.length / 2)-1;
-            index = index < 0? 0 : index;
-            return [d.entities[index]]
-          },
-          sortMethod: (a, b) => parseFloat(a[0][priceField].minus(b[0][priceField])),
-          aggregate: values => {
-            const entities = flatten(values);
-            entities.sort((a, b) => parseFloat(a[priceField].minus(b[priceField])));
-            let index = Math.floor(entities.length/2)-1;
-            index = index < 0? 0 : index;
-            return [entities[index]]
-          },
-          Aggregated: row => {
-            return <Accordion>
-              <AccordionItem
-                  title={this.props.formatCurrency(row.value[0][priceField], preferredCurrency)}
-                  titleTag="span">
-                <ul className="list-unstyled mb-0">
-                  {row.value.map(entity => <li key={entity.id}>
-                    <EntityExternalLink
-                        entity={entity}
-                        label={storesDict[entity.store].name} />
-                  </li>)}
-                </ul>
-              </AccordionItem>
-            </Accordion>
-          },
-          Cell: entitiesData => {
-            return <Accordion>
-              <AccordionItem
-                  title={this.props.formatCurrency(entitiesData.value[0][priceField], preferredCurrency)}
-                  titleTag="span">
-                <ul className="list-unstyled mb-0">
-                  {entitiesData.value.map(entity => <li key={entity.id}>
-                    <EntityExternalLink
-                        entity={entity}
-                        label={storesDict[entity.store].name} />
-                  </li>)}
-                </ul>
-              </AccordionItem>
-            </Accordion>
-          }
-        }
-      })
-    });
-
-    columns.push({
-      Header: 'Diferencia con Mediana',
-      columns: priceTypes.map(priceType => {
-        const {label, field} = priceType;
-        const priceField = `converted_${field}_price`;
-
-
-        return {
-          Header: label,
-          id: `median_${field}_diff`,
-          accessor: d => {
-            d.entities.sort((a, b) => parseFloat(a[priceField].minus(b[priceField])));
-            let index = Math.floor(d.entities.length / 2)-1;
-            index = index < 0? 0 : index;
-            const medianPrice = d.entities[index][priceField];
-            const storeEntity= d.entities.filter(entity => entity.store === preferredStore.url)[0];
-            const storePrice = storeEntity? storeEntity[priceField] : null;
-            return storePrice? (100*(storePrice - medianPrice)/medianPrice).toFixed(2) : null;
+            return d.entities.map(entity => entity[priceField]);
           },
           sortMethod: (a, b) => {
-            if (a === null) {
-              return -1
-            }
+            const aIndex = Math.floor((a.length-1) / 2);
+            const bIndex = Math.floor((b.length-1) / 2);
 
-            if (b === null) {
-              return 1
-            }
+            const aValue = a[aIndex];
+            const bValue = b[bIndex];
 
-            return a - b
+            return aValue - bValue
           },
-          aggregate: values => {
-            const numValues = values.filter(value => value !== null);
-            if (!numValues.length) {
-              return null
-            }
-            return Math.max(numValues);
+          aggregate: allValues => {
+            const values = flatten(allValues);
+            values.sort((a, b) => parseFloat(a.minus(b)));
+            return values
           },
           Cell: data => {
-            return data.value === null? 'N/A' : `${data.value}%`
+            const index = Math.floor((data.value.length-1) / 2);
+            return this.props.formatCurrency(data.value[index], preferredCurrency)
           }
         }
       })
     });
+
+    if (preferredStore) {
+      columns.push({
+        Header: 'Diferencia con Mediana',
+        columns: priceTypes.map(priceType => {
+          const {label, field} = priceType;
+          const priceField = `converted_${field}_price`;
+
+          const getColumnValue = (entities, preferredStore, priceField) => {
+            const storeEntity = entities.filter(entity => entity.store === preferredStore.url)[0];
+            const storePrice = storeEntity ? storeEntity[priceField] : null;
+
+            const index = Math.floor((entities.length - 1) / 2);
+            const medianPrice = entities[index][priceField];
+
+            return storePrice ? (100 * (storePrice - medianPrice) / medianPrice).toFixed(2) : null;
+          };
+
+          return {
+            Header: label,
+            id: `median_${field}_diff`,
+            accessor: d => {
+              d.entities.sort((a, b) => parseFloat(a[priceField].minus(b[priceField])));
+              return d.entities
+            },
+            sortMethod: (a, b) => {
+              const aValue = getColumnValue(a, preferredStore, priceField);
+              const bValue = getColumnValue(b, preferredStore, priceField);
+
+              if (aValue === null) {
+                return -1
+              }
+
+              if (bValue === null) {
+                return 1
+              }
+
+              return aValue - bValue
+            },
+            aggregate: allEntities => {
+              const entities = flatten(allEntities);
+              entities.sort((a, b) => parseFloat(a[priceField].minus(b[priceField])));
+              return entities
+            },
+            Cell: data => {
+              const difference = getColumnValue(data.value, preferredStore, priceField);
+              return difference === null ? 'N/A' : `${difference}%`
+            }
+          }
+        })
+      });
+    }
 
     const storeUrlsSet = new Set();
 
@@ -471,7 +466,7 @@ class CategoryDetailBrowseResult extends React.Component {
     const stores = this.props.stores.filter(store => storeUrlsSet.has(store.url));
 
     for (const store of stores) {
-      if (store.id === preferredStore.id) {
+      if (preferredStore && store.id === preferredStore.id) {
         continue
       }
       const storeColumns = priceTypes.map(priceType => {
