@@ -155,7 +155,11 @@ class CategoryDetailBrowse extends React.Component {
   }
 
   apiEndpoint = () => {
-    return `categories/${this.props.apiResourceObject.id}/full_browse/`;
+    let endpoint = `categories/${this.props.apiResourceObject.id}/full_browse/`;
+    if (this.props.preferredStore && this.state.formValues.stores && this.state.formValues.stores.length) {
+      endpoint += `?stores=${this.props.preferredStore.id}`
+    }
+    return endpoint
   };
 
   handleFieldsetChange = (fieldset, expanded) => {
@@ -482,7 +486,6 @@ class CategoryDetailBrowse extends React.Component {
 
     const storeTypeUrls = this.props.stores.map(store => store.type);
     const storeTypes = this.props.storeTypes.filter(storeType => storeTypeUrls.includes(storeType.url));
-
     return (
       <ApiForm
         endpoints={[this.apiEndpoint()]}
@@ -574,7 +577,7 @@ class CategoryDetailBrowse extends React.Component {
 
 function mapStateToProps(state) {
   const {ApiResourceObject, fetchAuth} = apiResourceStateToPropsUtils(state);
-  const {preferredCountry, preferredCurrency, preferredNumberFormat, formatCurrency} = pricingStateToPropsUtils(state);
+  const {preferredCountry, preferredCurrency, preferredNumberFormat, preferredStore, formatCurrency} = pricingStateToPropsUtils(state);
 
   return {
     ApiResourceObject,
@@ -582,6 +585,7 @@ function mapStateToProps(state) {
     preferredCountry,
     preferredCurrency,
     preferredNumberFormat,
+    preferredStore,
     formatCurrency,
     currencies: filterApiResourceObjectsByType(state.apiResourceObjects, 'currencies'),
     stores: filterApiResourceObjectsByType(state.apiResourceObjects, 'stores'),
