@@ -331,7 +331,6 @@ class CategoryDetailBrowseResult extends React.Component {
             const storePrice = storeEntity ? storeEntity[priceField] : null;
 
             const minPrice = entities[0][priceField];
-
             return storePrice ? (100 * (storePrice - minPrice) / minPrice).toFixed(2) : null;
           };
 
@@ -339,7 +338,6 @@ class CategoryDetailBrowseResult extends React.Component {
             Header: label,
             id: `min_${field}_diff`,
             accessor: d => {
-              d.entities.sort((a, b) => parseFloat(a[priceField].minus(b[priceField])));
               return d.entities;
             },
             sortMethod: (a, b) => {
@@ -356,11 +354,11 @@ class CategoryDetailBrowseResult extends React.Component {
               return aValue - bValue
             },
             aggregate: allEntities => {
-              const entities = flatten(allEntities);
-              return entities.sort((a, b) => parseFloat(a[priceField].minus(b[priceField])));
+              return flatten(allEntities);
             },
             Cell: data => {
-              const difference = getColumnValue(data.value, preferredStore, priceField);
+              const entities = data.value.sort((a, b) => parseFloat(a[priceField].minus(b[priceField])));
+              const difference = getColumnValue(entities, preferredStore, priceField);
               return difference === null ? 'N/A' : `${difference}%`
             }
           }
@@ -424,7 +422,6 @@ class CategoryDetailBrowseResult extends React.Component {
             Header: label,
             id: `median_${field}_diff`,
             accessor: d => {
-              d.entities.sort((a, b) => parseFloat(a[priceField].minus(b[priceField])));
               return d.entities
             },
             sortMethod: (a, b) => {
@@ -442,12 +439,11 @@ class CategoryDetailBrowseResult extends React.Component {
               return aValue - bValue
             },
             aggregate: allEntities => {
-              const entities = flatten(allEntities);
-              entities.sort((a, b) => parseFloat(a[priceField].minus(b[priceField])));
-              return entities
+              return flatten(allEntities);
             },
             Cell: data => {
-              const difference = getColumnValue(data.value, preferredStore, priceField);
+              const entities = data.value.sort((a, b) => parseFloat(a[priceField].minus(b[priceField])));
+              const difference = getColumnValue(entities, preferredStore, priceField);
               return difference === null ? 'N/A' : `${difference}%`
             }
           }
