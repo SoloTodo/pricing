@@ -98,13 +98,13 @@ const routes = [
   { path: '/products/:id/pricing_history', exact: true, name: 'Historial de precios', render: props=> <RequiredResources resources={['categories', 'stores', 'countries', 'currencies']}>
       <ResourceObjectPermission match={props.match} resource="products" component={ProductDetailPricingHistory}/>
     </RequiredResources>},
-  { path: '/alerts', exact: true, name: 'Alertas', render: props => <RequiredResources resources={['user_alerts', 'stores']}><AlertList/></RequiredResources>},
-  { path: '/alerts/:id', exact: true, name: params => ({apiResource: 'user_alerts', apiResourceObjectId: params.id}), render: props => <RequiredResources resources={['stores']}>
-      <ResourceObjectPermission Http404={Page404} onDelete='/alerts' match={props.match} resource="user_alerts" component={AlertDetail} />
+  { path: '/alerts', exact: true, name: 'Alertas', render: props => <RequiredResources resources={['stores']}><AlertList/></RequiredResources>},
+  { path: '/alerts/:id', exact: true, name: params => ({apiResource: 'alerts', apiResourceObjectId: params.id}), render: props => <RequiredResources resources={['stores']}>
+      <ResourceObjectPermission Http404={Page404} onDelete='/alerts' match={props.match} resource="alerts" component={AlertDetail} />
     </RequiredResources>},
-  { path: '/alerts/:id/change_history', exact: true, name: 'Historial de cambios', render:props => <RequiredResources resources={['stores', 'currencies']}>
-      <ResourceObjectPermission Http404={Page404} match={props.match} resource="user_alerts" component={AlertDetailChangeHistory} />
-    </RequiredResources>},
+  // { path: '/alerts/:id/change_history', exact: true, name: 'Historial de cambios', render:props => <RequiredResources resources={['stores', 'currencies']}>
+  //    <ResourceObjectPermission Http404={Page404} match={props.match} resource="user_alerts" component={AlertDetailChangeHistory} />
+  //  </RequiredResources>},
   { path: '/reports', exact: true, name: 'Reportes', render:props => <RequiredResources resources={['reports']}><ReportList/></RequiredResources>},
   { path: '/reports/current_prices', exact: true, name: 'Precios actuales', render: props => <RequiredResources resources={['categories', 'stores', 'currencies', 'store_types', 'countries']}>
       <ReportCurrentPrices />

@@ -25,8 +25,9 @@ class AlertList extends React.Component{
   }
 
   setAlerts = json => {
+    console.log(json);
     this.setState({
-      alerts: json ? json.payload : null
+      alerts: json ? json.payload.results : null
     })
   };
 
@@ -50,37 +51,37 @@ class AlertList extends React.Component{
         label: 'Producto / SKU',
         renderer: result => result.entity?
           <span>
-            <NavLink to={'/products/' + result.entity.product.id}>{result.entity.product.name}</NavLink>&nbsp;
+            <NavLink to={'/products/' + result.product.id}>{result.product.name}</NavLink>&nbsp;
             (<NavLink to={'/skus/' + result.entity.id}>{result.entity.sku}</NavLink>)
           </span> :
-          <NavLink to={'/products/' + result.alert.product.id}>{result.alert.product.name}</NavLink>
+          <NavLink to={'/products/' + result.product.id}>{result.product.name}</NavLink>
       },
       {
         label: 'Tiendas',
         renderer: result => result.entity?
           this.props.stores.filter(store => store.url === result.entity.store)[0].name :
           <div>
-            {result.alert.stores.map(store_url => <li key={store_url} className="list-without-decoration">
+            {result.stores.map(store_url => <li key={store_url} className="list-without-decoration">
               {this.props.stores.filter(store => store.url === store_url)[0].name}
             </li>)}
           </div>
       },
       {
         label: 'Fecha creación',
-        ordering: 'alert__creation_date',
-        renderer: result => formatDateStr(result.alert.creation_date)
+        ordering: 'creation_date',
+        renderer: result => formatDateStr(result.creation_date)
       }
     ];
 
     return <div>
       <ApiForm
-        endpoints={['user_alerts/']}
+        endpoints={['alerts/']}
         fields={['ordering']}
         onResultsChange={this.setAlerts}
         onFormValueChange={this.handleFormValueChange}>
         <ApiFormChoiceField
           name="ordering"
-          choices={createOrderingOptionChoices(['id', 'alert__creation_date'])}
+          choices={createOrderingOptionChoices(['id', 'creation_date'])}
           hidden={true}
           initial='id' />
         <Row>

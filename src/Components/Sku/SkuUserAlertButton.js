@@ -13,21 +13,23 @@ class SkuUserAlertButton extends React.Component{
 
     const formData = JSON.stringify({
       stores: [this.props.entity.store.id],
-      entity: this.props.entity.id
+      product: this.props.entity.product.id
     });
 
-    this.props.fetchAuth(settings.apiResourceEndpoints.user_alerts, {
+    this.props.fetchAuth(settings.apiResourceEndpoints.alerts, {
       method: 'POST',
       body:formData
     }).then(json => {
       toast.success('Alerta creada exitosamente')
     }).catch(async error => {
+      console.log(error);
       const jsonError = await error.json();
       toast.error(jsonError.non_field_errors[0])
     });
   };
 
   render() {
+    console.log(this.props.entity.product);
     if (this.props.entity.category.permissions.includes('view_category_reports') && this.props.entity.product) {
       return <Button className="btn-success" onClick={this.clickHandler}><i className="fas fa-bell"/> Crear alerta</Button>
     } else {
