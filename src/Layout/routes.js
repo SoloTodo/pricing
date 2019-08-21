@@ -21,7 +21,6 @@ import ProductDetailPricingHistory from "../views/Product/ProductDetailPricingHi
 import CategoryDetail from "../views/Category/CategoryDetail";
 import AlertList from "../views/Alert/AlertList";
 import AlertDetail from "../views/Alert/AlertDetail"
-import AlertDetailChangeHistory from "../views/Alert/AlertDetailChangeHistory"
 import ReportList from "../views/Report/ReportList";
 import ReportCurrentPrices from "../views/Report/ReportCurrentPrices";
 import ReportStoreAnalysis from "../views/Report/ReportStoreAnalysis";

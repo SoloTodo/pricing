@@ -1,5 +1,5 @@
 import React from 'react'
-import {Row, Col, Card, CardHeader, CardBody} from "reactstrap";
+import {Row, Col} from "reactstrap";
 import {connect} from "react-redux";
 import {
   apiResourceStateToPropsUtils,
@@ -8,7 +8,7 @@ import {
 import {
   ApiForm,
   ApiFormChoiceField,
-  ApiFormResultsTable,
+  ApiFormResultTableWithPagination,
   createOrderingOptionChoices
 } from "../../react-utils/api_forms";
 import {formatDateStr} from "../../react-utils/utils";
@@ -25,9 +25,8 @@ class AlertList extends React.Component{
   }
 
   setAlerts = json => {
-    console.log(json);
     this.setState({
-      alerts: json ? json.payload.results : null
+      alerts: json ? json.payload : null
     })
   };
 
@@ -42,10 +41,6 @@ class AlertList extends React.Component{
         label: 'Id',
         ordering: 'id',
         renderer: result => <NavLink to={'/alerts/' + result.id}>{result.id}</NavLink>
-      },
-      {
-        label: 'Tipo',
-        renderer: result => result.entity? 'SKU' : 'Producto'
       },
       {
         label: 'Producto / SKU',
@@ -69,14 +64,14 @@ class AlertList extends React.Component{
       {
         label: 'Fecha creación',
         ordering: 'creation_date',
-        renderer: result => formatDateStr(result.creation_date)
+        renderer: result => formatDateStr(result.creationDate)
       }
     ];
 
     return <div>
       <ApiForm
         endpoints={['alerts/']}
-        fields={['ordering']}
+        fields={['ordering', 'page', 'page_size']}
         onResultsChange={this.setAlerts}
         onFormValueChange={this.handleFormValueChange}>
         <ApiFormChoiceField
@@ -86,22 +81,22 @@ class AlertList extends React.Component{
           initial='id' />
         <Row>
           <Col sm="12">
-            <Card>
-              <CardHeader>Alertas</CardHeader>
-              <CardBody>
-                <ApiFormResultsTable
-                  results={this.state.alerts}
-                  columns={columns}
-                  ordering={this.state.formValues.ordering}/>
-              </CardBody>
-            </Card>
+            <ApiFormResultTableWithPagination
+              icon="fas fa-list"
+              label="Alertas"
+              cardClass="card-body"
+              page_size_choices={[10, 25, 50]}
+              page={this.state.formValues.page}
+              page_size={this.state.formValues.page_size}
+              data={this.state.alerts}
+              columns={columns}
+              ordering={this.state.formValues.ordering}/>
           </Col>
         </Row>
       </ApiForm>
     </div>
   }
 }
-
 
 function mapStateToProps(state) {
   const {fetchAuth} = apiResourceStateToPropsUtils(state);

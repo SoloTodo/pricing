@@ -49,7 +49,7 @@ class ProductUserAlertButton extends React.Component{
       product: this.props.product.id
     });
 
-    this.props.fetchAuth(settings.apiResourceEndpoints.user_alerts, {
+    this.props.fetchAuth(settings.apiResourceEndpoints.alerts, {
       method: 'POST',
       body:formData
     }).then(json => {
