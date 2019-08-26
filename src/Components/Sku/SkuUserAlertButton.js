@@ -13,10 +13,10 @@ class SkuUserAlertButton extends React.Component{
 
     const formData = JSON.stringify({
       stores: [this.props.entity.store.id],
-      entity: this.props.entity.id
+      product: this.props.entity.product.id
     });
 
-    this.props.fetchAuth(settings.apiResourceEndpoints.user_alerts, {
+    this.props.fetchAuth(settings.apiResourceEndpoints.alerts, {
       method: 'POST',
       body:formData
     }).then(json => {
