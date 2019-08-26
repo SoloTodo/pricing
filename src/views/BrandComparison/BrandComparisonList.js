@@ -21,7 +21,7 @@ class BrandComparisonList extends React.Component {
     this.state = {
       formValues: {},
       brandComparisons: undefined,
-      endpoint:'brand_comparisons'
+      endpoint: 'brand_comparisons/'
     };
   }
 
