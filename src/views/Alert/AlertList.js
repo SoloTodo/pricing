@@ -1,5 +1,5 @@
 import React from 'react'
-import {Row, Col, Card, CardHeader, CardBody} from "reactstrap";
+import {Row, Col} from "reactstrap";
 import {connect} from "react-redux";
 import {
   apiResourceStateToPropsUtils,
@@ -8,7 +8,7 @@ import {
 import {
   ApiForm,
   ApiFormChoiceField,
-  ApiFormResultsTable,
+  ApiFormResultTableWithPagination,
   createOrderingOptionChoices
 } from "../../react-utils/api_forms";
 import {formatDateStr} from "../../react-utils/utils";
@@ -43,64 +43,60 @@ class AlertList extends React.Component{
         renderer: result => <NavLink to={'/alerts/' + result.id}>{result.id}</NavLink>
       },
       {
-        label: 'Tipo',
-        renderer: result => result.entity? 'SKU' : 'Producto'
-      },
-      {
         label: 'Producto / SKU',
         renderer: result => result.entity?
           <span>
-            <NavLink to={'/products/' + result.entity.product.id}>{result.entity.product.name}</NavLink>&nbsp;
+            <NavLink to={'/products/' + result.product.id}>{result.product.name}</NavLink>&nbsp;
             (<NavLink to={'/skus/' + result.entity.id}>{result.entity.sku}</NavLink>)
           </span> :
-          <NavLink to={'/products/' + result.alert.product.id}>{result.alert.product.name}</NavLink>
+          <NavLink to={'/products/' + result.product.id}>{result.product.name}</NavLink>
       },
       {
         label: 'Tiendas',
         renderer: result => result.entity?
           this.props.stores.filter(store => store.url === result.entity.store)[0].name :
           <div>
-            {result.alert.stores.map(store_url => <li key={store_url} className="list-without-decoration">
+            {result.stores.map(store_url => <li key={store_url} className="list-without-decoration">
               {this.props.stores.filter(store => store.url === store_url)[0].name}
             </li>)}
           </div>
       },
       {
         label: 'Fecha creación',
-        ordering: 'alert__creation_date',
-        renderer: result => formatDateStr(result.alert.creation_date)
+        ordering: 'creation_date',
+        renderer: result => formatDateStr(result.creationDate)
       }
     ];
 
     return <div>
       <ApiForm
-        endpoints={['user_alerts/']}
-        fields={['ordering']}
+        endpoints={['alerts/']}
+        fields={['ordering', 'page', 'page_size']}
         onResultsChange={this.setAlerts}
         onFormValueChange={this.handleFormValueChange}>
         <ApiFormChoiceField
           name="ordering"
-          choices={createOrderingOptionChoices(['id', 'alert__creation_date'])}
+          choices={createOrderingOptionChoices(['id', 'creation_date'])}
           hidden={true}
           initial='id' />
         <Row>
           <Col sm="12">
-            <Card>
-              <CardHeader>Alertas</CardHeader>
-              <CardBody>
-                <ApiFormResultsTable
-                  results={this.state.alerts}
-                  columns={columns}
-                  ordering={this.state.formValues.ordering}/>
-              </CardBody>
-            </Card>
+            <ApiFormResultTableWithPagination
+              icon="fas fa-list"
+              label="Alertas"
+              cardClass="card-body"
+              page_size_choices={[10, 25, 50]}
+              page={this.state.formValues.page}
+              page_size={this.state.formValues.page_size}
+              data={this.state.alerts}
+              columns={columns}
+              ordering={this.state.formValues.ordering}/>
           </Col>
         </Row>
       </ApiForm>
     </div>
   }
 }
-
 
 function mapStateToProps(state) {
   const {fetchAuth} = apiResourceStateToPropsUtils(state);
