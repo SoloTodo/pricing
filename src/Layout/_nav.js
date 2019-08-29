@@ -42,6 +42,11 @@ export default {
       icon: 'fas fa-bell'
     },
     {
+      name: 'Suscripción a Tiendas',
+      url: '/store_subscriptions',
+      icon: 'fas fa-store'
+    },
+    {
       name: 'Banner Visibility',
       icon: 'fas fa-eye',
       requiredPermission: 'banners.backend_list_banners',
