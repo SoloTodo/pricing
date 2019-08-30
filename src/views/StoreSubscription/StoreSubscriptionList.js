@@ -1,5 +1,17 @@
 import React from 'react'
+import {connect} from "react-redux"
 import moment from "moment";
+import {Row, Col} from "reactstrap";
+
+import {filterApiResourceObjectsByType} from "../../react-utils/ApiResource";
+import {formatDateStr} from "../../react-utils/utils";
+import {
+  ApiForm, ApiFormChoiceField,
+  ApiFormResultTableWithPagination,
+  createOrderingOptionChoices
+} from "../../react-utils/api_forms";
+import StoreSubscriptionCreateButton from "../../Components/StoreSubscription/StoreSubscriptionCreateButton";
+
 
 class StoreSubscriptionList extends React.Component {
   constructor(props) {
@@ -10,12 +22,6 @@ class StoreSubscriptionList extends React.Component {
       endpoint: 'store_subscriptions/'
     }
   }
-
-  subscriptionChangeHandler = () => {
-    this.setState({
-      endpoint: `store_subscriptions/?_=${new Date().getTime()}`
-    })
-  };
 
   handleFormValueChange = formValues => {
     this.setState({
@@ -43,12 +49,44 @@ class StoreSubscriptionList extends React.Component {
       },
       {
         label: 'Tienda',
-        renderer: storeSubscription => <div>Nombre Tienda</div>
+        renderer: storeSubscription => this.props.stores.filter(store => store.url === storeSubscription.store.url)[0].name
+      },
+      {
+        label: 'Fecha creación',
+        renderer: storeSubscription => formatDateStr(storeSubscription.creation_date)
       }
     ];
 
-    return <div>Hola</div>
+    return <div>
+      <ApiForm
+        endpoints={[this.state.endpoint]}
+        fields={['page', 'page_size']}
+        onResultsChange={this.setStoreSubscriptions}
+        onFormValueChange={this.handleFormValueChange}>
+        <Row>
+          <Col sm="12">
+            <ApiFormResultTableWithPagination
+              icon="fas fa-list"
+              label="Suscripciones a Tiendas"
+              cardClass="card-body"
+              headerButton={<StoreSubscriptionCreateButton/>}
+              page_size_choices={[10, 20, 50]}
+              page={this.state.formValues.page}
+              page_size={this.state.formValues.page_size}
+              data={this.state.storeSubscriptions}
+              columns={columns}/>
+          </Col>
+        </Row>
+      </ApiForm>
+    </div>
   }
 }
 
-export default StoreSubscriptionList
+function mapStateToProps(state) {
+  return {
+    stores: filterApiResourceObjectsByType(state.apiResourceObjects, 'stores'),
+    categories: filterApiResourceObjectsByType(state.apiResourceObjects, 'categories')
+  }
+}
+
+export default connect(mapStateToProps)(StoreSubscriptionList)
