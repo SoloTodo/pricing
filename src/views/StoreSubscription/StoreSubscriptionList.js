@@ -6,10 +6,10 @@ import {Row, Col} from "reactstrap";
 import {filterApiResourceObjectsByType} from "../../react-utils/ApiResource";
 import {formatDateStr} from "../../react-utils/utils";
 import {
-  ApiForm, ApiFormChoiceField,
+  ApiForm,
   ApiFormResultTableWithPagination,
-  createOrderingOptionChoices
 } from "../../react-utils/api_forms";
+
 import StoreSubscriptionCreateButton from "../../Components/StoreSubscription/StoreSubscriptionCreateButton";
 
 
@@ -44,16 +44,23 @@ class StoreSubscriptionList extends React.Component {
   render() {
     const columns = [
       {
-        label: 'Id',
-        renderer: storeSubscription => <div>{storeSubscription.id}</div>
-      },
-      {
         label: 'Tienda',
         renderer: storeSubscription => this.props.stores.filter(store => store.url === storeSubscription.store.url)[0].name
       },
       {
+        label: 'Categorías',
+        renderer: storeSubscription => <div>
+          {storeSubscription.categories.map(categoryUrl => {
+            const category = this.props.categories.filter(category => category.url === categoryUrl)[0];
+            return <li className="list-without-decoration" key={category.id}>
+              {category.name}
+            </li>})
+          }
+        </div>
+      },
+      {
         label: 'Fecha creación',
-        renderer: storeSubscription => formatDateStr(storeSubscription.creation_date)
+        renderer: storeSubscription => formatDateStr(storeSubscription.creationDate)
       }
     ];
 
@@ -69,7 +76,7 @@ class StoreSubscriptionList extends React.Component {
               icon="fas fa-list"
               label="Suscripciones a Tiendas"
               cardClass="card-body"
-              headerButton={<StoreSubscriptionCreateButton/>}
+              headerButton={<StoreSubscriptionCreateButton callback={this.updateEndpoint}/>}
               page_size_choices={[10, 20, 50]}
               page={this.state.formValues.page}
               page_size={this.state.formValues.page_size}
