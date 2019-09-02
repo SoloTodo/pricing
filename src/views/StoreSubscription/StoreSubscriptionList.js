@@ -11,6 +11,7 @@ import {
 } from "../../react-utils/api_forms";
 
 import StoreSubscriptionCreateButton from "../../Components/StoreSubscription/StoreSubscriptionCreateButton";
+import StoreSubscriptionDeleteButton from "../../Components/StoreSubscription/StoreSubscriptionDeleteButton";
 
 
 class StoreSubscriptionList extends React.Component {
@@ -61,6 +62,12 @@ class StoreSubscriptionList extends React.Component {
       {
         label: 'Fecha creación',
         renderer: storeSubscription => formatDateStr(storeSubscription.creationDate)
+      },
+      {
+        label: 'Eliminar',
+        renderer: storeSubscription => <StoreSubscriptionDeleteButton
+          subscription={storeSubscription}
+          onSubscriptionDelete={this.updateEndpoint}/>
       }
     ];
 

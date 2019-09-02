@@ -5,7 +5,6 @@ import Select from "react-select"
 
 import {createOptions} from "../../react-utils/form_utils";
 import {apiResourceStateToPropsUtils, filterApiResourceObjectsByType} from "../../react-utils/ApiResource";
-import {pricingStateToPropsUtils} from "../../utils";
 
 class StoreSubscriptionCreateButton extends React.Component {
   constructor(props) {
@@ -28,7 +27,8 @@ class StoreSubscriptionCreateButton extends React.Component {
     this.setState({
       newSubscriptionStore: undefined,
       newSubscriptionCategories: []
-    })
+    });
+    this.toggleCreateSubscriptionModal()
   };
 
   storeChangeHandler = e => {
@@ -97,10 +97,8 @@ class StoreSubscriptionCreateButton extends React.Component {
 
 function mapStateToProps(state) {
   const {fetchAuth} = apiResourceStateToPropsUtils(state);
-  const {user} = pricingStateToPropsUtils(state);
 
   return {
-    user,
     fetchAuth,
     stores: filterApiResourceObjectsByType(state.apiResourceObjects, 'stores'),
     categories: filterApiResourceObjectsByType(state.apiResourceObjects, 'categories')
