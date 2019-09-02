@@ -47,6 +47,7 @@ import KeywordSearchUpdateList from "../views/KeywordSearch/KeywordSearchUpdateL
 import KeywordSearchUpdateDetail from "../views/KeywordSearch/KeywordSearchUpdateDetail";
 import KeywordSearchActiveReport from "../views/KeywordSearch/KeywordSearchActiveReport";
 import ReportSoicosConversion from "../views/Report/ReportSoicosConversion";
+import StoreSubscriptionList from "../views/StoreSubscription/StoreSubscriptionList";
 
 
 // https://github.com/ReactTraining/react-router/tree/master/packages/react-router-config
@@ -167,6 +168,9 @@ const routes = [
   { path: '/keyword_search_updates/:id', exact: true, name: params => ({apiResource: 'keyword_search_updates', apiResourceObjectId: params.id}), render: props =>
       <ResourceObjectPermission match={props.match} resource={'keyword_search_updates'} component={KeywordSearchUpdateDetail}/>
   },
+  { path: '/store_subscriptions', exact:true, name: 'Suscripciones a Tiendas', render: props => <RequiredResources resources={['stores', 'categories']}>
+      <StoreSubscriptionList/>
+    </RequiredResources>}
 ];
 
 export default routes;
