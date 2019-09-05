@@ -15,6 +15,7 @@ import {booleanChoices} from "../../utils";
 import {formatDateStr} from "../../react-utils/utils";
 import CardBody from "reactstrap/es/CardBody";
 import './BannerList.css'
+import {ApiFormDateRangeField} from "../../react-utils/api_forms";
 
 
 class BannerList extends React.Component{
@@ -123,6 +124,24 @@ class BannerList extends React.Component{
               <CardBody>
                 <Row className="entity-form-controls">
                   <Col xs="12" sm="6">
+                    <label htmlFor="brands">Marcas</label>
+                    <ApiFormChoiceField
+                      name="brands"
+                      id="brand"
+                      choices={this.props.brands}
+                      multiple={true}
+                      placeholder='Todas'/>
+                  </Col>
+                  <Col xs="12" sm="6">
+                    <label htmlFor="categories">Categorías</label>
+                    <ApiFormChoiceField
+                      name="categories"
+                      id="categories"
+                      choices={this.props.categories}
+                      multiple={true}
+                      placeholder='Todas'/>
+                  </Col>
+                  <Col xs="12" sm="6">
                     <label htmlFor="stores">Tiendas</label>
                     <ApiFormChoiceField
                       name="stores"
@@ -131,15 +150,6 @@ class BannerList extends React.Component{
                       multiple={true}
                       value={this.state.formValues.stores}
                       placeholder='Todas'/>
-                  </Col>
-                  <Col xs="12" sm="6">
-                    <label htmlFor="is_active">¿Activo?</label>
-                    <ApiFormChoiceField
-                      name="is_active"
-                      id="is_active"
-                      choices={booleanChoices}
-                      searchable={false}
-                      value={this.state.formValues.stores}/>
                   </Col>
                   <Col xs="12" sm="6">
                     <label htmlFor="sections">Sección</label>
@@ -152,6 +162,32 @@ class BannerList extends React.Component{
                       value={this.state.formValues.sections}
                       placeholder='Todas'/>
                   </Col>
+                  <Col xs="12" sm="6">
+                    <label htmlFor="types">Tipos</label>
+                    <ApiFormChoiceField
+                      name="types"
+                      id="types"
+                      choices={this.props.banner_subsection_types}
+                      multiple={true}
+                      placeholder='Todas'/>
+                  </Col>
+                  <Col xs="12" sm="6">
+                    <label htmlFor="is_active">¿Activo?</label>
+                    <ApiFormChoiceField
+                      name="is_active"
+                      id="is_active"
+                      choices={booleanChoices}
+                      searchable={false}
+                      value={this.state.formValues.stores}/>
+                  </Col>
+                  <div className="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+                    <label htmlFor="creation_date">Fecha creación (desde / hasta)</label>
+                    <ApiFormDateRangeField
+                      name="creation_date"
+                      id="creation_date"
+                      nullable={true}/>
+                  </div>
+
                 </Row>
               </CardBody>
             </Card>
@@ -181,7 +217,10 @@ function mapStateToProps(state) {
   return {
     ApiResourceObject,
     stores: filterApiResourceObjectsByType(state.apiResourceObjects, 'stores').filter(store => store.permissions.includes('view_store_banners')),
-    sections: filterApiResourceObjectsByType(state.apiResourceObjects, 'banner_sections')
+    brands: filterApiResourceObjectsByType(state.apiResourceObjects, 'brands'),
+    categories: filterApiResourceObjectsByType(state.apiResourceObjects, 'categories').filter(category => category.permissions.includes('view_category_reports')),
+    sections: filterApiResourceObjectsByType(state.apiResourceObjects, 'banner_sections'),
+    banner_subsection_types: filterApiResourceObjectsByType(state.apiResourceObjects, 'banner_subsection_types')
   }
 }
 

@@ -133,7 +133,7 @@ const routes = [
   { path: '/reports/soicos_conversions', exact: true, name: 'Reporte conversiones soicos', render: props => <RequiredResources resources={['stores', 'categories', 'websites']}>
       <ReportSoicosConversion />
     </RequiredResources>},
-  { path: '/banners', exact:true, name: 'Banners', render: props => <RequiredResources resources={['stores', 'banner_sections']}>
+  { path: '/banners', exact:true, name: 'Banners', render: props => <RequiredResources resources={['stores', 'banner_sections', 'brands', 'categories', 'banner_subsection_types']}>
       <BannerList/>
     </RequiredResources>},
   { path: '/banners/active_participation', exact:true, name: 'Active participation', render: props => <RequiredResources resources={['stores', 'brands', 'categories', 'banner_sections', 'banner_subsection_types']}>
