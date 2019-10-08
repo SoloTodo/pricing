@@ -47,6 +47,10 @@ class ReportCurrentPrices extends Component {
   };
 
   render() {
+    const extended_choices = [
+      {id:false, name:'No'},
+      {id:true, name:'Si'}];
+
     return <Row>
       <Col sm="12">
         <Card>
@@ -124,6 +128,16 @@ class ReportCurrentPrices extends Component {
                     placeholder="Opcional"
                     onChange={this.state.apiFormFieldChangeHandler}
                     debounceTimeout={1}/>
+                </Col>
+
+                <Col xs="12" sm="6" md="6" lg="6" xl="6">
+                  <label>Mostrar especificaciones extendidas</label>
+                  <ApiFormChoiceField
+                    name="extended"
+                    choices={extended_choices}
+                    required={true}
+                    onChange={this.state.apiFormFieldChangeHandler}
+                    value={this.state.formValues.extended}/>
                 </Col>
 
                 <Col xs="12" sm="7" md="6" lg="12" xl="12">
