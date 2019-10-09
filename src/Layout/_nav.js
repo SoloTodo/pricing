@@ -31,12 +31,6 @@ export default {
       requiredPermission: 'brand_comparisons.backend_list_brand_comparisons'
     },
     {
-      name: 'Listas de Productos',
-      url: '/product_lists',
-      icon: 'fas fa-list',
-      requiredPermission: 'product_lists.backend_list_product_lists'
-    },
-    {
       name: 'Alertas',
       url: '/alerts',
       icon: 'fas fa-bell'
