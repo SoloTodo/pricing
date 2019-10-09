@@ -33,9 +33,6 @@ import ReportWtb from "../views/Report/ReportWtb";
 import BannerList from "../views/Banner/BannerList"
 import BannerActiveParticipation from "../views/Banner/BannerActiveParticipation";
 import BannerHistoricParticipation from "../views/Banner/BannerHistoricParticipation";
-import ProductListList from "../views/ProductList/ProductListList"
-import ProductListDetail from "../views/ProductList/ProductListDetail";
-import ProductListDetailBrowse from "../views/ProductList/ProductListDetailBrowse";
 import BrandComparisonList from "../views/BrandComparison/BrandComparisonList";
 import BrandComparisonDetail from "../views/BrandComparison/BrandComparisonDetail";
 import SkuDetailPositionHistory from "../views/Sku/SkuDetailPositionHistory";
@@ -141,13 +138,6 @@ const routes = [
     </RequiredResources>},
   { path: '/banners/historic_participation', exact:true, name: 'Historic participation', render: props => <RequiredResources resources={['stores', 'brands', 'categories', 'banner_sections', 'banner_subsection_types']}>
       <BannerHistoricParticipation/>
-    </RequiredResources>},
-  { path: '/product_lists', exact:true, name: 'Listas de Productos', render: props => <RequiredResources resources={['categories']}>
-      <ProductListList/>
-    </RequiredResources>},
-  { path: '/product_lists/:id', exact:true, name: params => ({apiResource: 'product_lists', apiResourceObjectId: params.id}), component:ProductListDetail},
-  { path: '/product_lists/:id/current_prices', exact:true, name: 'Precios actuales', render: props => <RequiredResources resources={['stores', 'categories']}>
-      <ResourceObjectPermission Http404={Page404} match={props.match} resource="product_lists" component={ProductListDetailBrowse} />
     </RequiredResources>},
   { path: '/brand_comparisons', exact:true, name:'Comparación de Marcas', render: props => <RequiredResources resources={['categories', 'brands']}>
       <BrandComparisonList/>
