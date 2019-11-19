@@ -131,7 +131,7 @@ class ReportCurrentPrices extends Component {
                 </Col>
 
                 <Col xs="12" sm="6" md="6" lg="6" xl="6">
-                  <label>Mostrar especificaciones extendidas</label>
+                  <label>Incluir especificaciones extendidas</label>
                   <ApiFormChoiceField
                     name="extended"
                     choices={extended_choices}

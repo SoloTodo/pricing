@@ -40,15 +40,16 @@ class BrandComparisonTable extends React.Component {
 
     const brand1Options = this.createOptionsWithGroup(this.props.brand1RowData);
     const brand2Options = this.createOptionsWithGroup(this.props.brand2RowData);
+    const displayStores = this.props.displayStores;
 
     return <Table className="comparison-table" bordered size="sm">
       <thead>
       <tr>
         <th className="center-aligned">&nbsp;</th>
         <th className="center-aligned">{brandComparison.brand_1.name}</th>
-        {brandComparison.stores.map(storeUrl => <th key={storeUrl} className="center-aligned pricing-cell">{storesDict[storeUrl].name}</th>)}
+        {displayStores && brandComparison.stores.map(storeUrl => <th key={storeUrl} className="center-aligned pricing-cell">{storesDict[storeUrl].name}</th>)}
         <th className="center-aligned">{brandComparison.brand_2.name}</th>
-        {brandComparison.stores.map(storeUrl => <th key={storeUrl} className="center-aligned pricing-cell">{storesDict[storeUrl].name}</th>)}
+        {displayStores && brandComparison.stores.map(storeUrl => <th key={storeUrl} className="center-aligned pricing-cell">{storesDict[storeUrl].name}</th>)}
         <th className="center-aligned">&nbsp;</th>
       </tr>
       </thead>
@@ -90,7 +91,7 @@ class BrandComparisonTable extends React.Component {
                   brandIndex="1"
                   onComparisonChange={this.props.onComparisonChange}/>
               </td>
-              {brandComparison.stores.map(storeUrl =>
+              {displayStores && brandComparison.stores.map(storeUrl =>
                 <td key={storeUrl} className={`row-cell ${rowIndex === 0? "segment-border" : ""}`}>
                   <BrandComparisonSegmentRowPriceCell
                     storeUrl={storeUrl}
@@ -108,7 +109,7 @@ class BrandComparisonTable extends React.Component {
                   brandIndex="2"
                   onComparisonChange={this.props.onComparisonChange}/>
               </td>
-              {brandComparison.stores.map(storeUrl =>
+              {displayStores && brandComparison.stores.map(storeUrl =>
                 <td key={storeUrl} className={`row-cell ${rowIndex === 0? "segment-border" : ""}`}>
                   <BrandComparisonSegmentRowPriceCell
                     storeUrl={storeUrl}

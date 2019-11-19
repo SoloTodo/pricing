@@ -14,6 +14,8 @@ import {apiResourceStateToPropsUtils, filterApiResourceObjectsByType} from "../.
 import {areListsEqual} from "../../react-utils/utils";
 import LaddaButton, {EXPAND_LEFT} from "react-ladda"
 import BrandComparisonManualProductsButton from "../../Components/BrandComparison/BrandComparisonManualProductsButton";
+import BrandComparisonStoreToggleButton
+  from "../../Components/BrandComparison/BrandComparisonStoreToggleButton";
 
 
 class BrandComparisonDetail extends React.Component {
@@ -22,6 +24,7 @@ class BrandComparisonDetail extends React.Component {
     this.state = {
       deleted: false,
       loading: false,
+      displayStores: true
     };
   }
 
@@ -159,6 +162,12 @@ class BrandComparisonDetail extends React.Component {
     }
   };
 
+  toggleStoreDisplay = () => {
+    this.setState({
+      displayStores: !this.state.displayStores
+    })
+  };
+
   render() {
     if (this.state.deleted){
       return <Redirect to={{pathname: '/brand_comparisons'}}/>
@@ -188,6 +197,10 @@ class BrandComparisonDetail extends React.Component {
             <BrandComparisonSelectStoresButton
               brandComparison={brandComparison}
               onComparisonChange={this.handleComparisonChange}/>
+            <BrandComparisonStoreToggleButton
+              displayStores={this.state.displayStores}
+              toggleStoreDisplay={this.toggleStoreDisplay}
+            />
             <BrandComparisonPriceTypeButton
               brandComparison={brandComparison}
               onComparisonChange={this.handleComparisonChange}/>
@@ -207,7 +220,9 @@ class BrandComparisonDetail extends React.Component {
             brandComparison={brandComparison}
             onComparisonChange={this.handleComparisonChange}
             brand1RowData={brand1RowData}
-            brand2RowData={brand2RowData}/>
+            brand2RowData={brand2RowData}
+            displayStores={this.state.displayStores}
+          />
         </CardBody>
       </Card>
     </div>

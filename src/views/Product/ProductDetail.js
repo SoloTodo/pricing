@@ -130,7 +130,7 @@ class ProductDetail extends Component {
             <CardHeader>Opciones</CardHeader>
             <CardBody>
               <ProductUserAlertButton product={product}/>
-              <ProductAddOrRemoveFromListButton product={product}/>
+              {/*<ProductAddOrRemoveFromListButton product={product}/>*/}
             </CardBody>
           </Card>
         </Col>
