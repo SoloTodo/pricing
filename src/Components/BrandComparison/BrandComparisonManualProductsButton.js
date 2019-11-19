@@ -1,6 +1,7 @@
 import React from 'react'
 import {Row, Col, Modal, ModalHeader, ModalBody, ModalFooter, Button} from 'reactstrap'
 import {NavLink} from "react-router-dom";
+import BrandComparisonAddManualProductsButton from "./BrandComparisonAddManualProductsButton";
 
 class BrandComparisonManualProductsButton extends React.Component {
   constructor(props) {
@@ -33,7 +34,7 @@ class BrandComparisonManualProductsButton extends React.Component {
           </Row>
         </ModalBody>
         <ModalFooter>
-          <Button color="success">Agregar producto</Button>
+          <BrandComparisonAddManualProductsButton/>
         </ModalFooter>
       </Modal>
     </React.Fragment>
