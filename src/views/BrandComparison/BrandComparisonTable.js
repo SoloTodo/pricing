@@ -24,21 +24,8 @@ class BrandComparisonTable extends React.Component {
   createOptionsWithGroup = (rowData) => {
     const customCreateOptions = localRowData => createOptions(localRowData.map(data => ({...data, name: data.product.name, id: data.product.id})));
 
-    const pending_products = customCreateOptions(rowData.filter(data => data.entities.length && !data.rowIds.length));
-    
-    for (const manual_product in this.props.brandComparison.manual_products) {
-      pending_products.push({
-        option: { entities: [],
-          product: manual_product,
-          name: manual_product.name,
-          id: manual_product.id},
-        value: manual_product.id.toString(),
-        label: manual_product.name
-      })
-    }
-
     return [
-      {label: 'Pendientes', options: pending_products},
+      {label: 'Pendientes', options: customCreateOptions(rowData.filter(data => data.entities.length && !data.rowIds.length))},
       {label: 'Ya ingresados', options:customCreateOptions(rowData.filter(data => data.entities.length && data.rowIds.length))},
       {label: 'No disponibles', options:customCreateOptions(rowData.filter(data => !data.entities.length))}
     ]
