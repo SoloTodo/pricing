@@ -160,6 +160,9 @@ class BrandComparisonDetail extends React.Component {
         this.props.updateBrandComparison(json)
       });
     }
+
+    this.setRowData('1', updatedBrandComparison);
+    this.setRowData('2', updatedBrandComparison);
   };
 
   toggleStoreDisplay = () => {
@@ -189,7 +192,8 @@ class BrandComparisonDetail extends React.Component {
             onComparisonChange={this.handleComparisonChange}/>
           <div>
             <BrandComparisonManualProductsButton
-              brandComparison={brandComparison}/>
+              brandComparison={brandComparison}
+              handleComparisonChange={this.handleComparisonChange}/>
             <BrandComparisonPendingProductsButton
               brandComparison={brandComparison}
               brand1RowData={brand1RowData}
