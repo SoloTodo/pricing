@@ -54,8 +54,11 @@ class BrandComparisonDetail extends React.Component {
     })
   };
 
-  setRowData = (brandIndex, comparison) => {
+  setRowData = async (brandIndex, comparison) => {
     comparison = comparison || this.props.apiResourceObject;
+    const otherIndex = (brandIndex%2)+1;
+    const otherBrand = comparison[`brand_${otherIndex}`];
+
     const categoryId = comparison.category.id;
     const selectedStores = comparison.stores.map(store_url => this.props.stores.filter(store => store.url === store_url)[0].id);
 
@@ -65,64 +68,46 @@ class BrandComparisonDetail extends React.Component {
       endpoint += `stores=${storeId}&`
     }
 
-    this.props.fetchAuth(endpoint + `db_brands=${comparison[`brand_${brandIndex}`].id}`).then(json => {
-      let rawRowData = json['results'];
+    const promises = [
+      this.props.fetchAuth(endpoint + `db_brands=${comparison[`brand_${brandIndex}`].id}`).then(json => json['results'])
+    ];
 
-      if (comparison.manual_products.length > 0) {
-        let mpEndpoint = `products/available_entities/?`;
+    if (comparison.manual_products.length > 0) {
+      let mpEndpoint = `products/available_entities/?`;
 
-        for (const manual_product of comparison.manual_products) {
-          mpEndpoint += `ids=${manual_product.id}&`
-        }
-
-        for (const storeId of selectedStores) {
-          mpEndpoint += `stores=${storeId}&`
-        }
-
-        this.props.fetchAuth(mpEndpoint).then(json => {
-          const extraRowData = json['results'];
-          for (const data of extraRowData) {
-            rawRowData.push(data);
-          }
-
-          for (const segment of comparison.segments) {
-            for (const row of segment.rows) {
-              if (row[`product_${brandIndex}`]) {
-                // Manually add the products referenced by the comparison (in case they are not avaialble)
-                const result = rawRowData.filter(result => result.product.id === row[`product_${brandIndex}`].id)[0];
-                if (!result) {
-                  rawRowData.push({
-                    entities: [],
-                    product: row[`product_${brandIndex}`]
-                  })
-                }
-              }
-            }
-          }
-          this.setState({
-            [`brand${brandIndex}RawRowData`]: rawRowData
-          })
-        });
-      } else {
-        for (const segment of comparison.segments) {
-          for (const row of segment.rows) {
-            if (row[`product_${brandIndex}`]) {
-              // Manually add the products referenced by the comparison (in case they are not avaialble)
-              const result = rawRowData.filter(result => result.product.id === row[`product_${brandIndex}`].id)[0];
-              if (!result) {
-                rawRowData.push({
-                  entities: [],
-                  product: row[`product_${brandIndex}`]
-                })
-              }
-            }
-          }
-        }
-        this.setState({
-          [`brand${brandIndex}RawRowData`]: rawRowData
-        })
+      for (const manual_product of comparison.manual_products) {
+        mpEndpoint += `ids=${manual_product.id}&`
       }
-    });
+
+      for (const storeId of selectedStores) {
+        mpEndpoint += `stores=${storeId}&`
+      }
+
+      promises.push(this.props.fetchAuth(mpEndpoint).then(json => {
+        const extraRowData = json['results'];
+        return extraRowData.filter(data => data.product.brand !== otherBrand.url);
+      }));
+    }
+
+    const rawRowData =  await Promise.all(promises).then(res => res.flat());
+
+    for (const segment of comparison.segments) {
+      for (const row of segment.rows) {
+        if (row[`product_${brandIndex}`]) {
+          // Manually add the products referenced by the comparison (in case they are not avaialble)
+          const result = rawRowData.filter(result => result.product.id === row[`product_${brandIndex}`].id)[0];
+          if (!result) {
+            rawRowData.push({
+              entities: [],
+              product: row[`product_${brandIndex}`]
+            })
+          }
+        }
+      }
+    }
+    this.setState({
+      [`brand${brandIndex}RawRowData`]: rawRowData
+    })
   };
 
   processRowData = (rawRowData, brandIndex) => {
@@ -161,8 +146,8 @@ class BrandComparisonDetail extends React.Component {
       });
     }
 
-    this.setRowData('1', updatedBrandComparison);
-    this.setRowData('2', updatedBrandComparison);
+    this.setRowData(1, updatedBrandComparison);
+    this.setRowData(2, updatedBrandComparison);
   };
 
   toggleStoreDisplay = () => {

@@ -1,5 +1,5 @@
 import React from 'react'
-import {Row, Col, Modal, ModalHeader, ModalBody, ModalFooter, Button} from 'reactstrap'
+import {Modal, ModalHeader, ModalBody, ModalFooter, Table, Button} from 'reactstrap'
 import {NavLink} from "react-router-dom";
 import BrandComparisonAddManualProductsButton from "./BrandComparisonAddManualProductsButton";
 import {apiResourceStateToPropsUtils} from "../../react-utils/ApiResource";
@@ -21,8 +21,13 @@ class BrandComparisonManualProductsButton extends React.Component {
   };
 
   handleRemoveProductButton = (product_id) => {
-    const endpoint =`${this.props.brandComparison.url}remove_manual_product/?id=${product_id}`;
-    this.props.fetchAuth(endpoint).then(json => {
+    const endpoint =`${this.props.brandComparison.url}remove_manual_product/`;
+    this.props.fetchAuth(endpoint, {
+      method: 'POST',
+      body: JSON.stringify({
+        product_id
+      })
+    }).then(json => {
       this.props.handleComparisonChange(json);
       toast.success('Producto removido exitosamente')
     })
@@ -34,15 +39,16 @@ class BrandComparisonManualProductsButton extends React.Component {
       <Modal centered id="pending_products" size="lg" isOpen={this.state.productModalIsActive} toggle={this.toggleProductModal}>
         <ModalHeader>Productos manuales</ModalHeader>
         <ModalBody>
-          <Row>
-            <Col>
-              <ul>
-                {this.props.brandComparison.manual_products.map(product =>
-                  <li key={product.id}><NavLink to={`/products/${product.id}`}>{product.name}</NavLink> <Button color="link" onClick={e => this.handleRemoveProductButton((product.id))}>(quitar)</Button></li>
-                )}
-              </ul>
-            </Col>
-          </Row>
+          <Table size="sm" striped bordered>
+            <tbody>
+            {this.props.brandComparison.manual_products.map(product =>
+              <tr key={product.id}>
+                <td><NavLink to={`/products/${product.id}`}>{product.name}</NavLink></td>
+                <td className="center-aligned"><Button size="sm" color="danger" onClick={() => this.handleRemoveProductButton((product.id))}>Quitar</Button></td>
+              </tr>
+            )}
+            </tbody>
+          </Table>
         </ModalBody>
         <ModalFooter>
           <BrandComparisonAddManualProductsButton

@@ -22,14 +22,21 @@ class BrandComparisonPendingProductsButton extends React.Component {
       'brand2': []
     };
 
+    const brand1 = this.props.brandComparison['brand_1'];
+    const brand2 = this.props.brandComparison['brand_2'];
+
     for (const data of this.props.brand1RowData){
       if (!data.rowIds.length) {
-        pendingProducts.brand1.push(data.product)
+        if (data.product.brand === brand1.url) {
+          pendingProducts.brand1.push(data.product)
+        }
       }
     }
     for (const data of this.props.brand2RowData){
       if (!data.rowIds.length) {
-        pendingProducts.brand2.push(data.product)
+        if (data.product.brand === brand2.url) {
+          pendingProducts.brand2.push(data.product)
+        }
       }
     }
 

@@ -56,9 +56,14 @@ class BrandComparisonAddManualProductsButton extends React.Component {
       return
     }
 
-    const endpoint =`${this.props.brandComparison.url}add_manual_product/?id=${this.state.selectedProduct.id}`;
+    const endpoint =`${this.props.brandComparison.url}add_manual_product/`;
 
-    this.props.fetchAuth(endpoint).then(json => {
+    this.props.fetchAuth(endpoint, {
+      method: 'POST',
+      body: JSON.stringify({
+        product_id: this.state.selectedProduct.id
+      })
+    }).then(json => {
       this.props.handleComparisonChange(json);
       this.toggleProductModal();
       toast.success('Producto agregado exitosamente')
