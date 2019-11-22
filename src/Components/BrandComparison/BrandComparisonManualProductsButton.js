@@ -44,7 +44,7 @@ class BrandComparisonManualProductsButton extends React.Component {
             {this.props.brandComparison.manual_products.map(product =>
               <tr key={product.id}>
                 <td><NavLink to={`/products/${product.id}`}>{product.name}</NavLink></td>
-                <td className="center-aligned"><Button size="sm" color="danger" onClick={() => this.handleRemoveProductButton((product.id))}>Quitar</Button></td>
+                <td className="center-aligned"><Button size="sm" color="danger" onClick={() => this.handleRemoveProductButton(product.id)}>Quitar</Button></td>
               </tr>
             )}
             </tbody>

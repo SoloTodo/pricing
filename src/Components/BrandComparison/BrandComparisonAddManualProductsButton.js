@@ -27,11 +27,7 @@ class BrandComparisonAddManualProductsButton extends React.Component {
 
     this.props.fetchAuth(endpoint).then(json => {
       const productChoices = json.results;
-      const selectedProduct = productChoices.length ? productChoices[0] : undefined
-
-      if (!productChoices.length) {
-
-      }
+      const selectedProduct = productChoices.length ? productChoices[0] : undefined;
 
       this.setState({
         productChoices,
