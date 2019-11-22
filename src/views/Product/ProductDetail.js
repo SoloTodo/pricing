@@ -9,7 +9,6 @@ import {NavLink} from "react-router-dom";
 import {Row, Col, Card, CardHeader, CardBody} from "reactstrap";
 import './ProductDetail.css'
 import ProductUserAlertButton from "../../Components/Product/ProductUserAlertButton";
-import ProductAddOrRemoveFromListButton from '../../Components/Product/ProductAddOrRemoveFromListButton'
 import ProductDetailPricingHistoryChart from "./ProductDetailPricingHistoryChart";
 import moment from "moment";
 import Button from "reactstrap/es/Button";
