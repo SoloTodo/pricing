@@ -16,6 +16,7 @@ import LaddaButton, {EXPAND_LEFT} from "react-ladda"
 import BrandComparisonManualProductsButton from "../../Components/BrandComparison/BrandComparisonManualProductsButton";
 import BrandComparisonStoreToggleButton
   from "../../Components/BrandComparison/BrandComparisonStoreToggleButton";
+import BrandComparisonAlertsButton from "../../Components/BrandComparison/BrandComparisonAlertsButton";
 
 
 class BrandComparisonDetail extends React.Component {
@@ -176,6 +177,7 @@ class BrandComparisonDetail extends React.Component {
             brandComparison={brandComparison}
             onComparisonChange={this.handleComparisonChange}/>
           <div>
+            <BrandComparisonAlertsButton/>
             <BrandComparisonManualProductsButton
               brandComparison={brandComparison}
               handleComparisonChange={this.handleComparisonChange}/>
