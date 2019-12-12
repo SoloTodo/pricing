@@ -1,7 +1,8 @@
 import React from 'react'
 import {Modal, ModalHeader, ModalBody, ModalFooter, Table, Button} from 'reactstrap'
-import {apiResourceStateToPropsUtils} from "../../react-utils/ApiResource";
+import {apiResourceStateToPropsUtils, filterApiResourceObjectsByType} from "../../react-utils/ApiResource";
 import {connect} from "react-redux";
+import { toast } from 'react-toastify';
 import BrandComparisonAlertsCreateButton from "./BrandComparisonAlertsCreateButton";
 
 
@@ -15,12 +16,16 @@ class BrandComparisonAlertsButton extends React.Component {
   }
 
   componentDidMount() {
-    this.props.fetchAuth('brand_comparison_alerts/').then(json => {
+    this.componentUpdate()
+  }
+
+  componentUpdate = () => {
+    this.props.fetchAuth(`brand_comparison_alerts/?brand_comparison=${this.props.brandComparison.id}`).then(json => {
       this.setState({
         alerts: json
       })
     })
-  }
+  };
 
   toggleAlertsModal = () => {
     this.setState({
@@ -29,7 +34,12 @@ class BrandComparisonAlertsButton extends React.Component {
   };
 
   handleRemoveAlertButton = (alert_id) => {
-
+    this.props.fetchAuth(`brand_comparison_alerts/${alert_id}/`, {
+      method: 'DELETE',
+    }).then(json => {
+      toast.success("Alerta eliminada exitosamente");
+      this.componentUpdate()
+    })
   };
 
   render() {
@@ -46,16 +56,16 @@ class BrandComparisonAlertsButton extends React.Component {
             <tbody>
             {this.state.alerts.map(alert =>
               <tr key={alert.id}>
-                <td>{alert.id}</td>
-                <td>{alert.last_check}</td>
+                <td>{alert.stores.map(store => `${this.props.stores.filter(s => s.url === store)[0].name}, `)}</td>
                 <td className="center-aligned"><Button size="sm" color="danger" onClick={() => this.handleRemoveAlertButton(alert.id)}>Eliminar</Button></td>
-              </tr>
-            )}
+              </tr>)}
             </tbody>
           </Table>
         </ModalBody>
         <ModalFooter>
-          <BrandComparisonAlertsCreateButton/>
+          <BrandComparisonAlertsCreateButton
+            callback = {this.componentUpdate}
+            brandComparison={this.props.brandComparison}/>
         </ModalFooter>
       </Modal>
     </React.Fragment>
@@ -65,7 +75,8 @@ class BrandComparisonAlertsButton extends React.Component {
 function mapStateToProps(state){
   const {fetchAuth} = apiResourceStateToPropsUtils(state);
   return {
-    fetchAuth
+    fetchAuth,
+    stores: filterApiResourceObjectsByType(state.apiResourceObjects, 'stores')
   }
 }
 

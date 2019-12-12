@@ -177,7 +177,8 @@ class BrandComparisonDetail extends React.Component {
             brandComparison={brandComparison}
             onComparisonChange={this.handleComparisonChange}/>
           <div>
-            <BrandComparisonAlertsButton/>
+            <BrandComparisonAlertsButton
+              brandComparison={brandComparison}/>
             <BrandComparisonManualProductsButton
               brandComparison={brandComparison}
               handleComparisonChange={this.handleComparisonChange}/>
