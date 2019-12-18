@@ -56,7 +56,7 @@ class BrandComparisonAlertsButton extends React.Component {
             <tbody>
             {this.state.alerts.map(alert =>
               <tr key={alert.id}>
-                <td>{alert.stores.map(store => `${this.props.stores.filter(s => s.url === store)[0].name}, `)}</td>
+                <td>{alert.stores.map(store => this.props.stores.filter(s => s.url === store)[0].name).join(', ')}</td>
                 <td className="center-aligned"><Button size="sm" color="danger" onClick={() => this.handleRemoveAlertButton(alert.id)}>Eliminar</Button></td>
               </tr>)}
             </tbody>
