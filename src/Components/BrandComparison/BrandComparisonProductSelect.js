@@ -19,6 +19,18 @@ class BrandComparisonProductSelect extends React.Component {
     })
   };
 
+  onHighlightedClick = (e, isHighlighted) => {
+    e.preventDefault();
+    this.props.fetchAuth(`brand_comparison_segment_rows/${this.props.row.id}/`, {
+      method: 'PATCH',
+      body: JSON.stringify({
+        [`is_product_${this.props.brandIndex}_highlighted`]: !isHighlighted
+      })
+    }).then(json => {
+      this.props.onComparisonChange()
+    })
+  };
+
   getProductWarnings = productOption => {
     const warnings = [];
     if (productOption) {
@@ -35,10 +47,13 @@ class BrandComparisonProductSelect extends React.Component {
 
   render() {
     const product = this.props.row[`product_${this.props.brandIndex}`];
+    const isHighlighted = this.props.row[
+        `is_product_${this.props.brandIndex}_highlighted`];
     const allOptions = this.props.options.map(x => x.options).flat();
 
     const productOption = product ? allOptions.filter(option => option.option.id === product.id)[0] : null;
     const warnings = this.getProductWarnings(productOption);
+    const highlighted_class = isHighlighted? "fas fa-sun text-warning ml-1" : "fas fa-sun text-secondary ml-1"
 
     return <div className="d-flex align-items-center">
       {warnings.length > 0 && <span className="mr-2" id={`brand${this.props.brandIndex}Row${this.props.row.id}`}>
@@ -53,6 +68,9 @@ class BrandComparisonProductSelect extends React.Component {
         value={productOption}
         isClearable={true}
         onChange={this.onProductChange}/>
+      <a href="#" onClick={(e)=>this.onHighlightedClick(e, isHighlighted)}>
+        <i className={highlighted_class}>
+      </i></a>
     </div>
   }
 }
