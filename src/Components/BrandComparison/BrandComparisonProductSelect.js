@@ -3,7 +3,7 @@ import Select from 'react-select'
 
 import {apiResourceStateToPropsUtils} from "../../react-utils/ApiResource";
 import {connect} from "react-redux";
-import {UncontrolledTooltip, Input} from "reactstrap";
+import {UncontrolledTooltip} from "reactstrap";
 
 
 class BrandComparisonProductSelect extends React.Component {
