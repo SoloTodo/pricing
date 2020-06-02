@@ -45,6 +45,8 @@ import KeywordSearchUpdateDetail from "../views/KeywordSearch/KeywordSearchUpdat
 import KeywordSearchActiveReport from "../views/KeywordSearch/KeywordSearchActiveReport";
 import ReportSoicosConversion from "../views/Report/ReportSoicosConversion";
 import StoreSubscriptionList from "../views/StoreSubscription/StoreSubscriptionList";
+import MicrositesList from "../views/Microsites/MicrositesList";
+import MicrositeDetail from "../views/Microsites/MicrositeDetail";
 
 
 // https://github.com/ReactTraining/react-router/tree/master/packages/react-router-config
@@ -160,7 +162,12 @@ const routes = [
   },
   { path: '/store_subscriptions', exact:true, name: 'Suscripciones a Tiendas', render: props => <RequiredResources resources={['stores', 'categories']}>
       <StoreSubscriptionList/>
-    </RequiredResources>}
+    </RequiredResources>},
+  { path: '/microsites', exact: true, name: 'Sitios', render: props => <RequiredResources resources={['microsite_brands']}>
+        <MicrositesList/>
+    </RequiredResources>},
+  { path: '/microsites/:id', exact: true, name: params =>({apiResource: 'microsite_brands', apiResourceObjectId: params.id}), render: props =>
+          <ResourceObjectPermission match={props.match} resource="microsite_brands" component={MicrositeDetail}/>}
 ];
 
 export default routes;
