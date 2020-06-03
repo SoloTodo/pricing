@@ -8,7 +8,6 @@ import {NavLink} from "react-router-dom";
 
 class MicrositesList extends React.Component {
     render() {
-        console.log(this.props.microsites);
         return <Row>
             <Col sm="12">
                 <Card>

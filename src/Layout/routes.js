@@ -47,6 +47,7 @@ import ReportSoicosConversion from "../views/Report/ReportSoicosConversion";
 import StoreSubscriptionList from "../views/StoreSubscription/StoreSubscriptionList";
 import MicrositesList from "../views/Microsites/MicrositesList";
 import MicrositeDetail from "../views/Microsites/MicrositeDetail";
+import MicrositeEntries from "../views/Microsites/MicrositeEntries";
 
 
 // https://github.com/ReactTraining/react-router/tree/master/packages/react-router-config
@@ -167,7 +168,9 @@ const routes = [
         <MicrositesList/>
     </RequiredResources>},
   { path: '/microsites/:id', exact: true, name: params =>({apiResource: 'microsite_brands', apiResourceObjectId: params.id}), render: props =>
-          <ResourceObjectPermission match={props.match} resource="microsite_brands" component={MicrositeDetail}/>}
+     <ResourceObjectPermission match={props.match} resource="microsite_brands" component={MicrositeDetail}/>},
+  { path: '/microsites/:id/product_entries', exact: true, name: params=>({apiResource: 'microsite_brands', apiResourceObjectId: params.id}), render: props =>
+     <ResourceObjectPermission match={props.match} resource="microsite_brands" component={MicrositeEntries}/>}
 ];
 
 export default routes;
