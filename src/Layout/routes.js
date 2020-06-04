@@ -169,8 +169,9 @@ const routes = [
     </RequiredResources>},
   { path: '/microsites/:id', exact: true, name: params =>({apiResource: 'microsite_brands', apiResourceObjectId: params.id}), render: props =>
      <ResourceObjectPermission match={props.match} resource="microsite_brands" component={MicrositeDetail}/>},
-  { path: '/microsites/:id/product_entries', exact: true, name: params=>({apiResource: 'microsite_brands', apiResourceObjectId: params.id}), render: props =>
-     <ResourceObjectPermission match={props.match} resource="microsite_brands" component={MicrositeEntries}/>}
+  { path: '/microsites/:id/product_entries', exact: true, name: params=>({apiResource: 'microsite_brands', apiResourceObjectId: params.id}), render: props => <RequiredResources resources={['categories']}>
+          <ResourceObjectPermission match={props.match} resource="microsite_brands" component={MicrositeEntries}/>
+  </RequiredResources>}
 ];
 
 export default routes;

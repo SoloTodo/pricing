@@ -1,13 +1,8 @@
 import React from "react";
 import { connect } from "react-redux";
+import { toast } from "react-toastify";
 import {
-    Modal,
-    ModalHeader,
-    ModalBody,
-    Row,
-    Col,
-    Button,
-    ModalFooter
+    Modal, ModalHeader, ModalBody, ModalFooter, Row, Col, Button
 } from "reactstrap";
 
 import { apiResourceStateToPropsUtils } from "../../react-utils/ApiResource";
@@ -33,13 +28,11 @@ class MicrositeAddProductButton extends React.Component {
 
     handleProductSearchSubmit = e => {
         e.preventDefault();
-        const endpoint = `${settings.apiResourceEndpoints['products']}browse/?search=${encodeURIComponent(this.state.keywords)}`;
+        const endpoint = `${settings.apiResourceEndpoints['products']}?search=${encodeURIComponent(this.state.keywords)}`;
 
         this.props.fetchAuth(endpoint).then(json => {
-            const productChoices = json.results.map(choice => choice.product);
+            const productChoices = json.results;
             const selectedProduct = productChoices.length ? productChoices[0] : undefined;
-
-            console.log(productChoices);
 
             this.setState({
                 productChoices,
@@ -47,6 +40,34 @@ class MicrositeAddProductButton extends React.Component {
             })
         })
     };
+
+    handleProductSelectChange = e => {
+        const selectedProduct = this.state.productChoices.filter(product => product.id.toString() === e.target.value)[0]
+        this.setState({
+            selectedProduct
+        })
+    }
+
+    handleProductAddSubmit = e => {
+        e.preventDefault();
+        if (!this.state.selectedProduct) {
+            toast.error('Ningun producto seleccionado');
+            return
+        }
+
+        const endpoint = `${this.props.microsite.url}add_entry/`;
+
+        this.props.fetchAuth(endpoint, {
+            method: 'POST',
+            body: JSON.stringify({
+                product_id: this.state.selectedProduct.id
+            })
+        }).then(json => {
+            this.props.handleMicrositeChange();
+            this.toggleProductModal();
+            toast.success('Producto agregado exitosamente')
+        })
+    }
 
     render() {
         const selectedProductId = this.state.selectedProduct? this.state.selectedProduct.id:'';
@@ -87,7 +108,7 @@ class MicrositeAddProductButton extends React.Component {
                         </Col>
                     </Row>
                 </ModalBody>
-                <ModalFooter><Button color="success">Agregar</Button></ModalFooter>
+                <ModalFooter><Button color="success" onClick={this.handleProductAddSubmit}>Agregar</Button></ModalFooter>
             </Modal>
         </React.Fragment>
     }
