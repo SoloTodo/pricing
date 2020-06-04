@@ -34,7 +34,7 @@ class BrandComparisonAddSegmentButton extends React.Component {
         name
       })
     }).then(json => {
-      this.props.onComparisonChange(json);
+      this.props.onComparisonChange();
       this.toggleAddSegmentModalOpen()
     })
   };
