@@ -1,12 +1,13 @@
 import React from "react";
 import { connect } from "react-redux";
-import { Row, Col, Card, CardHeader, CardBody, Table, Button } from "reactstrap";
+import { Row, Col, Card, CardHeader, CardBody, Table} from "reactstrap";
 
 import {
     apiResourceStateToPropsUtils,
     filterApiResourceObjectsByType
 } from "../../react-utils/ApiResource";
 import MicrositeAddProductButton from "../../Components/Microsites/MicrositeAddProductButton";
+import MicrositeEntryRow from "../../Components/Microsites/MicrositeEntryRow";
 
 
 class MicrositeEntries extends React.Component {
@@ -19,7 +20,15 @@ class MicrositeEntries extends React.Component {
     render() {
         const microsite = this.props.ApiResourceObject(this.props.apiResourceObject);
         const entries = microsite.entries;
-        const extra_fields = microsite.fields.split(',');
+        const extra_fields = microsite.fields.split(',').map(field => field.trim());
+
+        const field_names = {
+            'sku': 'SKU',
+            'brand_url': 'URL',
+            'title': 'Nombre',
+            'description': 'Descripción',
+            'reference_price': 'Precio Referencia'
+        }
 
 
         return <Row>
@@ -39,7 +48,7 @@ class MicrositeEntries extends React.Component {
                                 <th>Ordenamiento Home</th>
                                 {extra_fields.map(field =>
                                     <th key={field}>
-                                        {field.trim()}
+                                        {field_names[field]}
                                     </th>
                                 )}
                                 <th>Eliminar</th>
@@ -48,19 +57,7 @@ class MicrositeEntries extends React.Component {
                             <tbody>
                             {entries.map(entry => {
                                 const category = this.props.categories.filter(category => category.url === entry.product.category)[0];
-                                return <tr key={entry.id}>
-                                    <td>{entry.product.name}</td>
-                                    <td>{category.name}</td>
-                                    <td>{entry.ordering}</td>
-                                    <td>{entry.home_ordering}</td>
-                                    {extra_fields.map(field => {
-                                        const field_name = field.trim();
-                                        return <td key={field_name}>
-                                            {entry[field_name]}
-                                        </td>
-                                    })}
-                                    <td><Button color="danger">X</Button></td>
-                                </tr>
+                                return <MicrositeEntryRow key={entry.id} entry={entry} category={category} extra_fields={extra_fields}/>
                             })}
                             </tbody>
                         </Table>
