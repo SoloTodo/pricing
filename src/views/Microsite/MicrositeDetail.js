@@ -7,7 +7,7 @@ import {NavLink} from "react-router-dom";
 
 class MicrositeDetail extends React.Component{
     render() {
-        const microsite = this.props.ApiResourceObject(this.props.apiResourceObject);
+        const microsite = this.props.apiResourceObject;
         return <Row>
             <Col sm="6" md="8">
                 <Card>

@@ -28,7 +28,10 @@ class MicrositeAddProductButton extends React.Component {
 
     handleProductSearchSubmit = e => {
         e.preventDefault();
-        const endpoint = `${settings.apiResourceEndpoints['products']}?search=${encodeURIComponent(this.state.keywords)}`;
+        const endpoint = `${settings.apiResourceEndpoints['products']}?search=${encodeURIComponent(this.state.keywords)}&brands=${this.props.microsite.brand.id}`;
+
+        toast.success("Buscando Productos...", {autoClose: false});
+
 
         this.props.fetchAuth(endpoint).then(json => {
             const productChoices = json.results;
@@ -38,6 +41,10 @@ class MicrositeAddProductButton extends React.Component {
                 productChoices,
                 selectedProduct
             })
+
+            toast.dismiss();
+        }).catch(error => {
+            toast.error("Error en la búsqueda");
         })
     };
 

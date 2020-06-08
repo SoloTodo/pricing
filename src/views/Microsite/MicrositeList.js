@@ -6,7 +6,7 @@ import {filterApiResourceObjectsByType} from "../../react-utils/ApiResource";
 import {NavLink} from "react-router-dom";
 
 
-class MicrositesList extends React.Component {
+class MicrositeList extends React.Component {
     render() {
         return <Row>
             <Col sm="12">
@@ -40,4 +40,4 @@ function mapStateToProps(state) {
     }
 }
 
-export default connect(mapStateToProps)(MicrositesList)
+export default connect(mapStateToProps)(MicrositeList)

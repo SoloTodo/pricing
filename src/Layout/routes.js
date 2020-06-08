@@ -45,9 +45,9 @@ import KeywordSearchUpdateDetail from "../views/KeywordSearch/KeywordSearchUpdat
 import KeywordSearchActiveReport from "../views/KeywordSearch/KeywordSearchActiveReport";
 import ReportSoicosConversion from "../views/Report/ReportSoicosConversion";
 import StoreSubscriptionList from "../views/StoreSubscription/StoreSubscriptionList";
-import MicrositesList from "../views/Microsites/MicrositesList";
-import MicrositeDetail from "../views/Microsites/MicrositeDetail";
-import MicrositeEntries from "../views/Microsites/MicrositeEntries";
+import MicrositesList from "../views/Microsite/MicrositeList";
+import MicrositeDetail from "../views/Microsite/MicrositeDetail";
+import MicrositeEntries from "../views/Microsite/MicrositeEntries";
 
 
 // https://github.com/ReactTraining/react-router/tree/master/packages/react-router-config
