@@ -42,9 +42,10 @@ class MicrositeEntries extends React.Component {
         const fieldNames = {
             'sku': 'SKU',
             'brand_url': 'URL',
-            'title': 'Nombre',
+            'title': 'Titulo',
+            'subtitle': 'Subtitulo',
             'description': 'Descripción',
-            'reference_price': 'Precio Referencia'
+            'reference_price': 'Precio Referencia',
         }
 
         const categoryOptions = this.props.categories.map(category => {
@@ -99,6 +100,7 @@ class MicrositeEntries extends React.Component {
                                             {fieldNames[field]}
                                         </th>
                                     )}
+                                    <th>Extra</th>
                                     <th>Eliminar</th>
                                 </tr>
                                 </thead>

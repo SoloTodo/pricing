@@ -74,7 +74,8 @@ class MicrositeEntryRow extends React.Component {
         const category = this.props.categories.filter(category => category.url === entry.product.category)[0];
         const extraFields = this.props.extraFields;
         const extraFieldTypes = {
-            'description': 'textarea'
+            'description': 'textarea',
+            'subtitle': 'textarea'
         }
 
         return <tr key={entry.id}>
@@ -91,6 +92,7 @@ class MicrositeEntryRow extends React.Component {
                         onBlur={e => this.onInputBlur(e, field)}/>
                 </td>
             })}
+            <td><Input value={entry['custom_attr_1_str'] || ''} onChange={e => this.onInputChange(e, 'custom_attr_1_str')} onBlur={e => this.onInputBlur(e, 'custom_attr_1_str')}/></td>
             <td><Button color="danger" onClick={this.toggleDeleteModalOpen}>X</Button></td>
             <Modal centered isOpen={this.state.deleteModalOpen} toggle={this.toggleDeleteModalOpen}>
                 <ModalHeader>¿Desea eliminar el producto {entry.product.name}?</ModalHeader>
