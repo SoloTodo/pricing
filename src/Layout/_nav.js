@@ -31,6 +31,12 @@ export default {
       requiredPermission: 'brand_comparisons.backend_list_brand_comparisons'
     },
     {
+      name: 'Sitios',
+      url: '/microsites',
+      icon: 'fas fa-tags',
+      requiredPermission: 'microsite.pricing_view_microsite'
+    },
+    {
       name: 'Alertas',
       url: '/alerts',
       icon: 'fas fa-bell'

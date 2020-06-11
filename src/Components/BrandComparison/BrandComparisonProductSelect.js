@@ -68,7 +68,7 @@ class BrandComparisonProductSelect extends React.Component {
         value={productOption}
         isClearable={true}
         onChange={this.onProductChange}/>
-      <a href="#" onClick={(e)=>this.onHighlightedClick(e, isHighlighted)}>
+      <a href="/" onClick={(e)=>this.onHighlightedClick(e, isHighlighted)}>
         <i className={highlighted_class}>
       </i></a>
     </div>
