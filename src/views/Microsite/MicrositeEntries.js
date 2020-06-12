@@ -30,6 +30,11 @@ class MicrositeEntries extends React.Component {
         });
     }
 
+    getCustomName = field => {
+        const fieldNumber = field.split('_')[2];
+        return `Custom ${fieldNumber}`
+    }
+
     render() {
         const microsite = this.props.apiResourceObject;
         let entries = microsite.entries;
@@ -40,6 +45,8 @@ class MicrositeEntries extends React.Component {
         }
 
         const fieldNames = {
+            'ordering': 'Ordenamiento',
+            'home_ordering': 'Ordenamiento Home',
             'sku': 'SKU',
             'brand_url': 'URL',
             'title': 'Titulo',
@@ -93,14 +100,11 @@ class MicrositeEntries extends React.Component {
                                 <tr>
                                     <th>Producto</th>
                                     <th>Categoría</th>
-                                    <th>Ordenamiento</th>
-                                    <th>Ordenamiento Home</th>
                                     {extraFields.map(field =>
                                         <th key={field}>
-                                            {fieldNames[field]}
+                                            {fieldNames[field] || this.getCustomName(field)}
                                         </th>
                                     )}
-                                    <th>Extra</th>
                                     <th>Eliminar</th>
                                 </tr>
                                 </thead>

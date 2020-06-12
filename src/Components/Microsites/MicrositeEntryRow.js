@@ -81,8 +81,6 @@ class MicrositeEntryRow extends React.Component {
         return <tr key={entry.id}>
             <td><NavLink to={'/products/' + entry.product.id}>{entry.product.name}</NavLink></td>
             <td>{category.name}</td>
-            <td><Input invalid={this.state.errors['ordering']} value={entry['ordering'] || ''} onChange={e => this.onInputChange(e, 'ordering')} onBlur={e => this.onInputBlur(e, 'ordering')}/></td>
-            <td><Input invalid={this.state.errors['home_ordering']} value={entry['home_ordering'] || ''} onChange={e => this.onInputChange(e, 'home_ordering')} onBlur={e => this.onInputBlur(e, 'home_ordering')}/></td>
             {extraFields.map(field => {
                 return <td key={field}>
                     <Input
@@ -92,7 +90,6 @@ class MicrositeEntryRow extends React.Component {
                         onBlur={e => this.onInputBlur(e, field)}/>
                 </td>
             })}
-            <td><Input value={entry['custom_attr_1_str'] || ''} onChange={e => this.onInputChange(e, 'custom_attr_1_str')} onBlur={e => this.onInputBlur(e, 'custom_attr_1_str')}/></td>
             <td><Button color="danger" onClick={this.toggleDeleteModalOpen}>X</Button></td>
             <Modal centered isOpen={this.state.deleteModalOpen} toggle={this.toggleDeleteModalOpen}>
                 <ModalHeader>¿Desea eliminar el producto {entry.product.name}?</ModalHeader>
