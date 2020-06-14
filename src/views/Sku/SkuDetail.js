@@ -68,7 +68,7 @@ class SkuDetail extends React.Component {
     const endDate = moment().startOf('day');
     const currency = this.props.currencies.filter(currency => currency.url === entity.currency)[0];
 
-    this.props.fetchAuth(`entities/${entity.id}/pricing_history?timestamp_0=${startDate.format()}`).then(json => {
+    this.props.fetchAuth(`entities/${entity.id}/pricing_history?timestamp_after=${startDate.format()}`).then(json => {
       this.setState({
         chart: {
           data: json,
