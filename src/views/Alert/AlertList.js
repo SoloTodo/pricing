@@ -56,9 +56,14 @@ class AlertList extends React.Component{
         renderer: result => result.entity?
           this.props.stores.filter(store => store.url === result.entity.store)[0].name :
           <div>
-            {result.stores.map(store_url => <li key={store_url} className="list-without-decoration">
-              {this.props.stores.filter(store => store.url === store_url)[0].name}
-            </li>)}
+            {result.stores.map(store_url => {
+              const store = this.props.stores.filter(store => store.url === store_url);
+              if (!store.length) {
+                return null
+              }
+              return <li key={store_url} className="list-without-decoration">
+                {store[0].name}
+              </li>})}
           </div>
       },
       {
