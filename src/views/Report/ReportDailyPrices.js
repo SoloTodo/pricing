@@ -53,7 +53,7 @@ class ReportDailyPrices extends Component {
           </CardHeader>
           <ApiForm
             endpoints={['reports/daily_prices/']}
-            fields={['timestamp', 'category', 'stores', 'countries', 'store_types', 'currency', 'brand', 'exclude_unavailable', 'filename', 'submit']}
+            fields={['timestamp', 'category', 'stores', 'countries', 'store_types', 'currency', 'brands', 'exclude_unavailable', 'filename', 'submit']}
             onResultsChange={this.setDownloadLink}
             onFormValueChange={this.handleFormValueChange}
             requiresSubmit={true}>
@@ -120,9 +120,12 @@ class ReportDailyPrices extends Component {
 
                 <Col xs="12" sm="6" md="6" lg="6" xl="6">
                   <label>Marca</label>
-                  <ApiFormTextField
-                    name="brand"
-                    placeholder="Opcional"
+                  <ApiFormChoiceField
+                    name="brands"
+                    choices={this.props.brands}
+                    multiple={true}
+                    placeholder="Todas"
+                    value={this.state.formValues.brands}
                     debounceTimeout={1}/>
                 </Col>
 
@@ -166,6 +169,7 @@ function mapStateToProps(state) {
     categories: filterApiResourceObjectsByType(state.apiResourceObjects, 'categories').filter(category => category.permissions.includes('view_category_reports')),
     currencies: filterApiResourceObjectsByType(state.apiResourceObjects, 'currencies'),
     store_types: filterApiResourceObjectsByType(state.apiResourceObjects, 'store_types'),
+    brands: filterApiResourceObjectsByType(state.apiResourceObjects, 'brands'),
     countries: filterApiResourceObjectsByType(state.apiResourceObjects, 'countries'),
   }
 }

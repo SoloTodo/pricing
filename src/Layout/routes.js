@@ -124,7 +124,7 @@ const routes = [
   { path: '/reports/sec_prices', exact: true, name: 'Precios SEC', render: props => <RequiredResources resources={['categories', 'stores']}>
       <ReportSecPrices />
     </RequiredResources>},
-  { path: '/reports/daily_prices', exact: true, name: 'Precios diarios', render: props => <RequiredResources resources={['categories', 'stores']}>
+  { path: '/reports/daily_prices', exact: true, name: 'Precios diarios', render: props => <RequiredResources resources={['categories', 'stores', 'brands']}>
       <ReportDailyPrices />
     </RequiredResources>},
   { path: '/reports/wtb_report', exact: true, name: 'Reporte donde comprar', render: props => <RequiredResources resources={['wtb_brands', 'categories', 'stores', 'currencies', 'store_types', 'countries']}>
