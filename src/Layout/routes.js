@@ -48,6 +48,7 @@ import StoreSubscriptionList from "../views/StoreSubscription/StoreSubscriptionL
 import MicrositesList from "../views/Microsite/MicrositeList";
 import MicrositeDetail from "../views/Microsite/MicrositeDetail";
 import MicrositeEntries from "../views/Microsite/MicrositeEntries";
+import ReportWtbPrices from "../views/Report/ReportWtbPrices";
 
 
 // https://github.com/ReactTraining/react-router/tree/master/packages/react-router-config
@@ -129,6 +130,9 @@ const routes = [
     </RequiredResources>},
   { path: '/reports/wtb_report', exact: true, name: 'Reporte donde comprar', render: props => <RequiredResources resources={['wtb_brands', 'categories', 'stores', 'currencies', 'store_types', 'countries']}>
       <ReportWtb />
+    </RequiredResources>},
+  { path: '/reports/wtb_prices_report', exact: true, name: 'Reporte precios donde comprar', render: props => <RequiredResources resources={['wtb_brands', 'stores']}>
+      <ReportWtbPrices />
     </RequiredResources>},
   { path: '/reports/soicos_conversions', exact: true, name: 'Reporte conversiones soicos', render: props => <RequiredResources resources={['stores', 'categories', 'websites']}>
       <ReportSoicosConversion />
