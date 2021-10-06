@@ -1,8 +1,15 @@
 import React from 'react'
 import {connect} from "react-redux";
 import {Redirect} from "react-router-dom";
-import {Card, CardHeader, CardBody} from 'reactstrap'
+import {
+  Card,
+  CardHeader,
+  CardBody,
+  DropdownToggle,
+  DropdownMenu, ListGroupItem, UncontrolledButtonDropdown
+} from 'reactstrap'
 
+import {toast} from "react-toastify";
 import BrandComparisonRenameButton from '../../Components/BrandComparison/BrandComparisonRenameButton'
 import BrandComparisonPriceTypeButton from '../../Components/BrandComparison/BrandComparisonPriceTypeButton'
 import BrandComparisonDeleteButton from '../../Components/BrandComparison/BrandComparisonDeleteButton'
@@ -12,7 +19,6 @@ import BrandComparisonTable from './BrandComparisonTable'
 
 import {apiResourceStateToPropsUtils, filterApiResourceObjectsByType} from "../../react-utils/ApiResource";
 import {areListsEqual} from "../../react-utils/utils";
-import LaddaButton, {EXPAND_LEFT} from "react-ladda"
 import BrandComparisonManualProductsButton from "../../Components/BrandComparison/BrandComparisonManualProductsButton";
 import BrandComparisonStoreToggleButton
   from "../../Components/BrandComparison/BrandComparisonStoreToggleButton";
@@ -24,7 +30,6 @@ class BrandComparisonDetail extends React.Component {
     super(props);
     this.state = {
       deleted: false,
-      loading: false,
       displayStores: true
     };
   }
@@ -41,17 +46,14 @@ class BrandComparisonDetail extends React.Component {
     }
   }
 
-  handleReportButtonClick = e => {
+  handleReportButtonClick = (e, reportFormat) => {
     e.preventDefault();
-    this.setState({
-      loading: true
-    });
+    const toastId = toast.info('Generando reporte, espere un momento por favor', {autoClose: false})
 
-    this.props.fetchAuth(`brand_comparisons/${this.props.apiResourceObject.id}/?export_format=xls`).then(json => {
+    this.props.fetchAuth(`brand_comparisons/${this.props.apiResourceObject.id}/?export_format=${reportFormat || 'xls'}`).then(json => {
+      toast.dismiss(toastId);
+      toast.success('Descargando reporte')
       window.location = json.url;
-      this.setState({
-        loading:false
-      })
     })
   };
 
@@ -196,12 +198,17 @@ class BrandComparisonDetail extends React.Component {
             <BrandComparisonPriceTypeButton
               brandComparison={brandComparison}
               onComparisonChange={this.handleComparisonChange}/>
-            <LaddaButton loading={this.state.loading}
-                         onClick={this.handleReportButtonClick}
-                         data-style={EXPAND_LEFT}
-                         className="btn btn-primary mr-2">
-              {this.state.loading? 'Generando': 'Descargar'}
-            </LaddaButton>
+            <UncontrolledButtonDropdown className="mr-2">
+              <DropdownToggle color="primary" caret>Descargar</DropdownToggle>
+              <DropdownMenu>
+                <ListGroupItem className="d-flex justify-content-between" action onClick={evt => this.handleReportButtonClick(evt, 'xls')}>
+                  Formato 1
+                </ListGroupItem>
+                <ListGroupItem className="d-flex justify-content-between" action onClick={evt => this.handleReportButtonClick(evt, 'xls_2')}>
+                  Formato 2
+                </ListGroupItem>
+              </DropdownMenu>
+            </UncontrolledButtonDropdown>
             <BrandComparisonDeleteButton
               brandComparison={brandComparison}
               callback={this.deleteCallback}/>
