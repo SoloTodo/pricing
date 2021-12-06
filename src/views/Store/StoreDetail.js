@@ -3,9 +3,19 @@ import {Card, CardHeader, Table, CardBody, Col, Row, Nav, NavItem} from 'reactst
 import {connect} from "react-redux";
 import {NavLink} from "react-router-dom";
 import {apiResourceStateToPropsUtils} from "../../react-utils/ApiResource";
+import {settings} from "../../settings";
 
 
 class StoreDetail extends React.Component {
+  download_matching_report = () => {
+    const store = this.props.apiResourceObject
+
+    const endpoint = `${settings.apiResourceEndpoints.stores}${store.id}/matching_report/`
+    this.props.fetchAuth(endpoint).then(res => {
+      window.location = res.url
+    })
+  }
+
   render() {
     const store = this.props.ApiResourceObject(this.props.apiResourceObject);
 
@@ -51,6 +61,9 @@ class StoreDetail extends React.Component {
                 </React.Fragment>
                 : null
               }
+              {store.permissions.includes('view_store_reports') &&
+                <NavItem><a href="#" onClick={this.download_matching_report}>Descargar reporte de homologación</a></NavItem>
+              }
             </Nav>
           </CardBody>
         </Card>
@@ -60,9 +73,10 @@ class StoreDetail extends React.Component {
 }
 
 function mapStateToProps(state) {
-  const {ApiResourceObject} = apiResourceStateToPropsUtils(state);
+  const {ApiResourceObject, fetchAuth} = apiResourceStateToPropsUtils(state);
   return {
-    ApiResourceObject
+    ApiResourceObject,
+    fetchAuth
   }
 }
 
