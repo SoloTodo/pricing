@@ -86,7 +86,7 @@ class KeywordSearchActiveReport extends React.Component {
 }
 
 function mapStateToProps(state) {
-  const validStoresIds = [60, 18, 5, 11, 30, 88, 43, 9, 67, 87];
+  const validStoresIds = [60, 18, 5, 11, 30, 88, 43, 9, 67, 87, 260];
   return {
     stores: filterApiResourceObjectsByType(state.apiResourceObjects, 'stores').filter(store => store.permissions.includes('create_store_keyword_search') && validStoresIds.includes(store.id)),
     categories: filterApiResourceObjectsByType(state.apiResourceObjects, 'categories').filter(category => category.permissions.includes('create_category_keyword_search')),
